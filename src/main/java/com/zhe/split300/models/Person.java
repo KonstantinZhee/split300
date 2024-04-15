@@ -13,7 +13,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.validator.constraints.UniqueElements;
+
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -30,7 +30,6 @@ public class Person {
     @NotBlank(message = "Имя не должно быть пустым.")
     @Size(min = 2, max = 50, message = "Имя должно быть от 2 до 50 символов длиной.")
     @Column(name = "name")
-    @UniqueElements(message = "Такое имя уже есть. Придумайте другое имя.")
     private String name;
 
     @Email(message = "Введите корректный адрес электронной почты. Пример: me@gmail.com.")
