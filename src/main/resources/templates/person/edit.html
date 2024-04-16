@@ -2,20 +2,21 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <title>New person</title>
+    <title>Редактировать человека</title>
 </head>
 <body>
-<form th:method="POST" th:action="@{/person}" th:object="${person}">
-    <label for="name"> Введите Имя: </label>
+
+<form th:method="PATCH" th:action="@{/person/{id}(id=${person.getId()})}" th:object="${person}">
+    <label for="name">Введите Имя: </label>
     <input type="text" th:field="*{name}" id="name"/>
     <div style="color:red" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name Error</div>
     <br/>
-    <label for="email">Введите email: </label>
+    <label for="email">Введите Email: </label>
     <input type="text" th:field="*{email}" id="email"/>
     <div style="color:red" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Email Error</div>
     <br/>
-    <input type="submit" value="Create!"/>
+    <input type="submit" value="Редактировать!"/>
 </form>
+
 </body>
 </html>

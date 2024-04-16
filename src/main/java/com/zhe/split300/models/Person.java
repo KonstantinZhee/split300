@@ -28,12 +28,14 @@ public class Person {
     private int id;
 
     @NotBlank(message = "Имя не должно быть пустым.")
-    @Size(min = 2, max = 50, message = "Имя должно быть от 2 до 50 символов длиной.")
+    @Size(min = 2, max = 50, message = "Имя должно быть от 2 до 50 символов.")
     @Column(name = "name")
     private String name;
 
     @Email(message = "Введите корректный адрес электронной почты. Пример: me@gmail.com.")
-    @Column(name="email",length=50,nullable=false,unique=true)
+    @Column(name="email")
+    @Size( max = 50, message = "Адрес электронной почты  должен быть до 50 символов.")
+    @NotBlank(message = "Поле не должно быть пустым.")
     private String email;
 
 }
