@@ -99,5 +99,22 @@ public class PersonController {
         personService.delete(id);
         return "redirect:/person";
     }
+    @GetMapping("/find")
+    public String showFindPage(@ModelAttribute("person") Person person) {
+        log.info("Start method: showFindPage");
+        return "person/find";
+    }
+    @PostMapping("/find")
+    public String findPerson(Model model, @RequestParam(value = "name", required = false) String name,
+                             @RequestParam(value = "email", required = false) String email) {
+        log.info("Start method: findPerson");
+        if(name.isBlank()) {
+            log.info("name.isBlank");
+            model.addAttribute("person",
+                    personService.findByEmail(email).orElse(new Person()));
+        } else model.addAttribute("person",
+                personService.findByName(name).orElse(new Person()));
+        return "person/showfind";
+    }
 
 }
