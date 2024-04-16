@@ -8,6 +8,9 @@
 
 <hr/>
 <br/>
+<div th:if="${person == null}">
+    <span>Такого пользователя нет</span>
+</div>
     <div th:each="person : ${person}">
         <a th:href="@{/person/{id}(id=${person.getId()})}"
            th:text="${person.getName() + ', ' + person.getEmail()}">user</a>

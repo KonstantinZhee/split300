@@ -15,7 +15,13 @@
     <input type="text" th:field="*{email}" id="email"/>
     <div style="color:red" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Email Error</div>
     <br/>
-    <input type="submit" value="Create!"/>
+    <input type="submit" value="Создать!"/>
 </form>
+<br/>
+<hr/>
+<a href="/person"><button>На страницу с людьми</button></a>
+<br/>
+<br/>
+<a href="/person/find"><button>Искать человека</button></a>
 </body>
 </html>

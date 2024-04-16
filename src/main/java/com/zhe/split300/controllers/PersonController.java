@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.Objects;
+import java.util.Optional;
 
 @Log
 @Controller
@@ -107,13 +107,15 @@ public class PersonController {
     @PostMapping("/find")
     public String findPerson(Model model, @RequestParam(value = "name", required = false) String name,
                              @RequestParam(value = "email", required = false) String email) {
-        log.info("Start method: findPerson");
-        if(name.isBlank()) {
-            log.info("name.isBlank");
-            model.addAttribute("person",
-                    personService.findByEmail(email).orElse(new Person()));
-        } else model.addAttribute("person",
-                personService.findByName(name).orElse(new Person()));
+        log.info("Start method: findPerson\n" + "name: " + name +"\nemail: " + email);
+            if (name != null && !name.isBlank()) {
+                log.info("Byname");
+                personService.findByName(name).ifPresent(
+                        person -> model.addAttribute("person", person));
+            } else if (email != null && !email.isBlank()) {
+                personService.findByEmail(email).ifPresent(
+                        person -> model.addAttribute("person", person));
+            }
         return "person/showfind";
     }
 
