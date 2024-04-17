@@ -34,7 +34,9 @@ public class PersonService {
         return personRepository.findByName(name);
     }
     public List<Person> searchingByQuery(String query) {
-        return personRepository.findByNameStartingWith(query);
+        if(query.contains("@")) {
+            return personRepository.findByEmailStartingWith(query);
+        } else return personRepository.findByNameStartingWith(query);
     }
 
     @Transactional

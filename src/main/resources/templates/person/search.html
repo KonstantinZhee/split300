@@ -6,10 +6,17 @@
 </head>
 <body>
 <form th:method="POST" th:action="@{/person/search}">
-    <label for="query">Введите поисковой запрос: </label>
-    <input type="text" id="query" name="query"/>
+    <label for="name">Введите поисковой запрос по имени: </label>
+    <input type="text" id="name" name="name"/>
     <br/>
-    <input type="submit" value="Искать участника!"/>
+    <input type="submit" value="Искать участника по имени!"/>
+</form>
+<hr/>
+<form th:method="POST" th:action="@{/person/search}">
+    <label for="email">Введите поисковой запрос по почте: </label>
+    <input type="text" id="email" name="email"/>
+    <br/>
+    <input type="submit" value="Искать участника по почте!"/>
 </form>
 <hr/>
 <div th:if="${persons}">

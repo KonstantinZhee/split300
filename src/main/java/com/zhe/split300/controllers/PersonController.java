@@ -123,8 +123,12 @@ public class PersonController {
     }
 
     @PostMapping("/search")
-    public String searchByName(Model model, @RequestParam("query") String query) {
-        model.addAttribute("persons", personService.searchingByQuery(query));
+    public String searchByNameOrEmail(Model model, @RequestParam(value = "name", required = false) String name,
+                               @RequestParam(value = "email", required = false) String email) {
+        if(name == null && !email.isBlank()) {
+            model.addAttribute("persons", personService.searchingByQuery(email));
+        } else if (email == null && !name.isBlank())
+            model.addAttribute("persons", personService.searchingByQuery(name));
         return "person/search";
     }
 
