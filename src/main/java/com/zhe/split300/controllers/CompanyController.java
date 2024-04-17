@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 
@@ -25,5 +26,12 @@ public class CompanyController {
         log.info("Start method: index");
         model.addAttribute("company", companyService.findAll());
         return "company/index";
+    }
+
+    @GetMapping("/{id}")
+    public String showCompany(@PathVariable("id") int id, Model model) {
+        log.info("Start method: showCompany");
+        model.addAttribute("company", companyService.findOne(id));
+        return "company/show";
     }
 }

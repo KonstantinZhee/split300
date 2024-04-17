@@ -1,7 +1,6 @@
 package com.zhe.split300.services;
 
 import com.zhe.split300.models.Company;
-import com.zhe.split300.models.Person;
 import com.zhe.split300.repositories.CompanyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,5 +21,8 @@ public class CompanyService {
 
     public List<Company> findAll() {
         return companyRepository.findAll();
+    }
+    public Company findOne(int id) {
+        return companyRepository.findById(id).orElse(null);
     }
 }
