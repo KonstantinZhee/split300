@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Index</title>
+</head>
+<body>
+<form th:method="POST" th:action="@{/person/find}" th:object="${person}">
+    <label for="name"> Введите точное Имя для поиска: </label>
+    <input type="text" th:field="*{name}" id="name"/>
+    <div style="color:red" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name Error</div>
+    <input type="submit" value="Найти по имени!"/>
+    <br/>
+</form>
+<br/>
+<form th:method="POST" th:action="@{/person/find}" th:object="${person}">
+    <label for="email">Введите точный Email для поиска: </label>
+    <input type="text" th:field="*{email}" id="email"/>
+    <div style="color:red" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Email Error</div>
+    <input type="submit" value="Найти по поиску!"/>
+    <br/>
+</form>
+</body>
+</html>
