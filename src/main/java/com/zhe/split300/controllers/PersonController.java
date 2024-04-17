@@ -119,4 +119,9 @@ public class PersonController {
         return "person/showfind";
     }
 
+    @GetMapping("/search")
+    public String searchPage() {
+        return "person/search";
+    }
+
 }
