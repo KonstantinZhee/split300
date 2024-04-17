@@ -91,17 +91,20 @@ public class PersonController {
         }
         return "redirect:/person";
     }
+
     @DeleteMapping("/{id}")
     public String delete(@PathVariable("id") int id) {
         log.info("Start method: delete");
         personService.delete(id);
         return "redirect:/person";
     }
+
     @GetMapping("/find")
     public String showFindPage(@ModelAttribute("person") Person person) {
         log.info("Start method: showFindPage");
         return "person/find";
     }
+
     @PostMapping("/find")
     public String findPerson(Model model, @RequestParam(value = "name", required = false) String name,
                              @RequestParam(value = "email", required = false) String email) {
