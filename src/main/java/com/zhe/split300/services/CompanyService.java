@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -24,5 +25,25 @@ public class CompanyService {
     }
     public Company findOne(int id) {
         return companyRepository.findById(id).orElse(null);
+    }
+
+    @Transactional
+    public void save(Company company) {
+        companyRepository.save(company);
+    }
+
+    @Transactional
+    public void update(int id, Company company) {
+        company.setId(id);
+        companyRepository.save(company);
+    }
+
+    @Transactional
+    public void delete(int id) {
+        companyRepository.deleteById(id);
+    }
+
+    public Optional<Company> findByName(String name) {
+        return companyRepository.findByName(name);
     }
 }

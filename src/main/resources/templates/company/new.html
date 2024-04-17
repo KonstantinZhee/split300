@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>New company</title>
+</head>
+<body>
+<form th:method="POST" th:action="@{/company}" th:object="${company}">
+    <label for="name"> Введите Имя: </label>
+    <input type="text" th:field="*{name}" id="name"/>
+    <div style="color:red" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name Error</div>
+    <br/>
+    <input type="submit" value="Создать!"/>
+</form>
+<br><br/><hr>
+<a href="/company"><button>На страницу с Группами</button></a>
+<br><br/>
+<a href="/company/new"><button>Добавить новую Группу в базу данных</button></a>
+<br><br/>
+<a href="/company/search"><button>Искать Группу по Названию</button></a>
+<hr><br><br/>
+</body>
+</html>
