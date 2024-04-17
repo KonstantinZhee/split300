@@ -33,6 +33,9 @@ public class PersonService {
     public Optional<Person> findByName(String name) {
         return personRepository.findByName(name);
     }
+    public List<Person> findAllByQuery(String query) {
+        return personRepository.findAllByQuery(query);
+    }
 
     @Transactional
     public void save(Person person) {

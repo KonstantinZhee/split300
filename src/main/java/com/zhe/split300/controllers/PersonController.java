@@ -120,7 +120,8 @@ public class PersonController {
     }
 
     @GetMapping("/search")
-    public String searchPage() {
+    public String searchByQuery(Model model, @RequestParam("query") String query) {
+        model.addAttribute("persons", personService.findAllByQuery(query));
         return "person/search";
     }
 
