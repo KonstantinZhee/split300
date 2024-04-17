@@ -35,8 +35,8 @@ public class PersonService {
     }
     public List<Person> searchingByQuery(String query) {
         if(query.contains("@")) {
-            return personRepository.findByEmailStartingWith(query);
-        } else return personRepository.findByNameStartingWith(query);
+            return personRepository.findByEmailIgnoreCaseStartingWith(query);
+        } else return personRepository.findByNameIgnoreCaseStartingWith(query);
     }
 
     @Transactional
