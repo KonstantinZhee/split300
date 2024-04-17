@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Show</title>
+</head>
+<body>
+<p th:text="${company.getId() + ', ' + company.getName()}">VALUE</p>
+
+<form th:method="GET" th:action="@{/company/{id}/edit(id=${company.getId()})}">
+    <input type="submit" value="Редактировать"/>
+</form>
+
+<form th:method="DELETE" th:action="@{/company/{id}(id=${company.getId()})}">
+    <input type="submit" value="Удалить"/>
+
+    <br><br/><hr>
+    <a href="/company"><button>На страницу с Группами</button></a>
+    <br><br/>
+    <a href="/company/new"><button>Добавить новую Группу в базу данных</button></a>
+    <br><br/>
+    <a href="/company/search"><button>Искать Группу по Названию</button></a>
+    <hr><br><br/>
+</form>
