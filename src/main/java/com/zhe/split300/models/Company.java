@@ -40,11 +40,11 @@ public class Company {
     @Column(name = "name")
     private String name;
 
+    @ToString.Exclude
     @ManyToMany
     @JoinTable(
             name = "person_company",
             joinColumns = @JoinColumn(name = "company_id"),
             inverseJoinColumns = @JoinColumn(name = "person_id"))
-    @ToString.Exclude
     private List<Person> persons;
 }
