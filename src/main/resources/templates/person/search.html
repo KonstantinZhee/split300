@@ -18,8 +18,8 @@
     </div>
 
     <div th:each="person : ${persons}">
-        <p th:text="${person.getId() + ', ' + person.getName() + ', ' + person.getEmail()}">person</p>
-
+        <a th:href="@{/person/{id}(id=${person.getId()})}"><button>
+           <p th:text="${person.getId() + ', ' + person.getName() + ', ' + person.getEmail()}"></button></a>
     </div>
 </div>
 </body>
