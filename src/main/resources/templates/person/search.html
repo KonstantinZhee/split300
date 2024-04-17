@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Страница поиска пользователя</title>
+</head>
+<body>
+<form th:method="POST" th:action="@{/person/search}">
+    <label for="query">Введите поисковой запрос: </label>
+    <input type="text" id="query" name="query"/>
+    <br/>
+    <input type="submit" value="Искать участника!"/>
+</form>
+<hr/>
+<div th:if="${persons}">
+    <div th:if="${persons.isEmpty()}">
+        <span>Участники не найдены</span>
+    </div>
+
+    <div th:each="person : ${persons}">
+        <p th:text="${person.getId() + ', ' + person.getName() + ', ' + person.getEmail()}">person</p>
+
+    </div>
+</div>
+</body>
+</html>
