@@ -33,8 +33,8 @@ public class PersonService {
     public Optional<Person> findByName(String name) {
         return personRepository.findByName(name);
     }
-    public List<Person> findAllByQuery(String query) {
-        return personRepository.findAllByQuery(query);
+    public List<Person> searchingByQuery(String query) {
+        return personRepository.findByNameStartingWith(query);
     }
 
     @Transactional

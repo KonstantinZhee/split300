@@ -21,8 +21,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.Optional;
-
 @Log
 @Controller
 @RequestMapping("/person")
@@ -120,8 +118,13 @@ public class PersonController {
     }
 
     @GetMapping("/search")
-    public String searchByQuery(Model model, @RequestParam("query") String query) {
-        model.addAttribute("persons", personService.findAllByQuery(query));
+    public String searchPageView() {
+        return "person/search";
+    }
+
+    @PostMapping("/search")
+    public String searchByName(Model model, @RequestParam("query") String query) {
+        model.addAttribute("persons", personService.searchingByQuery(query));
         return "person/search";
     }
 
