@@ -1,13 +1,17 @@
 package com.zhe.split300.services;
 
 import com.zhe.split300.models.Company;
+import com.zhe.split300.models.Person;
 import com.zhe.split300.repositories.CompanyRepository;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.SequencedCollection;
 
 
 @Service
@@ -46,4 +50,8 @@ public class CompanyService {
     public Optional<Company> findByName(String name) {
         return companyRepository.findByName(name);
     }
-}
+    public List<Person> getPersons (int id) {
+        return companyRepository.findById(id).map(Company::getPersons).
+                orElse(Collections.emptyList());
+    }
+ }
