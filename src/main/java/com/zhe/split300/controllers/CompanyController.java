@@ -40,31 +40,15 @@ public class CompanyController {
     }
 
     @GetMapping()
+    //Получаем все записи (1)
     public String index(Model model) {
         log.info("Start method: index");
         model.addAttribute("company", companyService.findAll());
         return "company/index";
     }
 
-    @GetMapping("/{id}")
-    public String showCompany(@PathVariable("id") int id, Model model,
-                              @ModelAttribute("person") Person person) {
-        log.info("Start method: showCompany");
-        model.addAttribute("company", companyService.findOne(id));
-        List<Person> persons = companyService.getPersons(id);
-        if (persons != null) {
-            model.addAttribute("persons", persons);
-        }
-        return "company/show";
-    }
-    
-    @GetMapping("/new")
-    public String newCompany(@ModelAttribute("company") Company company) {
-        log.info("Start method: newCompany");
-        return "company/new";
-    }
-    
     @PostMapping()
+    //Создаем одну новую запись (2)
     public String create(@ModelAttribute("company") @Valid Company company, BindingResult bindingResult) {
         log.info("Start method: create");
         companyValidator.validate(company, bindingResult);
@@ -78,14 +62,36 @@ public class CompanyController {
         return "redirect:/company";
     }
 
+    @GetMapping("/new")
+    //получаем форму новой записи (3)
+    public String newCompany(@ModelAttribute("company") Company company) {
+        log.info("Start method: newCompany");
+        return "company/new";
+    }
+
     @GetMapping("/{id}/edit")
+    //Форма редактирования (4)
     public String edit(Model model, @PathVariable("id") int id) {
         log.info("Start method: showCompany");
         model.addAttribute("company", companyService.findOne(id));
         return "company/edit";
     }
 
+    @GetMapping("/{id}")
+    //Читаем одну запись (5)
+    public String showCompany(@PathVariable("id") int id, Model model,
+                              @ModelAttribute("person") Person person) {
+        log.info("Start method: showCompany");
+        model.addAttribute("company", companyService.findOne(id));
+        List<Person> persons = companyService.getPersons(id);
+        if (persons != null) {
+            model.addAttribute("persons", persons);
+        }
+        return "company/show";
+    }
+
     @PatchMapping("/{id}")
+    //Обновление одной записи (6)
     public String update(@ModelAttribute("company") @Valid Company company, BindingResult bindingResult,
                          @PathVariable("id") int id) {
         log.info("Start method: update");
@@ -101,12 +107,15 @@ public class CompanyController {
     }
 
     @DeleteMapping("/{id}")
+    //Удаление одной записи (7)
     public String delete(@PathVariable("id") int id) {
         log.info("Start method: delete");
         companyService.delete(id);
         return "redirect:/company";
     }
+
     @PostMapping("/searchPerson")
+    //Поиск всех людей и добавление выбранного
     public String searchPerson(Model model, @RequestParam(value = "name", required = false) String name,
                                @RequestParam(value = "email", required = false) String email,
                                @RequestParam(value = "id") int id) {

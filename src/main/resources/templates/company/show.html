@@ -36,7 +36,7 @@
 </form>
 <hr/>
     <div th:if="${personsResponse != null}">
-    <h3><span>Найдены люди по запросу:</span></h3>
+    <h3><span>Найдены люди по запросу из всей базы:</span></h3>
 <div th:if="${personsResponse}">
     <div th:each="person : ${personsResponse}">
 <!--        строка ниже не работает - нужно передать в метод добавления человека в группу по ссылке-->
