@@ -6,7 +6,6 @@ import com.zhe.split300.services.CompanyService;
 import com.zhe.split300.services.PersonService;
 import com.zhe.split300.utils.CompanyValidator;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,6 +17,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -126,5 +126,13 @@ public class CompanyController {
         } model.addAttribute("company", companyService.findOne(id));
             model.addAttribute("persons", companyService.getPersons(id));
         return "company/show";
+    }
+
+    @PatchMapping("/{id}/add")
+    public String assignPersonToCompany(@PathVariable("id") int companyId,
+                                        @ModelAttribute("personId") Person person) {
+        log.info("*****************" + companyId + "\\n person:" + person);
+        companyService.addPersonToCompany(companyId, person);
+        return "redirect:/company/" + companyId;
     }
 }

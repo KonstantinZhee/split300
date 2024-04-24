@@ -15,6 +15,7 @@ import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
@@ -49,4 +50,7 @@ public class Person {
     @ManyToMany(mappedBy = "persons")
     private List<Company> companies;
 
+    public Person(int id) {
+        setId(id);
+    }
 }

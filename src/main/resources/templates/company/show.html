@@ -10,13 +10,14 @@
 <div th:if="${persons.isEmpty()}">
     <h3> <span>Участники в группе не найдены</span></h3>
 </div>
-    <div th:if="${!persons.isEmpty()}">
-        <h3><span>Участники в группе:</span></h3>
+<div th:if="${!persons.isEmpty()}">
+    <h3><span>Участники в группе:</span></h3>
     <div th:each="person : ${persons}">
-        <a th:href="@{/person/{id}(id=${person.getId()})}">
-                <a th:text="${person.getId() + ', ' + person.getName() + ', ' + person.getEmail()}">
-                 </a><button>Удалить из группы</button></a>
-    </div></div>
+        <a th:href="@{/person/{idp}(idp=${person.getId()})}">
+            <a th:text="${person.getId() + ', ' + person.getName() + ', ' + person.getEmail()} + '  '">
+             <button>Удалить из группы</button></a></a>
+    </div>
+</div>
 </div>
 <br>
 <!--Поиск участников для добавления в группу-->
@@ -37,18 +38,23 @@
 <hr/>
     <div th:if="${personsResponse != null}">
     <h3><span>Найдены люди по запросу из всей базы:</span></h3>
-<div th:if="${personsResponse}">
-    <div th:each="person : ${personsResponse}">
-<!--        строка ниже не работает - нужно передать в метод добавления человека в группу по ссылке-->
-        <a th:href="@{/person/{id}(id=${person.getId()})}">
-            <a th:text="${person.getId() + ', ' + person.getName() + ', ' + person.getEmail()}">
-            </a><button>Добавить в группу</button></a>
-    </div></div></div>
-
-<!--Поиск челика для добавления в группу-->
+        <form th:method="PATCH"
+              th:action="@{/company/{idc}/add(idc=${company.getId()})}">
+            <label for="personId">Выберите человека</label>
+            <select th:object="${person}"
+                    name = "id"
+                    id="personId">
+                <option th:each="person : ${personsResponse}"
+                        th:value="${person.getId()}"
+                        th:text="${person.getName()}">
+                </option>
+            </select>
+            <input type="submit" value="Добавить в группу"/>
+        </form>
+    </div>
 <hr>
 <div th:if="${company}">
-        <form th:method="PATCH" th:action="@{/company/{id}/release(id=${company.getId()})}">
+        <form  th:action="@{/company/{id}/release(id=${company.getId()})}">
         <input type="submit" value="Очистить группу"/>
     </form>
 </div>
