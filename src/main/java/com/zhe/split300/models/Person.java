@@ -5,8 +5,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
@@ -15,7 +13,6 @@ import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
@@ -42,8 +39,8 @@ public class Person {
     private String name;
 
     @Email(message = "Введите корректный адрес электронной почты. Пример: me@gmail.com.")
-    @Column(name="email")
-    @Size( max = 50, message = "Адрес электронной почты  должен быть до 50 символов.")
+    @Column(name = "email")
+    @Size(max = 50, message = "Адрес электронной почты  должен быть до 50 символов.")
     @NotBlank(message = "Поле не должно быть пустым.")
     private String email;
 
