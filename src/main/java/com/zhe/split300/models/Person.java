@@ -6,6 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -48,10 +49,15 @@ public class Person {
     @ManyToMany(mappedBy = "persons")
     private List<Company> companies;
 
+    @OneToMany(mappedBy = "owner")
+    private List<Operation> operations;
+
+    @OneToMany(mappedBy = "personPaidFor")
+    private List<PaidFor> paidForActions;
+
     public Person(int id) {
         setId(id);
     }
-
 
     @Override
     public boolean equals(Object o) {

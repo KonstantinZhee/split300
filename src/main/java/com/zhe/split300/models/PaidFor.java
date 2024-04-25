@@ -25,7 +25,7 @@ import java.util.UUID;
 @Setter
 @Table(name = "payed_for")
 @ToString
-public class PayedFor {
+public class PaidFor {
 
     @Id
     @Column(name = "uid")
@@ -43,5 +43,5 @@ public class PayedFor {
 
     @ManyToOne
     @JoinColumn(name = "person_id", referencedColumnName = "id")
-    private Person person;
+    private Person personPaidFor;
 }

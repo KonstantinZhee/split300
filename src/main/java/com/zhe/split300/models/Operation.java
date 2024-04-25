@@ -49,11 +49,6 @@ public class Operation {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "value")
-    @NotBlank(message = "Укажите сумму.")
-    @Digits(message = "Укажите цифровое значение по второй знак после запятой например: 36,28", integer = 100, fraction = 2)
-    private BigDecimal value;
-
     @Column(name = "time")
     @Temporal(TemporalType.TIMESTAMP)
     @DateTimeFormat(pattern = "dd/MMMM/yyyy - HH:mm:ss")
@@ -63,7 +58,16 @@ public class Operation {
     @Size(min = 5, max = 100, message = "Комментарий должен быть от 5 до 100 символов.")
     private String note;
 
-    @OneToMany(mappedBy = "eventionUUID")
-    @ToString.Exclude
-    private List<Operation> operations;
+    @Column(name = "value")
+    @NotBlank(message = "Укажите сумму.")
+    @Digits(message = "Укажите цифровое значение по второй знак после запятой например: 36,28", integer = 100, fraction = 2)
+    private BigDecimal value;
+
+    @ManyToOne
+    @JoinColumn(name = "person_id", referencedColumnName = "id")
+    private Person owner;
+
+    @OneToMany(mappedBy = "operationUUID")
+    private List<PaidFor> paidForActions;
+
 }

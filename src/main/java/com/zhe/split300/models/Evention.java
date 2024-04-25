@@ -60,7 +60,7 @@ public class Evention {
     @Column(name = "balance")
     private BigDecimal balance;
 
-    @OneToMany(mappedBy = "operationUUID")
+    @OneToMany(mappedBy = "eventionUUID")
     @ToString.Exclude
-    private List<PayedFor> payedForActions;
+    private List<Operation> operations;
 }
