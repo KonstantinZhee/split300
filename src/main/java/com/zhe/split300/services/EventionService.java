@@ -1,5 +1,6 @@
 package com.zhe.split300.services;
 
+import com.zhe.split300.models.Company;
 import com.zhe.split300.models.Evention;
 import com.zhe.split300.repositories.EventionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,5 +21,10 @@ public class EventionService {
 
     public List<Evention> findAll() {
         return eventionRepository.findAll();
+    }
+
+    @Transactional
+    public void save(Evention evention) {
+        eventionRepository.save(evention);
     }
 }
