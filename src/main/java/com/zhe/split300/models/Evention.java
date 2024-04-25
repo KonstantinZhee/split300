@@ -13,7 +13,6 @@ import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -30,6 +29,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @Table(name = "Evention")
+@ToString
 public class Evention {
 
     @Id
@@ -60,7 +60,7 @@ public class Evention {
     @Column(name = "balance")
     private BigDecimal balance;
 
-    @OneToMany(mappedBy = "eventionUUID")
+    @OneToMany(mappedBy = "operationUUID")
     @ToString.Exclude
-    private List<Operation> operations;
+    private List<PayedFor> payedForActions;
 }
