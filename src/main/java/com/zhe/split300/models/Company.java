@@ -52,8 +52,4 @@ public class Company {
     @OneToMany(mappedBy = "company")
     @ToString.Exclude
     private List<Evention> eventions;
-
-    @OneToMany(mappedBy = "person")
-    @ToString.Exclude
-    private List<PayedFor> payedForActions;
 }
