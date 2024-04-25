@@ -13,10 +13,12 @@ import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.UuidGenerator;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.math.BigDecimal;
@@ -24,6 +26,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+@AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Getter
@@ -35,7 +38,8 @@ public class Evention {
     @Id
     @Column(name = "uid")
     @NotNull
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @GeneratedValue
+    @UuidGenerator
     private UUID uid;
 
     @NotBlank
@@ -60,7 +64,7 @@ public class Evention {
     @Column(name = "balance")
     private BigDecimal balance;
 
-    @OneToMany(mappedBy = "eventionUUID")
+    @OneToMany(mappedBy = "evention")
     @ToString.Exclude
     private List<Operation> operations;
 }

@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Index</title>
+</head>
+<body>
+<div th:each="evention : ${evention}">
+    <a th:href="@{/eventions/{id}(id=${evention.getId()})}"><button>
+        <p th:text="${evention.getId() + ', ' + evention.getName() + ', ' + evention.getEmail()}"></button></a>
+</div>
+<br><br/><hr>
+<a href="/eventions"><button>На страницу с событиями</button></a>
+<hr><br><br/>
+</body>
+</html>

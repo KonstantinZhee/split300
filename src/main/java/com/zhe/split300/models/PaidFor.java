@@ -11,30 +11,34 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.UuidGenerator;
 
 import java.math.BigDecimal;
 import java.util.UUID;
 
 @Entity
+@AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-@Table(name = "payed_for")
+@Table(name = "paid_for")
 @ToString
 public class PaidFor {
 
     @Id
     @Column(name = "uid")
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @GeneratedValue
+    @UuidGenerator
     private UUID uid;
 
     @ManyToOne
     @JoinColumn(name = "operation_uid", referencedColumnName = "uid")
-    private UUID operationUUID;
+    private Operation operation;
 
     @Column(name = "value")
     @NotBlank(message = "Укажите сумму.")

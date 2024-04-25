@@ -16,10 +16,12 @@ import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.UuidGenerator;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.math.BigDecimal;
@@ -29,6 +31,7 @@ import java.util.UUID;
 
 @Entity
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
 @Table(name = "Operation")
@@ -36,14 +39,15 @@ import java.util.UUID;
 public class Operation {
 
     @Id
-    @Column(name = "uid")
+    @Column(name = "uid", updatable = false, nullable = false)
     @NotNull
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @GeneratedValue
+    @UuidGenerator
     private UUID uid;
 
     @ManyToOne
     @JoinColumn(name = "evention_uid", referencedColumnName = "uid")
-    private UUID eventionUUID;
+    private Evention evention;
 
     @NotBlank(message = "Поле не должно быть пустым.")
     @Column(name = "name")
@@ -68,7 +72,7 @@ public class Operation {
     private Person owner;
 
     @ToString.Exclude
-    @OneToMany(mappedBy = "operationUUID")
+    @OneToMany(mappedBy = "operation")
     private List<PaidFor> paidForActions;
 
 }
