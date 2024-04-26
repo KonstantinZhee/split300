@@ -1,9 +1,11 @@
 package com.zhe.split300.controllers;
 
 import com.zhe.split300.models.Person;
+import com.zhe.split300.services.CompanyService;
 import com.zhe.split300.services.PersonService;
 import com.zhe.split300.utils.PersonValidator;
 import jakarta.validation.Valid;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,17 +19,20 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+@Log4j2
 @Controller
 @RequestMapping("/v1/persons")
 public class PersonController {
 
     private final PersonService personService;
     private final PersonValidator personValidator;
+    private final CompanyService companyService;
 
     @Autowired
-    public PersonController(PersonService personService, PersonValidator personValidator) {
+    public PersonController(PersonService personService, PersonValidator personValidator, CompanyService companyService) {
         this.personService = personService;
         this.personValidator = personValidator;
+        this.companyService = companyService;
     }
 
     @GetMapping()
@@ -116,4 +121,11 @@ public class PersonController {
         return "persons/search";
     }
 
+    @GetMapping("{id}/groups")
+    public String getCompaniesByPersonId(Model model, @PathVariable("id") int personId) {
+        log.info("getCompaniesByPersonId\npersonId:\t{}", personId);
+        model.addAttribute("companies", companyService.findByPersonId(personId));
+        model.addAttribute( "person" ,personService.findOne(personId));
+        return "persons/show";
+    }
 }

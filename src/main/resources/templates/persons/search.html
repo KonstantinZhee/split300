@@ -5,6 +5,7 @@
     <title>Страница поиска пользователя</title>
 </head>
 <body>
+<h3><a href="/v1"><button>НА ГЛАВНУЮ СТРАНИЦУ</button></a></h3>
 <form th:method="POST" th:action="@{/v1/persons/search}">
     <label for="name">Введите поисковой запрос по имени: </label>
     <input type="text" id="name" name="name"/>

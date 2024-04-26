@@ -129,4 +129,7 @@ public class CompanyController {
         companyService.removePersonFromCompany(companyId, person);
         return "redirect:/v1/groups/" + companyId;
     }
+
+
+
 }

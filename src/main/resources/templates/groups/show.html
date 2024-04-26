@@ -6,6 +6,7 @@
     <title>Show</title>
 </head>
 <body>
+<h3><a href="/v1"><button>НА ГЛАВНУЮ СТРАНИЦУ</button></a></h3>
 <h3><a href="/v1/groups"><button>На страницу с Группами</button></a></h3>
 <h1><a th:text="${company.getId() + ',  ' + company.getName()}">VALUE</a></h1>
 <div th:if="${persons.isEmpty()}">

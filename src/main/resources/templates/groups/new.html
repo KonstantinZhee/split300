@@ -6,6 +6,7 @@
     <title>New company</title>
 </head>
 <body>
+<h3><a href="/v1"><button>НА ГЛАВНУЮ СТРАНИЦУ</button></a></h3>
 <form th:method="POST" th:action="@{/v1/groups}" th:object="${company}">
     <label for="name"> Введите Имя: </label>
     <input type="text" th:field="*{name}" id="name"/>

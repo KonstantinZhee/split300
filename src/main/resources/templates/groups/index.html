@@ -5,6 +5,7 @@
     <title>Index</title>
 </head>
 <body>
+<h3><a href="/v1"><button>НА ГЛАВНУЮ СТРАНИЦУ</button></a></h3>
 <div th:each="company : ${company}">
     <a th:href="@{/v1/groups/{id}(id=${company.getId()})}"><button>
        <p th:text="${company.getId() + ', ' + company.getName()}"></button></a>

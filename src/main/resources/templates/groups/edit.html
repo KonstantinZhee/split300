@@ -5,6 +5,7 @@
     <title>Редактировать группу</title>
 </head>
 <body>
+<h3><a href="/v1"><button>НА ГЛАВНУЮ СТРАНИЦУ</button></a></h3>
 <form th:method="PATCH" th:action="@{/v1/groups/{id}(id=${company.getId()})}" th:object="${company}">
     <label for="name">Введите новое Название группы: </label>
     <input type="text" th:field="*{name}" id="name"/>
