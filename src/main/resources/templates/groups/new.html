@@ -6,7 +6,7 @@
     <title>New company</title>
 </head>
 <body>
-<form th:method="POST" th:action="@{/company}" th:object="${company}">
+<form th:method="POST" th:action="@{/v1/groups}" th:object="${company}">
     <label for="name"> Введите Имя: </label>
     <input type="text" th:field="*{name}" id="name"/>
     <div style="color:red" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name Error</div>
@@ -14,11 +14,11 @@
     <input type="submit" value="Создать!"/>
 </form>
 <br><br/><hr>
-<a href="/company"><button>На страницу с Группами</button></a>
+<a href="/v1/groups"><button>На страницу с Группами</button></a>
 <br><br/>
-<a href="/company/new"><button>Добавить новую Группу в базу данных</button></a>
+<a href="/v1/groups/new"><button>Добавить новую Группу в базу данных</button></a>
 <br><br/>
-<a href="/company/search"><button>Искать Группу по Названию</button></a>
+<a href="/v1/groups/search"><button>Искать Группу по Названию</button></a>
 <hr><br><br/>
 </body>
 </html>

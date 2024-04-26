@@ -23,14 +23,15 @@ import java.util.List;
 
 
 @Controller
-@RequestMapping("/company")
+@RequestMapping("/v1/groups")
 public class CompanyController {
     private final CompanyService companyService;
     private final CompanyValidator companyValidator;
     private final PersonService personService;
 
     @Autowired
-    public CompanyController(CompanyService companyService, CompanyValidator companyValidator, PersonService personService) {
+    public CompanyController(CompanyService companyService, CompanyValidator companyValidator,
+                             PersonService personService) {
         this.companyService = companyService;
         this.companyValidator = companyValidator;
         this.personService = personService;
@@ -40,7 +41,7 @@ public class CompanyController {
     //Получаем все записи (1)
     public String index(Model model) {
         model.addAttribute("company", companyService.findAll());
-        return "company/index";
+        return "groups/index";
     }
 
     @PostMapping()
@@ -48,24 +49,24 @@ public class CompanyController {
     public String create(@ModelAttribute("company") @Valid Company company, BindingResult bindingResult) {
         companyValidator.validate(company, bindingResult);
         if (bindingResult.hasErrors()) {
-            return "company/new";
+            return "groups/new";
         } else {
             companyService.save(company);
         }
-        return "redirect:/company";
+        return "redirect:/v1/groups";
     }
 
     @GetMapping("/new")
     //получаем форму новой записи (3)
     public String newCompany(@ModelAttribute("company") Company company) {
-        return "company/new";
+        return "groups/new";
     }
 
     @GetMapping("/{id}/edit")
     //Форма редактирования (4)
     public String edit(Model model, @PathVariable("id") int id) {
         model.addAttribute("company", companyService.findOne(id));
-        return "company/edit";
+        return "groups/edit";
     }
 
     @GetMapping("/{id}")
@@ -77,7 +78,7 @@ public class CompanyController {
         if (persons != null) {
             model.addAttribute("persons", persons);
         }
-        return "company/show";
+        return "groups/show";
     }
 
     @PatchMapping("/{id}")
@@ -86,18 +87,18 @@ public class CompanyController {
                          @PathVariable("id") int id) {
         companyValidator.validate(company, bindingResult);
         if (bindingResult.hasErrors()) {
-            return "company/edit";
+            return "groups/edit";
         } else {
             companyService.update(id, company);
         }
-        return "redirect:/company";
+        return "redirect:/v1/groups";
     }
 
     @DeleteMapping("/{id}")
     //Удаление одной записи (7)
     public String delete(@PathVariable("id") int id) {
         companyService.delete(id);
-        return "redirect:/company";
+        return "redirect:/v1/groups";
     }
 
     @PostMapping("/searchPerson")
@@ -112,20 +113,20 @@ public class CompanyController {
         }
         model.addAttribute("company", companyService.findOne(id));
         model.addAttribute("persons", companyService.getPersons(id));
-        return "company/show";
+        return "groups/show";
     }
 
     @PatchMapping("/{id}/add")
     public String assignPersonToCompany(@PathVariable("id") int companyId,
                                         @ModelAttribute("personId") Person person) {
         companyService.addPersonToCompany(companyId, person);
-        return "redirect:/company/" + companyId;
+        return "redirect:/v1/groups/" + companyId;
     }
 
     @PatchMapping("/{id}/remove")
     public String removePersonFromCompany(@PathVariable("id") int companyId,
                                           @ModelAttribute("personToRemoveId") Person person) {
         companyService.removePersonFromCompany(companyId, person);
-        return "redirect:/company/" + companyId;
+        return "redirect:/v1/groups/" + companyId;
     }
 }
