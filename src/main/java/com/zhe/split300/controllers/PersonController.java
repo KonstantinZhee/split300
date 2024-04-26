@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
-@RequestMapping("/person")
+@RequestMapping("/v1/persons")
 public class PersonController {
 
     private final PersonService personService;
@@ -33,18 +33,18 @@ public class PersonController {
     @GetMapping()
     public String index(Model model) {
         model.addAttribute("person", personService.findAll());
-        return "person/index";
+        return "persons/index";
     }
 
     @GetMapping("/{id}")
     public String showPerson(@PathVariable("id") int id, Model model) {
         model.addAttribute("person", personService.findOne(id));
-        return "person/show";
+        return "persons/show";
     }
 
     @GetMapping("/new")
     public String newPerson(@ModelAttribute("person") Person person) {
-        return "person/new";
+        return "persons/new";
     }
 
 
@@ -52,17 +52,17 @@ public class PersonController {
     public String create(@ModelAttribute("person") @Valid Person person, BindingResult bindingResult) {
         personValidator.validate(person, bindingResult);
         if (bindingResult.hasErrors()) {
-            return "person/new";
+            return "persons/new";
         } else {
             personService.save(person);
         }
-        return "redirect:/person";
+        return "redirect:/v1/persons";
     }
 
     @GetMapping("/{id}/edit")
     public String edit(Model model, @PathVariable("id") int id) {
         model.addAttribute("person", personService.findOne(id));
-        return "person/edit";
+        return "persons/edit";
     }
 
     @PatchMapping("/{id}")
@@ -70,22 +70,22 @@ public class PersonController {
                          @PathVariable("id") int id) {
         personValidator.validate(person, bindingResult);
         if (bindingResult.hasErrors()) {
-            return "person/edit";
+            return "persons/edit";
         } else {
             personService.update(id, person);
         }
-        return "redirect:/person";
+        return "redirect:/v1/persons";
     }
 
     @DeleteMapping("/{id}")
     public String delete(@PathVariable("id") int id) {
         personService.delete(id);
-        return "redirect:/person";
+        return "redirect:/v1/persons";
     }
 
     @GetMapping("/find")
     public String showFindPage(@ModelAttribute("person") Person person) {
-        return "person/find";
+        return "persons/find";
     }
 
     @PostMapping("/find")
@@ -98,12 +98,12 @@ public class PersonController {
             personService.findByEmail(email).ifPresent(
                     person -> model.addAttribute("person", person));
         }
-        return "person/showfind";
+        return "persons/showfind";
     }
 
     @GetMapping("/search")
     public String searchPageView() {
-        return "person/search";
+        return "persons/search";
     }
 
     @PostMapping("/search")
@@ -113,7 +113,7 @@ public class PersonController {
             model.addAttribute("persons", personService.searchingByQuery(email));
         } else if (email == null && !name.isBlank())
             model.addAttribute("persons", personService.searchingByQuery(name));
-        return "person/search";
+        return "persons/search";
     }
 
 }
