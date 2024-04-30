@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>ShowOne</title>
+</head>
+<body>
+<h3><a href="/v1"><button>НА ГЛАВНУЮ СТРАНИЦУ</button></a></h3>
+<h3><a th:href="@{/v1/persons/{id}(id=${personId})}"><button>На страницу с Группами пользователя</button></a></h3>
+<div th:if="${company != null}">
+<h1><a th:text="${company.getId() + ',  ' + company.getName()}">VALUE</a></h1>
+<div th:if="${company.getPersons() == null || company.getPersons().isEmpty()}">
+    <h3> <span>Участники в группе не найдены</span></h3>
+</div>
+
+<div th:if="${company.getPersons() != null || company.getPersons().isEmpty()}">
+    <h3><span>Участники в группе:</span></h3>
+    <div th:each="person : ${company.getPersons()}">
+            <span th:text="${person.getId() + ', ' + person.getName() + ', ' + person.getEmail()}"></span>
+    </div>
+</div>
+</div>
+<br>
+<hr/>
+<h3><span>Операции с группой:</span></h3>
+<form th:method="GET" th:action="@{/v1/persons/{id}(id=${personId})/groups/{idc}(idc=${company.getId()})/edit}">
+    <input type="submit" value="Редактировать группу"/>
+</form>
+</body>
+</html>

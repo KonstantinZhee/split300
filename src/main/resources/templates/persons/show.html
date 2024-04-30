@@ -26,7 +26,7 @@
 <div th:if="${companies != null && !companies.isEmpty()}">
     <h3><span>Группы участника:</span></h3>
     <div th:each="company : ${companies}">
-        <form th:method="GET" th:action="@{/v1/groups/{idc}(idc=${company.getId()})}"
+        <form th:method="GET" th:action="@{/v1/persons/{id}/groups/{idc}(idc=${company.getId()}, id=${person.getId()})}"
               th:object="${company}">
             <span th:text="${company.getId() + ', ' + company.getName()}"></span>
             <button type="submit">Выбрать группу</button>

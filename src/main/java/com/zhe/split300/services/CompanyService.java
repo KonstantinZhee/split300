@@ -4,6 +4,7 @@ import com.zhe.split300.models.Company;
 import com.zhe.split300.models.Person;
 import com.zhe.split300.repositories.CompanyRepository;
 import com.zhe.split300.repositories.PersonRepository;
+import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,11 @@ public class CompanyService {
 
     public Company findOne(int id) {
         return companyRepository.findById(id).orElse(null);
+    }
+    public  Company findOneWithPersons(int id) {
+        Optional<Company> company = companyRepository.findById(id);
+        company.ifPresent(value -> Hibernate.initialize(value.getPersons()));
+        return company.orElse(null);
     }
 
     public List<Company> findByPersonId(int personId) {
