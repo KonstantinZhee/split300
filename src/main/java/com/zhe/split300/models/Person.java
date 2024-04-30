@@ -18,7 +18,6 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.util.List;
-import java.util.Objects;
 
 
 @AllArgsConstructor
@@ -34,7 +33,7 @@ public class Person {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @NotBlank(message = "Имя не должно быть пустым.")
+//    @NotBlank(message = "Имя не должно быть пустым.")
     @Size(min = 2, max = 50, message = "Имя должно быть от 2 до 50 символов.")
     @Column(name = "name")
     private String name;
@@ -42,7 +41,7 @@ public class Person {
     @Email(message = "Введите корректный адрес электронной почты. Пример: me@gmail.com.")
     @Column(name = "email")
     @Size(max = 50, message = "Адрес электронной почты  должен быть до 50 символов.")
-    @NotBlank(message = "Поле не должно быть пустым.")
+//    @NotBlank(message = "Поле не должно быть пустым.")
     private String email;
 
     @ToString.Exclude
@@ -57,20 +56,12 @@ public class Person {
     @OneToMany(mappedBy = "personPaidFor")
     private List<PaidFor> paidForActions;
 
+    @OneToMany(mappedBy = "owner")
+    @ToString.Exclude
+    private List<Company> ownedCompanies;
+
     public Person(int id) {
         setId(id);
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Person person = (Person) o;
-        return id == person.id && Objects.equals(name, person.name) && Objects.equals(email, person.email);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name, email);
-    }
 }

@@ -45,24 +45,6 @@ public class CompanyController {
     }
 
 
-    @PostMapping("/v1/groups")
-    //Создаем одну новую запись (2)
-    public String create(@ModelAttribute("company") @Valid Company company, BindingResult bindingResult) {
-        companyValidator.validate(company, bindingResult);
-        if (bindingResult.hasErrors()) {
-            return "groups/new";
-        } else {
-            companyService.save(company);
-        }
-        return "redirect:/v1/groups";
-    }
-
-    @GetMapping("/v1/groups/new")
-    //получаем форму новой записи (3)
-    public String newCompany(@ModelAttribute("company") Company company) {
-        return "groups/new";
-    }
-
     @GetMapping("/v1/groups/{id}/edit")
     //Форма редактирования (4)
     public String edit(Model model, @PathVariable("id") int id) {
@@ -137,6 +119,7 @@ public class CompanyController {
         log.info("getCompaniesByPersonId\npersonId:\t{}", personId);
         model.addAttribute("companies", companyService.findByPersonId(personId));
         model.addAttribute("person", personService.findOne(personId));
+        model.addAttribute("ownedCompanies", companyService.findByOwnerId(personId));
         return "persons/show";
     }
 
@@ -147,5 +130,27 @@ public class CompanyController {
         model.addAttribute("company", companyService.findOneWithPersons(companyId));
         model.addAttribute("personId", personId);
         return "groups/showOne";
+    }
+
+    @GetMapping("/v1/persons/{id}/groups/new")
+    //получаем форму новой записи, где пользователь хозяин группы
+    public String newCompany(Model model, @ModelAttribute("company") Company company,
+                             @PathVariable("id") int personId) {
+        model.addAttribute("personId", personId);
+            return "groups/new";
+    }
+    @PostMapping("/v1/persons/{id}/groups")
+    //создаем новую группу с владельцем
+    public String create(Model model, @ModelAttribute("company") @Valid Company company,
+                         BindingResult bindingResult, @PathVariable("id") int personId) {
+        companyValidator.validate(company, bindingResult);
+        model.addAttribute("personId", personId);
+        if (bindingResult.hasErrors()) {
+            return "groups/new";
+        } else {
+            company.setOwner(personService.findOne(personId));
+            companyService.save(company);
+            return String.format("redirect:/v1/persons/%d/groups/%d", personId, company.getId());
+        }
     }
 }

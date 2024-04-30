@@ -48,6 +48,9 @@ public class CompanyService {
         return companyRepository.findByPersons(Collections.singletonList
                 (new Person(personId)));
     }
+    public List<Company> findByOwnerId(int ownerId) {
+        return companyRepository.findByOwner(new Person(ownerId));
+    }
 
     @Transactional
     public void save(Company company) {

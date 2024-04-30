@@ -18,13 +18,12 @@
     <input type="submit"  value="Показать группы"/>
 </form>
 </div>
-
 <div th:if="${companies != null && companies.isEmpty()}">
-    <h3> <span>Группы не найдены</span></h3>
+    <h3> <span>Группы, где Вы участник не найдены</span></h3>
 </div>
 
 <div th:if="${companies != null && !companies.isEmpty()}">
-    <h3><span>Группы участника:</span></h3>
+    <h3><span>Группы, где вы участник:</span></h3>
     <div th:each="company : ${companies}">
         <form th:method="GET" th:action="@{/v1/persons/{id}/groups/{idc}(idc=${company.getId()}, id=${person.getId()})}"
               th:object="${company}">
@@ -33,14 +32,36 @@
         </form>
     </div>
 </div>
+<br>
+</div>
 
+<div th:if="${ownedCompanies != null && ownedCompanies.isEmpty()}">
+    <h3> <span>Группы, где Вы владелец не найдены</span></h3>
+</div>
+
+<div th:if="${ownedCompanies != null && !ownedCompanies.isEmpty()}">
+    <h3><span>Группы, где вы владелец:</span></h3>
+    <div th:each="ownedCompany : ${ownedCompanies}">
+        <form th:method="GET" th:action="@{/v1/persons/{id}/groups/{idc}(idc=${ownedCompany.getId()}, id=${person.getId()})}"
+              th:object="${company}">
+            <span th:text="${ownedCompany.getId() + ', ' + ownedCompany.getName()}"></span>
+            <button type="submit">Выбрать группу</button>
+        </form>
+    </div>
+</div>
+<br>
+<form th:method="GET" th:action="@{/v1/persons/{id}/groups/new(id=${person.getId()})}">
+    <input type="submit" value="Создать новую группу"/>
+</form>
+<br>
+<hr>
 <br>
 <form th:method="GET" th:action="@{/v1/persons/{id}/edit(id=${person.getId()})}">
-    <input type="submit" value="Редактировать"/>
+    <input type="submit" value="Редактировать данные пользователя"/>
 </form>
 <br>
 <form th:method="DELETE" th:action="@{/v1/persons/{id}(id=${person.getId()})}">
-    <input type="submit" value="Удалить"/>
+    <input type="submit" value="Удалить данные пользователя"/>
 </form>
 </body>
 </html>

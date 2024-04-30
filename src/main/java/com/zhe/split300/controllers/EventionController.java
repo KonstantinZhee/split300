@@ -10,11 +10,12 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/eventions")
+@RequestMapping
 public class EventionController {
     private final EventionService eventionService;
 
@@ -37,5 +38,11 @@ public class EventionController {
             eventionService.save(evention);
         }
         return "redirect:/eventions";
+    }
+    @GetMapping("/v1/persons/{id}/groups/{idc}/events/new")
+    public String setNewEvention(@ModelAttribute("evention") Evention evention, @PathVariable("id") int personId,
+                                 @PathVariable("idc") int companyId) {
+
+        return "";
     }
 }

@@ -14,7 +14,7 @@
     <h3> <span>Участники в группе не найдены</span></h3>
 </div>
 
-<div th:if="${company.getPersons() != null || company.getPersons().isEmpty()}">
+<div th:if="${!company.getPersons().isEmpty()}">
     <h3><span>Участники в группе:</span></h3>
     <div th:each="person : ${company.getPersons()}">
             <span th:text="${person.getId() + ', ' + person.getName() + ', ' + person.getEmail()}"></span>
@@ -25,7 +25,7 @@
 <hr/>
 <h3><span>Операции с группой:</span></h3>
 <form th:method="GET" th:action="@{/v1/persons/{id}(id=${personId})/groups/{idc}(idc=${company.getId()})/edit}">
-    <input type="submit" value="Редактировать группу"/>
+    <input type="submit" value="РЕДАКТИРОВАТЬ ГРУППУ"/>
 </form>
 </body>
 </html>

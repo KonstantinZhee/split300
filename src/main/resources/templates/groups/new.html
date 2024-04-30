@@ -7,19 +7,17 @@
 </head>
 <body>
 <h3><a href="/v1"><button>НА ГЛАВНУЮ СТРАНИЦУ</button></a></h3>
-<form th:method="POST" th:action="@{/v1/groups}" th:object="${company}">
-    <label for="name"> Введите Имя: </label>
+<form th:method="POST" th:action="@{/v1/persons/{idp}/groups(idp=${personId})}" th:object="${company}">
+    <label for="name"> Введите Имя Новой Группы: </label>
     <input type="text" th:field="*{name}" id="name"/>
     <div style="color:red" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name Error</div>
     <br/>
     <input type="submit" value="Создать!"/>
 </form>
 <br><br/><hr>
-<a href="/v1/groups"><button>На страницу с Группами</button></a>
-<br><br/>
-<a href="/v1/groups/new"><button>Добавить новую Группу в базу данных</button></a>
-<br><br/>
-<a href="/v1/groups/search"><button>Искать Группу по Названию</button></a>
+<form th:method="GET" th:action="@{/v1/persons/{idp}/groups(idp=${personId})}">
+    <input type="submit" value="Создать новую группу"/>
+</form>
 <hr><br><br/>
 </body>
 </html>
