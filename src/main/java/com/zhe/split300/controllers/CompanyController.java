@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
+import java.util.Map;
 
 
 @Log4j2
@@ -64,18 +65,7 @@ public class CompanyController {
         return "groups/show";
     }
 
-    @PatchMapping("/v1/groups/{id}")
-    //Обновление одной записи (6)
-    public String update(@ModelAttribute("company") @Valid Company company, BindingResult bindingResult,
-                         @PathVariable("id") int id) {
-        companyValidator.validate(company, bindingResult);
-        if (bindingResult.hasErrors()) {
-            return "groups/edit";
-        } else {
-            companyService.update(id, company);
-        }
-        return "redirect:/v1/groups";
-    }
+
 
     @DeleteMapping("/v1/groups/{id}")
     //Удаление одной записи (7)
@@ -84,34 +74,11 @@ public class CompanyController {
         return "redirect:/v1/groups";
     }
 
-    @PostMapping("/v1/groups/searchPerson")
-    //Поиск всех людей и добавление выбранного
-    public String searchPerson(Model model, @RequestParam(value = "name", required = false) String name,
-                               @RequestParam(value = "email", required = false) String email,
-                               @RequestParam(value = "id") int id) {
-        if (name == null && !email.isBlank()) {
-            model.addAttribute("personsResponse", personService.searchingByQuery(email));
-        } else if (email == null && !name.isBlank()) {
-            model.addAttribute("personsResponse", personService.searchingByQuery(name));
-        }
-        model.addAttribute("company", companyService.findOne(id));
-        model.addAttribute("persons", companyService.getPersons(id));
-        return "groups/show";
-    }
 
-    @PatchMapping("/v1/groups/{id}/add")
-    public String assignPersonToCompany(@PathVariable("id") int companyId,
-                                        @ModelAttribute("personId") Person person) {
-        companyService.addPersonToCompany(companyId, person);
-        return "redirect:/v1/groups/" + companyId;
-    }
 
-    @PatchMapping("/v1/groups/{id}/remove")
-    public String removePersonFromCompany(@PathVariable("id") int companyId,
-                                          @ModelAttribute("personToRemoveId") Person person) {
-        companyService.removePersonFromCompany(companyId, person);
-        return "redirect:/v1/groups/" + companyId;
-    }
+
+
+///ToDo выше не должно быть методов!!!!!!!!!!!!!!!!!!!!!
 
     @GetMapping("/v1/persons/{id}/groups")
     //Просмотр групп в которых есть участник
@@ -127,9 +94,12 @@ public class CompanyController {
     //Выбираем группу в которой состоит участник для дальнейшей работы с ней.
     public String selectPersonsCompanyById(Model model, @PathVariable("id") int personId,
                                            @PathVariable("idc") int companyId) {
+        log.info("GET     /v1/persons/{id}/groups/{idc}");
         model.addAttribute("company", companyService.findOneWithPersons(companyId));
         model.addAttribute("personId", personId);
+        model.addAttribute("id", companyId);
         return "groups/showOne";
+        //ToDo отображение событий в группе при выборе группы.
     }
 
     @GetMapping("/v1/persons/{id}/groups/new")
@@ -143,14 +113,90 @@ public class CompanyController {
     //создаем новую группу с владельцем
     public String create(Model model, @ModelAttribute("company") @Valid Company company,
                          BindingResult bindingResult, @PathVariable("id") int personId) {
+        log.info("POST    /v1/persons/{id}/groups");
         companyValidator.validate(company, bindingResult);
         model.addAttribute("personId", personId);
         if (bindingResult.hasErrors()) {
+            log.info("groups/new");
             return "groups/new";
         } else {
             company.setOwner(personService.findOne(personId));
             companyService.save(company);
+            log.info(String.format("redirect:/v1/persons/%d/groups/%d", personId, company.getId()));
             return String.format("redirect:/v1/persons/%d/groups/%d", personId, company.getId());
         }
+    }
+
+    @GetMapping("/v1/persons/{id}/groups/{idc}/edit")
+    //получаем форму составления новой записи, где пользователь хозяин группы
+    public String getPageToEditCompany(Model model, @ModelAttribute("company") Company company,
+                             @PathVariable("id") int personId, @PathVariable("idc") int companyId) {
+        log.info("GET    /v1/persons/{id}/groups/{idc}/edit");
+        model.addAttribute("personId", personId);
+        model.addAttribute("companyId", companyId);
+        model.addAttribute("company", companyService.findOne(companyId));
+        if (companyService.isOwner(personId, companyId)){
+            log.info("groups/edit");
+            return "groups/edit";
+        }
+        log.info(String.format("redirect:/v1/persons/%d/groups/%d", personId, companyId));
+        return String.format("redirect:/v1/persons/%d/groups/%d", personId, companyId);
+    }
+
+    @PatchMapping("/v1/persons/{id}/groups/{idc}")
+    //принимаем PATCH, чтобы изменить название группы
+    public String editCompany(Model model, @ModelAttribute("company") @Valid Company company,
+                              @PathVariable("id") int personId, @PathVariable("idc") int companyId,
+                              BindingResult bindingResult) {
+        log.info("PATCH     /v1/persons/{id}/groups/{idc}");
+        model.addAttribute("personId", personId);
+        model.addAttribute("companyId", companyId);
+        companyValidator.validate(company, bindingResult);
+        if (bindingResult.hasErrors()) {
+            log.info("groups/edit");
+            return "groups/edit";
+        } else {
+            companyService.update(companyId, personId, company);
+        }log.info(String.format("redirect:/v1/persons/%d/groups/%d", personId, companyId));
+        return String.format("redirect:/v1/persons/%d/groups/%d", personId, companyId);
+    }
+
+    @PostMapping("/v1/persons/{id}/groups/{idc}")
+    //Поиск всех людей для дальнейшего добавления в группу
+    public String searchPerson(Model model, @PathVariable("id") int personId, @PathVariable("idc") int companyId,
+                               @RequestParam(value = "name", required = false) String name,
+                               @RequestParam(value = "email", required = false) String email,
+                               @RequestParam(value = "id") int id) {
+        log.info("POST    /v1/persons/{id}/groups/{idc}");
+        if (name == null && !email.isBlank()) {
+            model.addAttribute("personsResponse", personService.searchingByQuery(email));
+        } else if (email == null && !name.isBlank()) {
+            model.addAttribute("personsResponse", personService.searchingByQuery(name));
+        }
+        model.addAttribute("company", companyService.findOne(id));
+        model.addAttribute("persons", companyService.getPersons(id));
+        model.addAttribute("personId", personId);
+        model.addAttribute("companyId", companyId);
+        log.info("groups/edit");
+        return "groups/edit";
+    }
+
+    @PatchMapping("/v1/persons/{id}/groups/{idc}/add")
+    //Добавить человека в группу
+    public String assignPersonToCompany(@PathVariable("id") int personId, @PathVariable("idc") int companyId,
+                                        @ModelAttribute("personToAdd") Person person) {
+        log.info("PATCH    /v1/persons/{id}/groups/{idc}/add");
+        companyService.addPersonToCompany(companyId, person);
+        log.info("groups/edit");
+        return String.format("redirect:/v1/persons/%d/groups/%d/edit", personId, companyId);
+    }
+
+    @PatchMapping("/v1/persons/{id}/groups/{idc}/remove")
+    public String removePersonFromCompany(@PathVariable("id") int personId, @PathVariable("idc") int companyId,
+                                          @ModelAttribute("personToRemoveId") Person person) {
+        log.info("PATCH     /v1/persons/{id}/groups/{idc}/remove");
+        companyService.removePersonFromCompany(companyId, person);
+        log.info(String.format("redirect:/v1/persons/%d/groups/%d", personId, companyId));
+        return String.format("redirect:/v1/persons/%d/groups/%d/edit", personId, companyId);
     }
 }

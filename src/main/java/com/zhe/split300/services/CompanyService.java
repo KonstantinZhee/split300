@@ -51,6 +51,14 @@ public class CompanyService {
     public List<Company> findByOwnerId(int ownerId) {
         return companyRepository.findByOwner(new Person(ownerId));
     }
+    public boolean isOwner (int personId, int companyId) {
+       Optional<Company> optionalCompany = companyRepository.findById(companyId);
+       int ownerId = 0;
+       if(optionalCompany.isPresent()) {
+          ownerId = optionalCompany.get().getOwner().getId();
+       }
+        return ownerId == personId;
+    }
 
     @Transactional
     public void save(Company company) {
@@ -58,9 +66,11 @@ public class CompanyService {
     }
 
     @Transactional
-    public void update(int id, Company company) {
-        company.setId(id);
-        companyRepository.save(company);
+    public void update(int companyId, int personId,Company company) {
+        Company companyToSave = companyRepository.findById(companyId).orElse(null);
+        assert companyToSave != null;
+        companyToSave.setName(company.getName());
+        companyRepository.save(companyToSave);
     }
 
     @Transactional
