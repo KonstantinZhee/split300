@@ -3,6 +3,7 @@ package com.zhe.split300.controllers;
 import com.zhe.split300.models.Company;
 import com.zhe.split300.models.Person;
 import com.zhe.split300.services.CompanyService;
+import com.zhe.split300.services.EventionService;
 import com.zhe.split300.services.PersonService;
 import com.zhe.split300.utils.CompanyValidator;
 import jakarta.validation.Valid;
@@ -29,13 +30,15 @@ public class CompanyController {
     private final CompanyService companyService;
     private final CompanyValidator companyValidator;
     private final PersonService personService;
+    private final EventionService eventionService;
 
     @Autowired
     public CompanyController(CompanyService companyService, CompanyValidator companyValidator,
-                             PersonService personService) {
+                             PersonService personService, EventionService eventionService) {
         this.companyService = companyService;
         this.companyValidator = companyValidator;
         this.personService = personService;
+        this.eventionService = eventionService;
     }
 
     @GetMapping("/v1/groups")
@@ -74,10 +77,6 @@ public class CompanyController {
         return "redirect:/v1/groups";
     }
 
-
-
-
-
 ///ToDo выше не должно быть методов!!!!!!!!!!!!!!!!!!!!!
 
     @GetMapping("/v1/persons/{id}/groups")
@@ -95,9 +94,10 @@ public class CompanyController {
     public String selectPersonsCompanyById(Model model, @PathVariable("id") int personId,
                                            @PathVariable("idc") int companyId) {
         log.info("GET     /v1/persons/{id}/groups/{idc}");
-        model.addAttribute("company", companyService.findOneWithPersons(companyId));
         model.addAttribute("personId", personId);
-        model.addAttribute("id", companyId);
+        model.addAttribute("companyId", companyId);
+        model.addAttribute("company", companyService.findOneWithPersons(companyId));
+        model.addAttribute("eventions", eventionService.findByCompanyId(companyId));
         return "groups/showOne";
         //ToDo отображение событий в группе при выборе группы.
     }
@@ -194,6 +194,7 @@ public class CompanyController {
     }
 
     @PatchMapping("/v1/persons/{id}/groups/{idc}/remove")
+    //Удалить человека из группы.
     public String removePersonFromCompany(@PathVariable("id") int personId, @PathVariable("idc") int companyId,
                                           @ModelAttribute("personToRemoveId") Person person) {
         log.info("PATCH     /v1/persons/{id}/groups/{idc}/remove");

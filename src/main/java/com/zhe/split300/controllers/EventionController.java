@@ -1,6 +1,5 @@
 package com.zhe.split300.controllers;
 
-import com.zhe.split300.models.Company;
 import com.zhe.split300.models.Evention;
 import com.zhe.split300.services.EventionService;
 import jakarta.validation.Valid;
@@ -24,25 +23,35 @@ public class EventionController {
         this.eventionService = eventionService;
     }
 
-    @GetMapping()
-    public String index(Model model) {
-        model.addAttribute("evention", eventionService.findAll());
-        return "eventions/index";
+    @GetMapping("/v1/persons/{id}/groups/{idc}/events")
+    public String getAllEventionsByCompanyId(Model model, @PathVariable("id") int personId,
+                                             @PathVariable("idc") int companyId) {
+        model.addAttribute("evention", eventionService.findByCompanyId(companyId));
+        model.addAttribute("personId", personId);
+        model.addAttribute("companyId", companyId);
+        return "groups/showOne";
     }
-    @PostMapping()
-    //Создаем одну новую запись (2)
-    public String create(@ModelAttribute("evention") @Valid Evention evention, BindingResult bindingResult) {
+    @PostMapping("/v1/persons/{id}/groups/{idc}/events")
+    //Создаем одну новую запись события
+    public String create(@ModelAttribute("evention") @Valid Evention evention, BindingResult bindingResult,
+                         @PathVariable("id") int personId, @PathVariable("idc") int companyId, Model model) {
+        model.addAttribute("personId", personId);
+        model.addAttribute("companyId", companyId);
         if (bindingResult.hasErrors()) {
             return "eventions/new";
         } else {
-            eventionService.save(evention);
+            eventionService.createNewEvention(evention, companyId);
+            model.addAttribute("eventionUID", evention.getUid());
         }
-        return "redirect:/eventions";
+        return "redirect:/v1/persons/{id}/groups/{idc}";
     }
-    @GetMapping("/v1/persons/{id}/groups/{idc}/events/new")
-    public String setNewEvention(@ModelAttribute("evention") Evention evention, @PathVariable("id") int personId,
-                                 @PathVariable("idc") int companyId) {
 
-        return "";
+    @GetMapping("/v1/persons/{id}/groups/{idc}/events/new")
+    public String setNewEvention(Model model, @ModelAttribute("evention") Evention evention,
+                                 @PathVariable("id") int personId,
+                                 @PathVariable("idc") int companyId) {
+        model.addAttribute("personId", personId);
+        model.addAttribute("companyId", companyId);
+        return "eventions/new";
     }
 }
