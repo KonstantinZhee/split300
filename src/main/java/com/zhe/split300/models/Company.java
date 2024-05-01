@@ -57,4 +57,8 @@ public class Company {
     @ManyToOne
     @JoinColumn(name = "owner_id", referencedColumnName = "id")
     private Person owner;
+
+    public Company(int companyId) {
+        this.id = companyId;
+    }
 }
