@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 
 
 @Service
@@ -51,6 +52,13 @@ public class CompanyService {
     public List<Company> findByOwnerId(int ownerId) {
         return companyRepository.findByOwner(new Person(ownerId));
     }
+    public boolean isOwner (int personId, int companyId) {
+       Optional<Company> optionalCompany = companyRepository.findById(companyId);
+        AtomicInteger ownerId = new AtomicInteger();
+        optionalCompany.flatMap(company -> Optional.ofNullable(company.getOwner()))
+                .ifPresent(person -> ownerId.set(person.getId()));
+        return ownerId.get() == personId;
+    }
 
     @Transactional
     public void save(Company company) {
@@ -58,9 +66,11 @@ public class CompanyService {
     }
 
     @Transactional
-    public void update(int id, Company company) {
-        company.setId(id);
-        companyRepository.save(company);
+    public void update(int companyId, int personId,Company company) {
+        Company companyToSave = companyRepository.findById(companyId).orElse(null);
+        assert companyToSave != null;
+        companyToSave.setName(company.getName());
+        companyRepository.save(companyToSave);
     }
 
     @Transactional
