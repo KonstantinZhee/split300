@@ -59,6 +59,10 @@ public class Person {
     @ToString.Exclude
     private List<Company> ownedCompanies;
 
+    @ToString.Exclude
+    @ManyToMany(mappedBy = "persons")
+    private List<Company> eventions;
+
     public Person(int id) {
         setId(id);
     }

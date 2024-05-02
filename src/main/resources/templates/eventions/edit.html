@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Редактировать событие</title>
+</head>
+<body>
+<h3><a href="/v1">
+    <button>НА ГЛАВНУЮ СТРАНИЦУ</button>
+</a></h3>
+<h3><a th:href="@{/v1/persons/{id}/groups/{idc}/events/{eUID}(id=${personId}, idc=${companyId}, eUID=${eventionId})}">
+    <button>Выйти из редактирования</button>
+</a></h3>
+
+<hr/>
+<div th:if="${evention != null}">
+    <form th:method="PATCH"
+          th:action="@{/v1/persons/{id}/groups/{idc}/events/{eUID}(id=${personId}, idc=${companyId}, eUID=${eventionId})}"
+          th:object="${evention}">
+        <label for="eventionName">Введите новое название События: </label>
+        <input type="text" th:field="*{name}" id="eventionName"/>
+        <div style="color:red" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name Error
+        </div>
+        <input type="submit" value="Сменить название События"/>
+    </form>
+    <hr>
+    <h1><a th:text="${evention.getName()}"></a></h1>
+    <h3><a th:text="${'Дата создания: ' + evention.getStartTime()}"></a></h3>
+    <h2><a th:text="${'Расходы: ' + evention.getBalance()}"></a></h2>
+    <div th:if="${company != null}">
+        <h3><a th:text="${'Событие принадлежит группе: ' + company.getName()}">VALUE</a></h3>
+        <div th:if="${company.getOwner() != null}">
+            <h3><span>Владелец Группы События: </span><a th:text="${company.getOwner().getName()}">VALUE</a></h3>
+        </div>
+        <hr>
+        <div th:if="${company.getPersons() == null || company.getPersons().isEmpty()}">
+            <h3><span>Участники в группе не найдены</span></h3>
+        </div>
+        <div th:if="${company.getPersons() != null}">
+            <div th:if="${!company.getPersons().isEmpty()}">
+                <h3><span>Участники группы:</span></h3>
+                <div th:each="person : ${company.getPersons()}">
+                    <form th:method="PATCH"
+                          th:action="@{/v1/persons/{id}/groups/{idc}/events/{eUID}/addPerson(id=${personId}, idc=${companyId}, eUID=${eventionId})}"
+                          th:object="${person}">
+                        <span th:text="${person.getName() + ', ' + person.getEmail()}"></span>
+                        <button type="submit" name="id" id="personToAdd" th:value="${person.getId()}">Добавить в
+                            Событие
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr>
+    <div th:if="${evention.getPersons() == null || evention.getPersons().isEmpty()}">
+        <h3><span>Участники События отсутствуют</span></h3>
+    </div>
+    <div th:if="${evention.getPersons() != null}">
+        <div th:if="${!evention.getPersons().isEmpty()}">
+            <h3><span>Участники События:</span></h3>
+            <div th:each="person : ${evention.getPersons()}">
+                <form th:method="PATCH"
+                      th:action="@{/v1/persons/{id}/groups/{idc}/events/{eUID}/removePerson(id=${personId}, idc=${companyId}, eUID=${eventionId})}"
+                      th:object="${person}">
+                    <span th:text="${person.getName() + ', ' + person.getEmail()}"></span>
+                    <button type="submit" name="id" id="personToRemove" th:value="${person.getId()}">Исключить из
+                        События
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

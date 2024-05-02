@@ -39,7 +39,7 @@
     <h3><span>Список событий в группе:</span></h3>
     <div th:each="evention : ${eventions}">
         <form th:method="GET"
-              th:action="@{/v1/persons/{id}/groups/{idc}/eventions{ide}(idc=${companyId}, id=${personId}, ide=${evention.getUid()})}"
+              th:action="@{/v1/persons/{id}/groups/{idc}/events/{ide}(idc=${companyId}, id=${personId}, ide=${evention.getUid()})}"
               th:object="${evention}">
             <span th:text="${evention.getName()}"></span>
             <button type="submit">Выбрать событие</button>

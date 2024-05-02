@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
-import java.util.Map;
 
 
 @Log4j2
@@ -52,7 +51,7 @@ public class CompanyController {
     @GetMapping("/v1/groups/{id}/edit")
     //Форма редактирования (4)
     public String edit(Model model, @PathVariable("id") int id) {
-        model.addAttribute("company", companyService.findOne(id));
+        model.addAttribute("company", companyService.findOneById(id));
         return "groups/edit";
     }
 
@@ -60,7 +59,7 @@ public class CompanyController {
     //Читаем одну запись (5)
     public String showCompany(@PathVariable("id") int id, Model model,
                               @ModelAttribute("person") Person person) {
-        model.addAttribute("company", companyService.findOne(id));
+        model.addAttribute("company", companyService.findOneById(id));
         List<Person> persons = companyService.getPersons(id);
         if (persons != null) {
             model.addAttribute("persons", persons);
@@ -134,7 +133,7 @@ public class CompanyController {
         log.info("GET    /v1/persons/{id}/groups/{idc}/edit");
         model.addAttribute("personId", personId);
         model.addAttribute("companyId", companyId);
-        model.addAttribute("company", companyService.findOne(companyId));
+        model.addAttribute("company", companyService.findOneById(companyId));
         if (companyService.isOwner(personId, companyId)){
             log.info("groups/edit");
             return "groups/edit";
@@ -173,7 +172,7 @@ public class CompanyController {
         } else if (email == null && !name.isBlank()) {
             model.addAttribute("personsResponse", personService.searchingByQuery(name));
         }
-        model.addAttribute("company", companyService.findOne(id));
+        model.addAttribute("company", companyService.findOneById(id));
         model.addAttribute("persons", companyService.getPersons(id));
         model.addAttribute("personId", personId);
         model.addAttribute("companyId", companyId);

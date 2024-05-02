@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>Show Evention</title>
+</head>
+<body>
+<h3><a href="/v1">
+    <button>НА ГЛАВНУЮ СТРАНИЦУ</button>
+</a></h3>
+<h3><a th:href="@{/v1/persons/{id}/groups/{idc}(id=${personId}, idc=${companyId})}">
+    <button>На страницу с Группой пользователей</button>
+</a></h3>
+<hr/>
+<div th:if="${evention != null}">
+    <h1><a th:text="${evention.getName()}"></a></h1>
+    <h3><a th:text="${'Дата создания: ' + evention.getStartTime()}"></a></h3>
+    <h2><a th:text="${'Расходы: ' + evention.getBalance()}"></a></h2>
+</div>
+
+<hr>
+<h3><span>Операции с событием:</span></h3>
+<form th:method="GET" th:action="@{/v1/persons/{id}/groups/{idc}/events/{eUID}/operations/new(idc=${companyId}, id=${personId}, eUID=${eventionId})}">
+    <input type="submit" value="Добавить новую операцию ?"/>
+</form>
+<br>
+<form th:method="GET" th:action="@{/v1/persons/{id}/groups/{idc}/events/{eUID}/edit(idc=${companyId}, id=${personId}, eUID=${eventionId})}">
+    <input type="submit" value="Редактировать событие ?"/>
+</form>
+</body>
+</html>

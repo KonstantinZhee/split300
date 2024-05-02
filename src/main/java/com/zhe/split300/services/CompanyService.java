@@ -36,7 +36,7 @@ public class CompanyService {
         return companyRepository.findAll();
     }
 
-    public Company findOne(int id) {
+    public Company findOneById(int id) {
         return companyRepository.findById(id).orElse(null);
     }
     public  Company findOneWithPersons(int id) {

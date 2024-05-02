@@ -5,6 +5,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -20,6 +22,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.UuidGenerator;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.math.BigDecimal;
@@ -68,4 +71,12 @@ public class Evention {
     @OneToMany(mappedBy = "evention")
     @ToString.Exclude
     private List<Operation> operations;
+
+    @ToString.Exclude
+    @ManyToMany
+    @JoinTable(
+            name = "person_evention",
+            joinColumns = @JoinColumn(name = "evention_id"),
+            inverseJoinColumns = @JoinColumn(name = "person_id"))
+    private List<Person> persons;
 }
