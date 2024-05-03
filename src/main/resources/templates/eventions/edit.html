@@ -28,7 +28,7 @@
     <h3><a th:text="${'Дата создания: ' + evention.getStartTime()}"></a></h3>
     <h2><a th:text="${'Расходы: ' + evention.getBalance()}"></a></h2>
     <div th:if="${company != null}">
-        <h3><a th:text="${'Событие принадлежит группе: ' + company.getName()}">VALUE</a></h3>
+        <h3><a th:text="${'Событие принадлежит Группе с названием: ' + company.getName()}">VALUE</a></h3>
         <div th:if="${company.getOwner() != null}">
             <h3><span>Владелец Группы События: </span><a th:text="${company.getOwner().getName()}">VALUE</a></h3>
         </div>
