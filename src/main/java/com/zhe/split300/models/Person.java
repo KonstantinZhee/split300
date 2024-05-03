@@ -1,7 +1,9 @@
 package com.zhe.split300.models;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -60,7 +62,7 @@ public class Person {
     private List<Company> ownedCompanies;
 
     @ToString.Exclude
-    @ManyToMany(mappedBy = "persons")
+    @ManyToMany(mappedBy = "persons", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     private List<Company> eventions;
 
     public Person(int id) {

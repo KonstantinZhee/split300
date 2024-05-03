@@ -6,7 +6,10 @@ import com.zhe.split300.models.Person;
 import com.zhe.split300.repositories.CompanyRepository;
 import com.zhe.split300.repositories.EventionRepository;
 import com.zhe.split300.repositories.PersonRepository;
+import lombok.extern.log4j.Log4j2;
 import org.hibernate.Hibernate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +24,7 @@ import java.util.UUID;
 @Service
 @Transactional(readOnly = true)
 public class EventionService {
+    private static final Logger log = LoggerFactory.getLogger(EventionService.class);
     private final EventionRepository eventionRepository;
     private final CompanyRepository companyRepository;
     private final PersonRepository personRepository;
@@ -54,7 +58,7 @@ public class EventionService {
         return eventionRepository.findById(eventionId).orElse(null);
     }
 
-    public Evention findOneWithPersons(UUID id) {
+    public Evention findOneWithPersonsCompany(UUID id) {
         Optional<Evention> evention = eventionRepository.findById(id);
         evention.ifPresent(event -> {
 //            Hibernate.initialize(event.getPersons());
@@ -67,17 +71,16 @@ public class EventionService {
 
     @Transactional
     public void addPersonToEvention(UUID eventionId, Person selectedPerson) {
+        log.info("\n\nREQUEST"+ selectedPerson+"\n");
         eventionRepository.findById(eventionId).ifPresent(evention -> {
-            ArrayList<Person> persons = new ArrayList<>(evention.getPersons());
-            for (Person person : persons) {
-                if (person.getId() == selectedPerson.getId()) {
+            List<Person> eventionPersons = evention.getPersons();
+            log.info(eventionPersons.toString());
+            for (Person eventionPerson : eventionPersons) {
+                if (eventionPerson.getId() == (selectedPerson.getId())) {
                     return;
                 }
             }
-            personRepository.findById(selectedPerson.getId()).ifPresent(person -> {
-                persons.add(person);
-                evention.setPersons(persons);
-            });
+            personRepository.findById(selectedPerson.getId()).ifPresent(eventionPersons::add);
         });
     }
 
