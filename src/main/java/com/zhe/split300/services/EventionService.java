@@ -62,26 +62,18 @@ public class EventionService {
 
     @Transactional
     public void addPersonToEvention(UUID eventionId, Person selectedPerson) {
-        log.info("\n\nREQUEST" + selectedPerson + "\n");
         eventionRepository.findById(eventionId).ifPresent(evention -> {
-            for (Person eventionPerson : evention.getPersons()) {
-                if (eventionPerson.getId() == (selectedPerson.getId())) {
-                    return;
-                }
+            if (evention.getPersons().stream().anyMatch(person -> person.getId() == selectedPerson.getId())) {
+                return;
             }
             personRepository.findById(selectedPerson.getId()).ifPresent(evention.getPersons()::add);
         });
     }
 
     @Transactional
-    public void removePersonFromEvention(UUID eventionId, Person personToRemove) {
+    public void removePersonFromEvention(UUID eventionId, Person selectedPerson) {
         eventionRepository.findById(eventionId).ifPresent(evention -> {
-            for (Person person : evention.getPersons()) {
-                if (person.getId() == personToRemove.getId()) {
-                    evention.getPersons().remove(personToRemove);
-                    break;
-                }
-            }
+            evention.getPersons().removeIf(person -> person.getId() == selectedPerson.getId());
         });
     }
 }

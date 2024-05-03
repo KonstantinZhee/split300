@@ -3,7 +3,6 @@ package com.zhe.split300.models;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -11,6 +10,7 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -34,7 +34,7 @@ public class Person {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-//    @NotBlank(message = "Имя не должно быть пустым.")
+    @NotBlank(message = "Имя не должно быть пустым.")
     @Size(min = 2, max = 50, message = "Имя должно быть от 2 до 50 символов.")
     @Column(name = "name")
     private String name;
@@ -42,7 +42,7 @@ public class Person {
     @Email(message = "Введите корректный адрес электронной почты. Пример: me@gmail.com.")
     @Column(name = "email")
     @Size(max = 50, message = "Адрес электронной почты  должен быть до 50 символов.")
-//    @NotBlank(message = "Поле не должно быть пустым.")
+    @NotBlank(message = "Поле не должно быть пустым.")
     private String email;
 
     @ToString.Exclude
