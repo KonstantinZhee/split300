@@ -92,8 +92,9 @@ public class EventionController {
                                @PathVariable("idc") int companyId,
                                @PathVariable("eUID") UUID eventionId) {
         log.info("GET  /v1/persons/{id}/groups/{idc}/events/{eUID}/edit");
-        model.addAttribute("evention", eventionService.findOneWithPersons(eventionId));
-        model.addAttribute("company", companyService.findOneWithPersons(companyId));
+        Evention evention = eventionService.findOneWithPersonsCompany(eventionId);
+        model.addAttribute("evention", evention);
+        model.addAttribute("company", evention.getCompany());
         model.addAttribute("personId", personId);
         model.addAttribute("companyId", companyId);
         model.addAttribute("eventionId", eventionId);
