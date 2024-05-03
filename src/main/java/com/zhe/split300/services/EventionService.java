@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -56,14 +55,8 @@ public class EventionService {
         return eventionRepository.findById(eventionId).orElse(null);
     }
 
-    public Evention findOneWithPersonsCompany(UUID id) {
+    public Evention findOneWithPersonsAndCompany(UUID id) {
         Optional<Evention> evention = eventionRepository.findById(id);
-        evention.ifPresent(event -> {
-//            Hibernate.initialize(event.getPersons());
-            List<Person> personsEvention = event.getPersons();
-            Company company = event.getCompany();
-            List<Person> personsCompany = company.getPersons();
-        });
         return evention.orElse(null);
     }
 
@@ -71,30 +64,23 @@ public class EventionService {
     public void addPersonToEvention(UUID eventionId, Person selectedPerson) {
         log.info("\n\nREQUEST" + selectedPerson + "\n");
         eventionRepository.findById(eventionId).ifPresent(evention -> {
-            List<Person> eventionPersons = evention.getPersons();
-            log.info(eventionPersons.toString());
-            for (Person eventionPerson : eventionPersons) {
+            for (Person eventionPerson : evention.getPersons()) {
                 if (eventionPerson.getId() == (selectedPerson.getId())) {
                     return;
                 }
             }
-            personRepository.findById(selectedPerson.getId()).ifPresent(eventionPersons::add);
+            personRepository.findById(selectedPerson.getId()).ifPresent(evention.getPersons()::add);
         });
     }
 
     @Transactional
-    public void removePersonFromEvention(UUID eventionId, Person selectedPerson) {
-        eventionRepository.findById(eventionId).ifPresent(company -> {
-            ArrayList<Person> persons = new ArrayList<>(company.getPersons());
-            Person personToRemove = null;
-            for (Person person : persons) {
-                if (person.getId() == selectedPerson.getId()) {
-                    personToRemove = person;
+    public void removePersonFromEvention(UUID eventionId, Person personToRemove) {
+        eventionRepository.findById(eventionId).ifPresent(evention -> {
+            for (Person person : evention.getPersons()) {
+                if (person.getId() == personToRemove.getId()) {
+                    evention.getPersons().remove(personToRemove);
                     break;
                 }
-            }
-            if (persons.remove(personToRemove)) {
-                company.setPersons(persons);
             }
         });
     }
