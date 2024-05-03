@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+@Log4j2
 @Service
 @Transactional(readOnly = true)
 public class EventionService {
