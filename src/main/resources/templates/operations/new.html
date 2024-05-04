@@ -1,10 +1,29 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>New operation</title>
 </head>
 <body>
-
+<h3><a href="/v1"><button>НА ГЛАВНУЮ СТРАНИЦУ</button></a></h3>
+<h3><a th:href="@{/v1/persons/{id}/groups/{idc}/events/{eUID}(idc=${companyId}, id=${personId}, eUID=${eventionId})}">
+    <button>На страницу События</button>
+</a></h3>
+<hr>
+<h3><a>СОЗДАНИЕ НОВОЙ ОПЕРАЦИИ</a></h3>
+<form th:method="POST" th:action="@{/v1/persons/{id}/groups/{idc}/events/{eUID}/operations(idc=${companyId}, id=${personId}, eUID=${eventionId})}"
+      th:object="${operation}">
+    <label for="name"> Введите название Операции: </label>
+    <input type="text" th:field="*{name}" id="name"/>
+    <div style="color:red" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name Error</div>
+    <label for="value">Введите сумму Операции: </label>
+    <input type="text" th:field="*{value}" id="value"/>
+    <div style="color:red" th:if="${#fields.hasErrors('value')}" th:errors="*{value}">Value Error</div>
+    <label for="note">Введите комментарий: </label>
+    <input type="text" th:field="*{note}" id="note"/>
+    <div style="color:red" th:if="${#fields.hasErrors('note')}" th:errors="*{note}">Note Error</div>
+    <input type="submit" value="Создать новую Операцию"/>
+</form>
 </body>
 </html>
