@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,6 +29,19 @@ public class OperationController {
         this.operationService = operationService;
     }
 
+    @GetMapping("/v1/persons/{id}/groups/{idc}/events/{eUID}/operations/new")
+    //Страница создания новой операции
+    public String showNewOperationPage(Model model, @ModelAttribute("operation") Operation operation,
+                                 @PathVariable("id") int personId,
+                                 @PathVariable("idc") int companyId,
+                                 @PathVariable("eUID") UUID eventionId) {
+        log.info("GET /v1/persons/{id}/groups/{idc}/events/{eUID}/operations/new");
+        model.addAttribute("personId", personId);
+        model.addAttribute("companyId", companyId);
+        model.addAttribute("eventionId", eventionId);
+        return "operations/new";
+    }
+
     @PostMapping("/v1/persons/{id}/groups/{idc}/events/{eUID}/operations")
     //Создаем одну новую запись Операции из представления
     public String createNewOperation(Model model, @ModelAttribute("operation") @Valid Operation operation,
@@ -40,22 +54,23 @@ public class OperationController {
         model.addAttribute("companyId", companyId);
         model.addAttribute("eventionId", eventionId);
         if (bindingResult.hasErrors()) {
+            log.info(bindingResult.getAllErrors());
             return "operations/new";
         } else {
             operationService.createNewOperation(operation, eventionId, personId);
-            model.addAttribute("eventionId", operation.getUid());
+            model.addAttribute("operationId", operation.getUid());
         }
-        return "/v1/persons/{id}/groups/{idc}/events/{eUID}/operations/{oUID}";
+        return "redirect:/v1/persons/{id}/groups/{idc}/events/{eUID}/operations/" + operation.getUid();
     }
 
-    @GetMapping("/v1/persons/{id}/groups/{idc}/events/operations/{oUID}")
+    @GetMapping("/v1/persons/{id}/groups/{idc}/events/{eUID}/operations/{oUID}")
     //Вывод страницы с Операцией
     public String showOperationById(Model model,
                                            @PathVariable("id") int personId,
                                            @PathVariable("idc") int companyId,
                                            @PathVariable("eUID") UUID eventionId,
                                            @PathVariable("oUID") UUID operationId) {
-        log.info("GET /v1/persons/{id}/groups/{idc}/events/operations/{oUID}");
+        log.info("GET /v1/persons/{id}/groups/{idc}/events/{eUID}/operations/{oUID}");
         model.addAttribute("operation",
                 operationService.findOneWithAllFields(eventionId));
         model.addAttribute("personId", personId);

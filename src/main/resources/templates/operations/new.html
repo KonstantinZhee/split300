@@ -2,17 +2,20 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <title>New operation</title>
 </head>
 <body>
-<h3><a href="/v1"><button>НА ГЛАВНУЮ СТРАНИЦУ</button></a></h3>
+<h3><a href="/v1">
+    <button>НА ГЛАВНУЮ СТРАНИЦУ</button>
+</a></h3>
 <h3><a th:href="@{/v1/persons/{id}/groups/{idc}/events/{eUID}(idc=${companyId}, id=${personId}, eUID=${eventionId})}">
     <button>На страницу События</button>
 </a></h3>
 <hr>
 <h3><a>СОЗДАНИЕ НОВОЙ ОПЕРАЦИИ</a></h3>
-<form th:method="POST" th:action="@{/v1/persons/{id}/groups/{idc}/events/{eUID}/operations(idc=${companyId}, id=${personId}, eUID=${eventionId})}"
+<form th:method="POST"
+      th:action="@{/v1/persons/{id}/groups/{idc}/events/{eUID}/operations(idc=${companyId}, id=${personId}, eUID=${eventionId})}"
       th:object="${operation}">
     <label for="name"> Введите название Операции: </label>
     <input type="text" th:field="*{name}" id="name"/>

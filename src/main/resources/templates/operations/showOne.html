@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>Show Operation</title>
+</head>
+<body>
+<h3><a href="/v1">
+    <button>НА ГЛАВНУЮ СТРАНИЦУ</button>
+</a></h3>
+<h3><a th:href="@{/v1/persons/{id}/groups/{idc}/events/{eUID}(idc=${companyId}, id=${personId}, eUID=${eventionId})}">
+    <button>На страницу События</button>
+</a></h3>
+<hr/>
+
+<div th:if="${operation != null}">
+    <form th:method="GET"
+          th:action="@{/v1/persons/{id}/groups/{idc}/events/{eUID}/operations/{oUID}/edit(idc=${companyId}, id=${personId}, eUID=${eventionId}, oUID=${operationId})}">
+        <input type="submit" value="Редактировать операцию"/>
+    </form>
+    <h1><a th:text="${operation.getName()}"></a></h1>
+    <h2><a th:text="${'Сумма: ' + operation.getValue()}"></a></h2>
+    <div th:if="${operation.getOwner()!= null}">
+        <h3>
+            <a th:text="${'Операцию совершил: ' + operation.getOwner().getName() + ' ' + operation.getOwner().getEmail()}"></a>
+        </h3>
+    </div>
+    <div th:if="${operation.getEvention()!= null}">
+        <h3><a th:text="${'Операция события: ' + operation.getEvention().getName()}">VALUE</a></h3>
+    </div>
+    <h3><a th:text="${'Дата создания: ' + operation.getTime()}"></a></h3>
+    <div th:if="${operation.getPaidForActions() == null || operation.getPaidForActions().isEmpty()}">
+        <b><span>Операция разделена на всех участников События в равных долях</span></b>
+    </div>
+    <div th:if="${operation.getPaidForActions() != null}">
+        <div th:if="${!operation.getPaidForActions().isEmpty()}">
+            <b>Заплатил за участника сумму:</b>
+            <div th:each="paidFor : ${operation.getPaidForActions()}">
+                <span th:text="${paidFor.getPersonPaidFor().getName() + ', ' + paidFor.getPersonPaidFor().getEmail() + ': ' + paidFor.getPersonPaidFor().getValue()}"></span>
+            </div>
+        </div>
+    </div>
+</div>
+<hr>
+<form th:method="GET"
+      th:action="@{/v1/persons/{id}/groups/{idc}/events/{eUID}/operations/new(idc=${companyId}, id=${personId}, eUID=${eventionId})}">
+    <input type="submit" value="Добавить новую операцию"/>
+</form>
+<br>
+</body>
+</html>

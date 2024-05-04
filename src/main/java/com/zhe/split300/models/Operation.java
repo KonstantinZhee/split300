@@ -4,7 +4,6 @@ package com.zhe.split300.models;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -40,7 +39,6 @@ public class Operation {
 
     @Id
     @Column(name = "uid", updatable = false, nullable = false)
-    @NotNull
     @GeneratedValue
     @UuidGenerator
     private UUID uid;
@@ -49,7 +47,7 @@ public class Operation {
     @JoinColumn(name = "evention_uid", referencedColumnName = "uid")
     private Evention evention;
 
-    @NotBlank(message = "Поле не должно быть пустым.")
+    @NotNull(message = "Введите имя.")
     @Column(name = "name")
     private String name;
 
@@ -59,11 +57,11 @@ public class Operation {
     private Date time;
 
     @Column(name = "note")
-    @Size(min = 5, max = 100, message = "Комментарий должен быть от 5 до 100 символов.")
+    @Size(max = 100, message = "Комментарий должен быть от 5 до 100 символов.")
     private String note;
 
     @Column(name = "value")
-    @NotBlank(message = "Укажите сумму.")
+    @NotNull(message = "Укажите сумму.")
     @Digits(message = "Укажите цифровое значение по второй знак после запятой например: 36,28", integer = 100, fraction = 2)
     private BigDecimal value;
 
