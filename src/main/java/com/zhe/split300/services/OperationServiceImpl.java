@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -37,5 +38,10 @@ public class OperationServiceImpl implements OperationService {
             personRepository.findById(personId).ifPresent(operation::setOwner);
             operationRepository.save(operation);
         });
+    }
+
+    @Override
+    public Operation findOneWithAllFields(UUID operationId) {
+        return operationRepository.findById(operationId).orElse(null);
     }
 }

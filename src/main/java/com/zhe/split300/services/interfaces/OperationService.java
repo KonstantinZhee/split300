@@ -6,4 +6,6 @@ import java.util.UUID;
 
 public interface OperationService {
      void createNewOperation(Operation operation,UUID eventionId, int PersonId);
+
+     public Operation findOneWithAllFields(UUID operationId);
 }
