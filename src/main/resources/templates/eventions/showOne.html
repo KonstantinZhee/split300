@@ -10,23 +10,42 @@
     <button>НА ГЛАВНУЮ СТРАНИЦУ</button>
 </a></h3>
 <h3><a th:href="@{/v1/persons/{id}/groups/{idc}(id=${personId}, idc=${companyId})}">
-    <button>На страницу с Группой пользователей</button>
+    <button>На страницу Группы Событий</button>
 </a></h3>
 <hr/>
+
 <div th:if="${evention != null}">
+
     <h1><a th:text="${evention.getName()}"></a></h1>
-    <h3><a th:text="${'Дата создания: ' + evention.getStartTime()}"></a></h3>
     <h2><a th:text="${'Расходы: ' + evention.getBalance()}"></a></h2>
+    <div th:if="${evention.getCompany()!= null}">
+        <h3><a th:text="${'Группа: ' + evention.getCompany().getName()}">VALUE</a></h3>
+        <div th:if="${evention.getCompany().getOwner() != null}">
+            <h3><span>Владелец Группы: </span><a th:text="${evention.getCompany().getOwner().getName()}">VALUE</a></h3>
+        </div>
+    </div>
+    <h3><a th:text="${'Дата создания: ' + evention.getStartTime()}"></a></h3>
+    <div th:if="${evention.getPersons() == null || evention.getPersons().isEmpty()}">
+        <b><span>Участники События не найдены</span></b>
+    </div>
+     <div th:if="${evention.getPersons() != null}">
+         <div th:if="${!evention.getPersons().isEmpty()}">
+             <b>Участники События:</b>
+             <div th:each="person : ${evention.getPersons()}">
+                 <span th:text="${person.getName() + ', ' + person.getEmail()}"></span>
+             </div>
+         </div>
+     </div>
+    <form th:method="GET" th:action="@{/v1/persons/{id}/groups/{idc}/events/{eUID}/edit(idc=${companyId}, id=${personId}, eUID=${eventionId})}">
+        <input type="submit" value="Редактировать событие"/>
+    </form>
 </div>
 
 <hr>
-<h3><span>Операции с событием:</span></h3>
 <form th:method="GET" th:action="@{/v1/persons/{id}/groups/{idc}/events/{eUID}/operations/new(idc=${companyId}, id=${personId}, eUID=${eventionId})}">
-    <input type="submit" value="Добавить новую операцию ?"/>
+    <input type="submit" value="Добавить новую операцию"/>
 </form>
+<h3><span>Операции События:</span></h3>
 <br>
-<form th:method="GET" th:action="@{/v1/persons/{id}/groups/{idc}/events/{eUID}/edit(idc=${companyId}, id=${personId}, eUID=${eventionId})}">
-    <input type="submit" value="Редактировать событие ?"/>
-</form>
 </body>
 </html>
