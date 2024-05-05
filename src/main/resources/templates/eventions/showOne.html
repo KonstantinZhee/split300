@@ -17,14 +17,13 @@
 <div th:if="${evention != null}">
 
     <h1><a th:text="${evention.getName()}"></a></h1>
-    <h2><a th:text="${'Расходы: ' + evention.getBalance()}"></a></h2>
     <div th:if="${evention.getCompany()!= null}">
         <h3><a th:text="${'Группа: ' + evention.getCompany().getName()}">VALUE</a></h3>
         <div th:if="${evention.getCompany().getOwner() != null}">
             <h3>Владелец Группы:<a th:text="${evention.getCompany().getOwner().getName()}">VALUE</a></h3>
         </div>
     </div>
-    <h3><a th:text="${'Дата создания: ' + evention.getStartTime()}"></a></h3>
+    <h3><a th:text="${'Дата создания: ' + #dates.format(evention.getStartTime(), 'dd.MM.yy HH:mm')}"></a></h3>
     <div th:if="${evention.getPersons() == null || evention.getPersons().isEmpty()}">
         <b><span>Участники События не найдены</span></b>
     </div>
@@ -42,17 +41,19 @@
     </form>
 </div>
 <hr>
-<h3><span>Операции События:</span></h3>
+<h2><a th:text="${'Расходы: ' + evention.getBalance()}"></a></h2>
 <div th:if="${evention.getOperations() == null || evention.getOperations().isEmpty()}">
     <b><span>У События пока нет операций</span></b>
 </div>
 <div th:if="${evention.getOperations() != null}">
     <div th:if="${!evention.getOperations().isEmpty()}">
         <table>
+            <caption>Список операций</caption>
             <tr>
                 <th>Название</th>
                 <th>Заплатил</th>
                 <th>Сумма</th>
+                <th>Дата</th>
             </tr>
             <div th:each="operation : ${evention.getOperations()}">
                 <tr>
@@ -60,6 +61,7 @@
                             <button th:text="${operation.getName()}"> </button></a></td>
                     <td th:text="${operation.getOwner().getName()}"></td>
                     <td th:text="${operation.getValue()}"></td>
+                    <td th:text="${#dates.format(operation.getTime(), 'dd.MM.yy HH:mm')}"></td>
                 </tr>
             </div>
         </table>

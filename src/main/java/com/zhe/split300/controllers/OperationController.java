@@ -79,4 +79,6 @@ public class OperationController {
         model.addAttribute("operationId", operationId);
         return "operations/showOne";
     }
+    //TODO HTML showOne Operation - туда потом отображение PaidFor
+    //TODO
 }

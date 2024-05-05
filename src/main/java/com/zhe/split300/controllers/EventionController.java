@@ -78,7 +78,7 @@ public class EventionController {
                                            @PathVariable("idc") int companyId,
                                            @PathVariable("eUID") UUID eventionId) {
         log.info("GET /v1/persons/{id}/groups/{idc}/events/{eUID}");
-        model.addAttribute("evention", eventionService.findOneWithPersonsAndCompany(eventionId));
+        model.addAttribute("evention", eventionService.findOneWithAllFields(eventionId));
         model.addAttribute("personId", personId);
         model.addAttribute("companyId", companyId);
         model.addAttribute("eventionId", eventionId);
@@ -92,7 +92,7 @@ public class EventionController {
                                @PathVariable("idc") int companyId,
                                @PathVariable("eUID") UUID eventionId) {
         log.info("GET  /v1/persons/{id}/groups/{idc}/events/{eUID}/edit");
-        Evention evention = eventionService.findOneWithPersonsAndCompany(eventionId);
+        Evention evention = eventionService.findOneWithAllFields(eventionId);
         model.addAttribute("evention", evention);
         model.addAttribute("company", evention.getCompany());
         model.addAttribute("personId", personId);
@@ -118,9 +118,9 @@ public class EventionController {
     @PatchMapping("/v1/persons/{id}/groups/{idc}/events/{eUID}/removePerson")
     //Добавить человека в событие
     public String removePersonFromEvention(Model model, @ModelAttribute("personToRemove") Person person,
-                                         @PathVariable("id") int personId,
-                                         @PathVariable("idc") int companyId,
-                                         @PathVariable("eUID") UUID eventionId) {
+                                           @PathVariable("id") int personId,
+                                           @PathVariable("idc") int companyId,
+                                           @PathVariable("eUID") UUID eventionId) {
         log.info("PATCH   /v1/persons/{id}/groups/{idc}/events/{eUID}/removePerson");
         model.addAttribute("personId", personId);
         model.addAttribute("companyId", companyId);

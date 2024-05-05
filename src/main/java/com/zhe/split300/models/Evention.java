@@ -25,6 +25,7 @@ import org.hibernate.annotations.UuidGenerator;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.math.BigDecimal;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -78,4 +79,9 @@ public class Evention {
             joinColumns = @JoinColumn(name = "evention_id"),
             inverseJoinColumns = @JoinColumn(name = "person_id"))
     private List<Person> persons;
+
+    public List<Operation> getOperations() {
+        operations.sort(Comparator.comparing(Operation::getTime));
+        return operations;
+    }
 }

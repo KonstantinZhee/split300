@@ -5,7 +5,7 @@ import com.zhe.split300.models.Operation;
 import java.util.UUID;
 
 public interface OperationService {
-     void createNewOperation(Operation operation,UUID eventionId, int PersonId);
+    void createNewOperation(Operation operation, UUID eventionId, int PersonId);
 
-     public Operation findOneWithAllFields(UUID operationId);
+    Operation findOneWithAllFields(UUID operationId);
 }

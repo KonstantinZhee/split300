@@ -5,6 +5,7 @@ import com.zhe.split300.models.Evention;
 import com.zhe.split300.models.Person;
 import com.zhe.split300.repositories.CompanyRepository;
 import com.zhe.split300.repositories.EventionRepository;
+import com.zhe.split300.repositories.OperationRepository;
 import com.zhe.split300.repositories.PersonRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -25,12 +25,15 @@ public class EventionService {
     private final EventionRepository eventionRepository;
     private final CompanyRepository companyRepository;
     private final PersonRepository personRepository;
+    private final OperationRepository operationRepository;
 
     @Autowired
-    public EventionService(EventionRepository eventionRepository, CompanyRepository companyRepository, PersonRepository personRepository) {
+    public EventionService(EventionRepository eventionRepository, CompanyRepository companyRepository, PersonRepository personRepository,
+                           OperationRepository operationRepository) {
         this.eventionRepository = eventionRepository;
         this.companyRepository = companyRepository;
         this.personRepository = personRepository;
+        this.operationRepository = operationRepository;
     }
 
     public List<Evention> findAll() {
@@ -55,9 +58,8 @@ public class EventionService {
         return eventionRepository.findById(eventionId).orElse(null);
     }
 
-    public Evention findOneWithPersonsAndCompany(UUID id) {
-        Optional<Evention> evention = eventionRepository.findById(id);
-        return evention.orElse(null);
+    public Evention findOneWithAllFields(UUID id) {
+        return eventionRepository.findById(id).orElse(null);
     }
 
     @Transactional

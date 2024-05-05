@@ -12,7 +12,6 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import jakarta.validation.constraints.Digits;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -53,7 +52,7 @@ public class Operation {
 
     @Column(name = "time")
     @Temporal(TemporalType.TIMESTAMP)
-    @DateTimeFormat(pattern = "dd/MMMM/yyyy - HH:mm:ss")
+    @DateTimeFormat(pattern = "dd/MMMM/yyyy - HH:mm")
     private Date time;
 
     @Column(name = "note")
