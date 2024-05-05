@@ -98,7 +98,6 @@ public class CompanyController {
         model.addAttribute("company", companyService.findOneWithPersons(companyId));
         model.addAttribute("eventions", eventionService.findByCompanyId(companyId));
         return "groups/showOne";
-        //ToDo отображение событий в группе при выборе группы.
     }
 
     @GetMapping("/v1/persons/{id}/groups/new")

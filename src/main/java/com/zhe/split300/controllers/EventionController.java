@@ -128,4 +128,18 @@ public class EventionController {
         eventionService.removePersonFromEvention(eventionId, person);
         return String.format("redirect:/v1/persons/%d/groups/%d/events/%s/edit", personId, companyId, eventionId);
     }
+
+    @PatchMapping("/v1/persons/{id}/groups/{idc}/events/{eUID}/refresh")
+    //Обновление баланса
+    public String refreshOperations(Model model, @ModelAttribute("personToRemove") Person person,
+                                           @PathVariable("id") int personId,
+                                           @PathVariable("idc") int companyId,
+                                           @PathVariable("eUID") UUID eventionId) {
+        log.info("PATCH   /v1/persons/{id}/groups/{idc}/events/{eUID}/refresh");
+        model.addAttribute("personId", personId);
+        model.addAttribute("companyId", companyId);
+        model.addAttribute("eventionId", eventionId);
+        eventionService.refreshBalance(eventionId);
+        return String.format("redirect:/v1/persons/%d/groups/%d/events/%s", personId, companyId, eventionId);
+    }
 }

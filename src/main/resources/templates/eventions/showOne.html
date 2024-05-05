@@ -42,6 +42,10 @@
 </div>
 <hr>
 <h2><a th:text="${'Расходы: ' + evention.getBalance()}"></a></h2>
+<form th:method="PATCH"
+      th:action="@{/v1/persons/{id}/groups/{idc}/events/{eUID}/refresh (idc=${companyId}, id=${personId}, eUID=${eventionId})}">
+    <input type="submit" value="Обновить расходы"/>
+</form>
 <div th:if="${evention.getOperations() == null || evention.getOperations().isEmpty()}">
     <b><span>У События пока нет операций</span></b>
 </div>
@@ -67,6 +71,7 @@
         </table>
     </div>
 </div>
+<hr>
 <form th:method="GET"
       th:action="@{/v1/persons/{id}/groups/{idc}/events/{eUID}/operations/new(idc=${companyId}, id=${personId}, eUID=${eventionId})}">
     <input type="submit" value="Добавить новую операцию"/>
