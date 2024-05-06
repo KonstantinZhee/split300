@@ -132,9 +132,9 @@ public class EventionController {
     @PatchMapping("/v1/persons/{id}/groups/{idc}/events/{eUID}/refresh")
     //Обновление баланса
     public String refreshOperations(Model model, @ModelAttribute("personToRemove") Person person,
-                                           @PathVariable("id") int personId,
-                                           @PathVariable("idc") int companyId,
-                                           @PathVariable("eUID") UUID eventionId) {
+                                    @PathVariable("id") int personId,
+                                    @PathVariable("idc") int companyId,
+                                    @PathVariable("eUID") UUID eventionId) {
         log.info("PATCH   /v1/persons/{id}/groups/{idc}/events/{eUID}/refresh");
         model.addAttribute("personId", personId);
         model.addAttribute("companyId", companyId);

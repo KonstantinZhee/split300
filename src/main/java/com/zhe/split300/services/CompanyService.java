@@ -39,7 +39,8 @@ public class CompanyService {
     public Company findOneById(int id) {
         return companyRepository.findById(id).orElse(null);
     }
-    public  Company findOneWithPersons(int id) {
+
+    public Company findOneWithPersons(int id) {
         Optional<Company> company = companyRepository.findById(id);
         company.ifPresent(value -> Hibernate.initialize(value.getPersons()));
         return company.orElse(null);
@@ -49,11 +50,13 @@ public class CompanyService {
         return companyRepository.findByPersons(Collections.singletonList
                 (new Person(personId)));
     }
+
     public List<Company> findByOwnerId(int ownerId) {
         return companyRepository.findByOwner(new Person(ownerId));
     }
-    public boolean isOwner (int personId, int companyId) {
-       Optional<Company> optionalCompany = companyRepository.findById(companyId);
+
+    public boolean isOwner(int personId, int companyId) {
+        Optional<Company> optionalCompany = companyRepository.findById(companyId);
         AtomicInteger ownerId = new AtomicInteger();
         optionalCompany.flatMap(company -> Optional.ofNullable(company.getOwner()))
                 .ifPresent(person -> ownerId.set(person.getId()));
@@ -66,7 +69,7 @@ public class CompanyService {
     }
 
     @Transactional
-    public void update(int companyId, int personId,Company company) {
+    public void update(int companyId, int personId, Company company) {
         Company companyToSave = companyRepository.findById(companyId).orElse(null);
         assert companyToSave != null;
         companyToSave.setName(company.getName());

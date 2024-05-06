@@ -68,7 +68,6 @@ public class CompanyController {
     }
 
 
-
     @DeleteMapping("/v1/groups/{id}")
     //Удаление одной записи (7)
     public String delete(@PathVariable("id") int id) {
@@ -105,8 +104,9 @@ public class CompanyController {
     public String newCompany(Model model, @ModelAttribute("company") Company company,
                              @PathVariable("id") int personId) {
         model.addAttribute("personId", personId);
-            return "groups/new";
+        return "groups/new";
     }
+
     @PostMapping("/v1/persons/{id}/groups")
     //создаем новую группу с владельцем
     public String create(Model model, @ModelAttribute("company") @Valid Company company,
@@ -128,12 +128,12 @@ public class CompanyController {
     @GetMapping("/v1/persons/{id}/groups/{idc}/edit")
     //получаем форму составления новой записи, где пользователь хозяин группы
     public String getPageToEditCompany(Model model, @ModelAttribute("company") Company company,
-                             @PathVariable("id") int personId, @PathVariable("idc") int companyId) {
+                                       @PathVariable("id") int personId, @PathVariable("idc") int companyId) {
         log.info("GET    /v1/persons/{id}/groups/{idc}/edit");
         model.addAttribute("personId", personId);
         model.addAttribute("companyId", companyId);
         model.addAttribute("company", companyService.findOneById(companyId));
-        if (companyService.isOwner(personId, companyId)){
+        if (companyService.isOwner(personId, companyId)) {
             log.info("groups/edit");
             return "groups/edit";
         }
@@ -155,7 +155,8 @@ public class CompanyController {
             return "groups/edit";
         } else {
             companyService.update(companyId, personId, company);
-        }log.info(String.format("redirect:/v1/persons/%d/groups/%d", personId, companyId));
+        }
+        log.info(String.format("redirect:/v1/persons/%d/groups/%d", personId, companyId));
         return String.format("redirect:/v1/persons/%d/groups/%d", personId, companyId);
     }
 
@@ -186,7 +187,7 @@ public class CompanyController {
         log.info("PATCH    /v1/persons/{id}/groups/{idc}/add");
         companyService.addPersonToCompany(companyId, person);
         model.addAttribute("personId", personId);
-        model.addAttribute("companyId",companyId);
+        model.addAttribute("companyId", companyId);
         log.info("groups/edit");
         return String.format("redirect:/v1/persons/%d/groups/%d/edit", personId, companyId);
     }

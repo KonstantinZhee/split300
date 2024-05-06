@@ -27,7 +27,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.math.BigDecimal;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.UUID;
@@ -87,6 +86,7 @@ public class Evention {
         sortedOperations.addAll(operations);
         return sortedOperations;
     }
+
     public Set<Person> getPersons() {
         TreeSet<Person> sortedPersons = new TreeSet<>(Comparator.comparing(Person::getName));
         sortedPersons.addAll(persons);
