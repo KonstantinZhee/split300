@@ -28,6 +28,8 @@ import java.math.BigDecimal;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -70,7 +72,7 @@ public class Evention {
 
     @OneToMany(mappedBy = "evention")
     @ToString.Exclude
-    private List<Operation> operations;
+    private Set<Operation> operations;
 
     @ToString.Exclude
     @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
@@ -78,10 +80,16 @@ public class Evention {
             name = "person_evention",
             joinColumns = @JoinColumn(name = "evention_id"),
             inverseJoinColumns = @JoinColumn(name = "person_id"))
-    private List<Person> persons;
+    private Set<Person> persons;
 
-    public List<Operation> getOperations() {
-        operations.sort(Comparator.comparing(Operation::getTime));
-        return operations;
+    public Set<Operation> getOperations() {
+        TreeSet<Operation> sortedOperations = new TreeSet<>(Comparator.comparing(Operation::getTime));
+        sortedOperations.addAll(operations);
+        return sortedOperations;
+    }
+    public Set<Person> getPersons() {
+        TreeSet<Person> sortedPersons = new TreeSet<>(Comparator.comparing(Person::getName));
+        sortedPersons.addAll(persons);
+        return sortedPersons;
     }
 }

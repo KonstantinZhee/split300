@@ -80,5 +80,8 @@ public class OperationController {
         return "operations/showOne";
     }
     //TODO HTML showOne Operation - туда потом отображение PaidFor
-    //TODO
+    //TODO Редактирование операции (изменить заплатившего)
+    //TODO Удаление операции
+    //TODO Удаление Эвэнта
+    //TODO Удаление операции Каскадное удаление операций При удаление Эвентов
 }

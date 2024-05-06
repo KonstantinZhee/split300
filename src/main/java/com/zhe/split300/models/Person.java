@@ -19,6 +19,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.util.List;
+import java.util.Set;
 
 
 @AllArgsConstructor
@@ -47,23 +48,23 @@ public class Person {
 
     @ToString.Exclude
     @ManyToMany(mappedBy = "persons")
-    private List<Company> companies;
+    private Set<Company> companies;
 
     @ToString.Exclude
     @OneToMany(mappedBy = "owner")
-    private List<Operation> operations;
+    private Set<Operation> operations;
 
     @ToString.Exclude
     @OneToMany(mappedBy = "personPaidFor")
-    private List<PaidFor> paidForActions;
+    private Set<PaidFor> paidForActions;
 
     @OneToMany(mappedBy = "owner")
     @ToString.Exclude
-    private List<Company> ownedCompanies;
+    private Set<Company> ownedCompanies;
 
     @ToString.Exclude
     @ManyToMany(mappedBy = "persons", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-    private List<Company> eventions;
+    private Set<Company> eventions;
 
     public Person(int id) {
         setId(id);

@@ -116,7 +116,7 @@ public class EventionController {
     }
 
     @PatchMapping("/v1/persons/{id}/groups/{idc}/events/{eUID}/removePerson")
-    //Добавить человека в событие
+    //Удалить человека из события
     public String removePersonFromEvention(Model model, @ModelAttribute("personToRemove") Person person,
                                            @PathVariable("id") int personId,
                                            @PathVariable("idc") int companyId,
