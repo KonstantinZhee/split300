@@ -73,6 +73,10 @@ public class Evention {
     @ToString.Exclude
     private Set<Operation> operations;
 
+    @OneToMany(mappedBy = "evention")
+    @ToString.Exclude
+    private Set<PersonBalance> personBalances;
+
     @ToString.Exclude
     @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinTable(
