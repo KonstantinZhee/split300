@@ -3,6 +3,7 @@ package com.zhe.split300.models;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -42,8 +43,9 @@ public class Operation {
     @UuidGenerator
     private UUID uid;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "evention_uid", referencedColumnName = "uid")
+    @ToString.Exclude
     private Evention evention;
 
     @NotNull(message = "Введите имя.")
@@ -64,12 +66,17 @@ public class Operation {
     @Digits(message = "Укажите цифровое значение по второй знак после запятой например: 36,28", integer = 100, fraction = 2)
     private BigDecimal value;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "person_id", referencedColumnName = "id")
+    @ToString.Exclude
     private Person owner;
 
     @ToString.Exclude
     @OneToMany(mappedBy = "operation")
     private Set<PaidFor> paidForActions;
+
+    @ToString.Exclude
+    @OneToMany(mappedBy = "operation")
+    private Set<OperationBalance> operationBalances;
 
 }

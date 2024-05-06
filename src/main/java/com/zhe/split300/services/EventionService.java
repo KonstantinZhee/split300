@@ -68,14 +68,16 @@ public class EventionService {
             if (evention.getPersons().stream().anyMatch(person -> person.getId() == selectedPerson.getId())) {
                 return;
             }
-            personRepository.findById(selectedPerson.getId()).ifPresent(evention.getPersons()::add);
+            personRepository.findById(selectedPerson.getId()).ifPresent(evention::addPerson);
         });
     }
 
     @Transactional
     public void removePersonFromEvention(UUID eventionId, Person selectedPerson) {
         eventionRepository.findById(eventionId).ifPresent(evention -> {
-            evention.getPersons().removeIf(person -> person.getId() == selectedPerson.getId());
+            personRepository.findById(selectedPerson.getId()).ifPresent(person -> {
+                evention.removePerson(selectedPerson);
+            });
         });
     }
 

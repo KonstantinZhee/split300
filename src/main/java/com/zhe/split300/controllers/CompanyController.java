@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.List;
+import java.util.Set;
 
 
 @Log4j2
@@ -39,41 +39,41 @@ public class CompanyController {
         this.personService = personService;
         this.eventionService = eventionService;
     }
-
-    @GetMapping("/v1/groups")
-    //Получаем все записи (1) READ
-    public String index(Model model) {
-        model.addAttribute("company", companyService.findAll());
-        return "groups/index";
-    }
-
-
-    @GetMapping("/v1/groups/{id}/edit")
-    //Форма редактирования (4)
-    public String edit(Model model, @PathVariable("id") int id) {
-        model.addAttribute("company", companyService.findOneById(id));
-        return "groups/edit";
-    }
-
-    @GetMapping("/v1/groups/{id}")
-    //Читаем одну запись (5)
-    public String showCompany(@PathVariable("id") int id, Model model,
-                              @ModelAttribute("person") Person person) {
-        model.addAttribute("company", companyService.findOneById(id));
-        List<Person> persons = companyService.getPersons(id);
-        if (persons != null) {
-            model.addAttribute("persons", persons);
-        }
-        return "groups/show";
-    }
-
-
-    @DeleteMapping("/v1/groups/{id}")
-    //Удаление одной записи (7)
-    public String delete(@PathVariable("id") int id) {
-        companyService.delete(id);
-        return "redirect:/v1/groups";
-    }
+//
+//    @GetMapping("/v1/groups")
+//    //Получаем все записи (1) READ
+//    public String index(Model model) {
+//        model.addAttribute("company", companyService.findAll());
+//        return "groups/index";
+//    }
+//
+//
+//    @GetMapping("/v1/groups/{id}/edit")
+//    //Форма редактирования (4)
+//    public String edit(Model model, @PathVariable("id") int id) {
+//        model.addAttribute("company", companyService.findOneById(id));
+//        return "groups/edit";
+//    }
+//
+//    @GetMapping("/v1/groups/{id}")
+//    //Читаем одну запись (5)
+//    public String showCompany(@PathVariable("id") int id, Model model,
+//                              @ModelAttribute("person") Person person) {
+//        model.addAttribute("company", companyService.findOneById(id));
+//        Set<Person> persons = companyService.getPersons(id);
+//        if (persons != null) {
+//            model.addAttribute("persons", persons);
+//        }
+//        return "groups/show";
+//    }
+//
+//
+//    @DeleteMapping("/v1/groups/{id}")
+//    //Удаление одной записи (7)
+//    public String delete(@PathVariable("id") int id) {
+//        companyService.delete(id);
+//        return "redirect:/v1/groups";
+//    }
 
 ///ToDo выше не должно быть методов!!!!!!!!!!!!!!!!!!!!!
 
@@ -89,7 +89,8 @@ public class CompanyController {
 
     @GetMapping("/v1/persons/{id}/groups/{idc}")
     //Выбираем группу в которой состоит участник для дальнейшей работы с ней.
-    public String selectPersonsCompanyById(Model model, @PathVariable("id") int personId,
+    public String selectPersonsCompanyById(Model model,
+                                           @PathVariable("id") int personId,
                                            @PathVariable("idc") int companyId) {
         log.info("GET     /v1/persons/{id}/groups/{idc}");
         model.addAttribute("personId", personId);
@@ -120,8 +121,9 @@ public class CompanyController {
         } else {
             company.setOwner(personService.findOne(personId));
             companyService.save(company);
-            log.info(String.format("redirect:/v1/persons/%d/groups/%d", personId, company.getId()));
-            return String.format("redirect:/v1/persons/%d/groups/%d", personId, company.getId());
+            model.addAttribute("companyId", company.getId());
+            log.info(String.format("redirect:/v1/persons/%d/groups", personId));
+            return String.format("redirect:/v1/persons/%d/groups", personId);
         }
     }
 

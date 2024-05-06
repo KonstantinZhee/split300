@@ -23,21 +23,21 @@ import java.util.UUID;
 @Setter
 @ToString
 @RequiredArgsConstructor
-@Table(name = "person_balance")
-public class PersonBalance {
+@Table(name = "operation_balance")
+public class OperationBalance {
 
     @Id
-    @Column(name = "person_balance_id")
+    @Column(name = "operation_balance_id", updatable = false, nullable = false)
     @GeneratedValue
     @UuidGenerator
     private UUID uid;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "evention_uid", nullable = false, referencedColumnName = "uid")
+    @JoinColumn(name = "operation_uid", nullable = false, referencedColumnName = "uid")
     @ToString.Exclude
-    private Evention evention;
+    private Operation operation;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "person_id", referencedColumnName = "id")
     @ToString.Exclude
     private Person person;
@@ -45,5 +45,4 @@ public class PersonBalance {
     @Column(name = "balance_value")
     @Digits(integer = 100, fraction = 4)
     private BigDecimal balance;
-
 }

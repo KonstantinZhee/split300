@@ -49,11 +49,11 @@
 <br>
 <hr/>
 <h3><span>Операции с группой:</span></h3>
-<form th:method="GET" th:action="@{/v1/persons/{id}/groups/{idc}/events/new(idc=${company.getId()}, id=${personId})}">
+<form th:method="GET" th:action="@{/v1/persons/{id}/groups/{idc}/events/new(idc=${companyId}, id=${personId})}">
     <input type="submit" value="ДОБАВИТЬ СОБЫТИЕ"/>
 </form>
 <br>
-<form th:method="GET" th:action="@{/v1/persons/{id}/groups/{idc}/edit(idc=${company.getId()}, id=${personId})}">
+<form th:method="GET" th:action="@{/v1/persons/{id}/groups/{idc}/edit(idc=${companyId}, id=${personId})}">
     <input type="submit" value="РЕДАКТИРОВАТЬ ГРУППУ"/>
 </form>
 </body>

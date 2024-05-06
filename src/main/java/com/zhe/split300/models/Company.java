@@ -1,7 +1,9 @@
 package com.zhe.split300.models;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -20,7 +22,11 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.util.List;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
+import java.util.TreeSet;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -43,22 +49,57 @@ public class Company {
     private String name;
 
     @ToString.Exclude
-    @ManyToMany
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
             name = "person_company",
             joinColumns = @JoinColumn(name = "company_id"),
             inverseJoinColumns = @JoinColumn(name = "person_id"))
-    private List<Person> persons;
+    private Set<Person> persons;
 
-    @OneToMany(mappedBy = "company")
+    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
-    private List<Evention> eventions;
+    private Set<Evention> eventions = new HashSet<>();
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "owner_id", referencedColumnName = "id")
+    @ToString.Exclude
     private Person owner;
 
     public Company(int companyId) {
         this.id = companyId;
+    }
+
+    public Set<Person> getPersons() {
+        TreeSet<Person> sortedPersons = new TreeSet<>(Comparator.comparing(Person::getName));
+        sortedPersons.addAll(persons);
+        return sortedPersons;
+    }
+
+    public void addPerson(Person person) {
+        this.persons.add(person);
+        person.getCompanies().add(this);
+    }
+
+    public void removePerson(Person person) {
+        this.persons.remove(person);
+        person.getCompanies().remove(this);
+    }
+
+    public void addEvention(Evention evention) {
+        eventions.add(evention);
+        evention.setCompany(this);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Company company = (Company) o;
+        return id == company.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
     }
 }
