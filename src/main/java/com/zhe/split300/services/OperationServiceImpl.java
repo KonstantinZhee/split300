@@ -59,5 +59,6 @@ public class OperationServiceImpl implements OperationService {
     @Transactional
     public void delete(UUID operationId) {
         operationRepository.deleteById(operationId);
+
     }
 }

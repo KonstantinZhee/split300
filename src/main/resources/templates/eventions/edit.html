@@ -26,6 +26,10 @@
     <hr>
     <h1><a th:text="${evention.getName()}"></a></h1>
     <h3><a th:text="${'Дата создания: ' + evention.getStartTime()}"></a></h3>
+    <form th:method="DELETE"
+          th:action="@{/v1/persons/{id}/groups/{idc}/events/{eUID}(idc=${companyId}, id=${personId}, eUID=${eventionId})}">
+        <input type="submit" value="Удалить Событие"/>
+    </form>
     <h2><a th:text="${'Расходы: ' + evention.getBalance()}"></a></h2>
     <div th:if="${company != null}">
         <h3><a th:text="${'Событие принадлежит Группе с названием: ' + company.getName()}">VALUE</a></h3>

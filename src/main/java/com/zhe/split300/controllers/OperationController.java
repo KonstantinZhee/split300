@@ -95,6 +95,7 @@ public class OperationController {
         return "redirect:/v1/persons/{id}/groups/{idc}/events/{eUID}";
     }
 
+    //TODO Обновления Расхода события при удалении операции
     //TODO Добавить Calculation (см. записи)
     //TODO Редактирование операции (изменить заплатившего) при нажатии на операцию
     //TODO Удаление Эвента из представления группы

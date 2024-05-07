@@ -93,4 +93,9 @@ public class EventionService {
         }
         eventionRepository.save(evention);
     }
+
+    @Transactional
+    public void delete(UUID eventionId) {
+        eventionRepository.deleteById(eventionId);
+    }
 }

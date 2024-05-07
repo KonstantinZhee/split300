@@ -13,9 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 
 @Service
 public class OperationBalanceServiceImpl implements OperationBalanceService {
@@ -41,14 +39,16 @@ public class OperationBalanceServiceImpl implements OperationBalanceService {
     public void createNewOperationBalances(Operation operation) {
         Set<Person> persons = operation.getEvention().getPersons();
         Person operationOwner = operation.getOwner();
-        persons.remove(operationOwner);
         BigDecimal operationValue = operation.getValue();
-        BigDecimal personsCount = BigDecimal.valueOf(persons.size());
-        BigDecimal personsValue = operationValue.divide(personsCount, 4, RoundingMode.CEILING);
-        for(Person person : persons) {
-            createNewOperationBalance(operation, personsValue, person);
+        persons.remove(operationOwner);
+        if (!persons.isEmpty()) {
+            BigDecimal personsCount = BigDecimal.valueOf(persons.size());
+            BigDecimal personsValue = operationValue.divide(personsCount, 4, RoundingMode.CEILING);
+            for (Person person : persons) {
+                createNewOperationBalance(operation, personsValue, person);
+            }
+            createNewOperationBalance(operation, operationValue.negate(), operationOwner);
         }
-        createNewOperationBalance(operation, operationValue.negate(), operationOwner);
     }
 
 }

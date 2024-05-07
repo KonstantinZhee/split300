@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -141,5 +142,19 @@ public class EventionController {
         model.addAttribute("eventionId", eventionId);
         eventionService.refreshBalance(eventionId);
         return String.format("redirect:/v1/persons/%d/groups/%d/events/%s", personId, companyId, eventionId);
+    }
+
+    @DeleteMapping("/v1/persons/{id}/groups/{idc}/events/{eUID}")
+    //Удалить Событие
+    public String delete(Model model,
+                         @PathVariable("id") int personId,
+                         @PathVariable("idc") int companyId,
+                         @PathVariable("eUID") UUID eventionId){
+        log.info("DELETE /v1/persons/{id}/groups/{idc}/events/{eUID}/operations/{oUID}");
+        eventionService.delete(eventionId);
+        model.addAttribute("personId", personId);
+        model.addAttribute("companyId", companyId);
+        model.addAttribute("eventionId", eventionId);
+        return "redirect:/v1/persons/{id}/groups/{idc}";
     }
 }
