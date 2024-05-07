@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -76,6 +77,22 @@ public class OperationController {
         model.addAttribute("eventionId", eventionId);
         model.addAttribute("operationId", operationId);
         return "operations/showOne";
+    }
+
+    @DeleteMapping("/v1/persons/{id}/groups/{idc}/events/{eUID}/operations/{oUID}")
+    //Удалить операцию из События
+    public String delete(Model model,
+                         @PathVariable("id") int personId,
+                         @PathVariable("idc") int companyId,
+                         @PathVariable("eUID") UUID eventionId,
+                         @PathVariable("oUID") UUID operationId) {
+        log.info("DELETE /v1/persons/{id}/groups/{idc}/events/{eUID}/operations/{oUID}");
+        operationService.delete(operationId);
+        model.addAttribute("personId", personId);
+        model.addAttribute("companyId", companyId);
+        model.addAttribute("eventionId", eventionId);
+        model.addAttribute("operationId", operationId);
+        return "redirect:/v1/persons/{id}/groups/{idc}/events/{eUID}";
     }
 
     //TODO Удаление операции - рядом в таблицу!!!

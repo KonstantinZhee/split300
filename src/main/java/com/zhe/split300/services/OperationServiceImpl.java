@@ -54,4 +54,10 @@ public class OperationServiceImpl implements OperationService {
     public Operation findOneWithAllFields(UUID operationId) {
         return operationRepository.findById(operationId).orElse(null);
     }
+
+    @Override
+    @Transactional
+    public void delete(UUID operationId) {
+        operationRepository.deleteById(operationId);
+    }
 }
