@@ -1,6 +1,7 @@
 package com.zhe.split300.models;
 
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -63,7 +64,8 @@ public class Operation {
 
     @Column(name = "value")
     @NotNull(message = "Укажите сумму.")
-    @Digits(message = "Укажите цифровое значение по второй знак после запятой например: 36,28", integer = 100, fraction = 2)
+    @Digits(message = "Укажите цифровое значение по второй знак после запятой например: 36,28",
+            integer = 100, fraction = 2)
     private BigDecimal value;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -76,7 +78,7 @@ public class Operation {
     private Set<PaidFor> paidForActions;
 
     @ToString.Exclude
-    @OneToMany(mappedBy = "operation")
+    @OneToMany(mappedBy = "operation", cascade = CascadeType.ALL)
     private Set<OperationBalance> operationBalances;
 
 }

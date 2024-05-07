@@ -6,7 +6,6 @@ import com.zhe.split300.models.Person;
 import com.zhe.split300.repositories.CompanyRepository;
 import com.zhe.split300.repositories.PersonRepository;
 import jakarta.persistence.EntityNotFoundException;
-import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,16 +43,14 @@ public class CompanyService {
 
     public Company findOneWithPersons(int id) {
         Company company = companyRepository.findById(id).
-                orElseThrow(() ->
-                        new EntityNotFoundException("Company not found"));
+                orElseThrow(() -> new EntityNotFoundException("Company not found"));
         Set<Evention> eventions = company.getEventions();
         company.getPersons();
         return company;
     }
 
     public List<Company> findByPersonId(int personId) {
-        return companyRepository.findByPersons(Collections.singletonList
-                (new Person(personId)));
+        return companyRepository.findByPersons(Collections.singletonList(new Person(personId)));
     }
 
     public List<Company> findByOwnerId(int ownerId) {
@@ -63,8 +60,8 @@ public class CompanyService {
     public boolean isOwner(int personId, int companyId) {
         Optional<Company> optionalCompany = companyRepository.findById(companyId);
         AtomicInteger ownerId = new AtomicInteger();
-        optionalCompany.flatMap(company -> Optional.ofNullable(company.getOwner()))
-                .ifPresent(person -> ownerId.set(person.getId()));
+        optionalCompany.flatMap(company -> Optional.ofNullable(company.getOwner())).
+                ifPresent(person -> ownerId.set(person.getId()));
         return ownerId.get() == personId;
     }
 
@@ -91,16 +88,15 @@ public class CompanyService {
     }
 
     public Set<Person> getPersons(int id) {
-        return companyRepository.findById(id).map(Company::getPersons).
-                orElse(Collections.emptySet());
+        return companyRepository.findById(id).map(Company::getPersons).orElse(Collections.emptySet());
     }
 
     @Transactional
     public void addPersonToCompany(int idCompany, Person selectedPerson) {
         companyRepository.findById(idCompany).ifPresent(company -> {
             personRepository.findById(selectedPerson.getId()).ifPresent(person -> {
-                    company.addPerson(person);
-                    companyRepository.save(company);
+                company.addPerson(person);
+                companyRepository.save(company);
             });
         });
     }
@@ -108,7 +104,7 @@ public class CompanyService {
     @Transactional
     public void removePersonFromCompany(int idCompany, Person selectedPerson) {
         companyRepository.findById(idCompany).ifPresent(company -> {
-            personRepository.findById(selectedPerson.getId()).ifPresent( person -> {
+            personRepository.findById(selectedPerson.getId()).ifPresent(person -> {
                 company.removePerson(person);
                 companyRepository.save(company);
             });

@@ -73,15 +73,15 @@ public class Evention {
     @Column(name = "balance")
     private BigDecimal balance;
 
-    @OneToMany(mappedBy = "evention")
+    @OneToMany(mappedBy = "evention", cascade = CascadeType.ALL)
     @ToString.Exclude
     private Set<Operation> operations = new HashSet<>();
 
-    @OneToMany(mappedBy = "evention")
+    @OneToMany(mappedBy = "evention", cascade = CascadeType.ALL)
     @ToString.Exclude
     private Set<PersonBalance> personBalances = new HashSet<>();
 
-    @OneToMany(mappedBy = "evention")
+    @OneToMany(mappedBy = "evention", cascade = CascadeType.ALL)
     @ToString.Exclude
     private Set<Calculation> calculations = new HashSet<>();
 

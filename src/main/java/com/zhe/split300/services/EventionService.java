@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Service
@@ -29,8 +30,8 @@ public class EventionService {
     private final PersonRepository personRepository;
 
     @Autowired
-    public EventionService(EventionRepository eventionRepository, CompanyRepository companyRepository, PersonRepository personRepository,
-                           OperationRepository operationRepository) {
+    public EventionService(EventionRepository eventionRepository, CompanyRepository companyRepository,
+                           PersonRepository personRepository, OperationRepository operationRepository) {
         this.eventionRepository = eventionRepository;
         this.companyRepository = companyRepository;
         this.personRepository = personRepository;
@@ -50,7 +51,7 @@ public class EventionService {
         });
     }
 
-    public List<Evention> findByCompanyId(int companyId) {
+    public Set<Evention> findByCompanyId(int companyId) {
         return eventionRepository.findByCompany(new Company(companyId));
     }
 
@@ -65,7 +66,8 @@ public class EventionService {
     @Transactional
     public void addPersonToEvention(UUID eventionId, Person selectedPerson) {
         eventionRepository.findById(eventionId).ifPresent(evention -> {
-            if (evention.getPersons().stream().anyMatch(person -> person.getId() == selectedPerson.getId())) {
+            if (evention.getPersons().stream().
+                    anyMatch(person -> person.getId() == selectedPerson.getId())) {
                 return;
             }
             personRepository.findById(selectedPerson.getId()).ifPresent(evention::addPerson);

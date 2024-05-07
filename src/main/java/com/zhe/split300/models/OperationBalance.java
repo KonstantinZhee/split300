@@ -45,4 +45,11 @@ public class OperationBalance {
     @Column(name = "balance_value")
     @Digits(integer = 100, fraction = 4)
     private BigDecimal balance;
+
+
+    public OperationBalance(Operation operation, BigDecimal value, Person person) {
+        this.operation = operation;
+        this.balance = value;
+        this.person = person;
+    }
 }
