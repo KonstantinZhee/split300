@@ -8,4 +8,6 @@ public interface OperationService {
     void createNewOperation(Operation operation, UUID eventionId, int PersonId);
 
     Operation findOneWithAllFields(UUID operationId);
+
+    void delete(UUID operationId);
 }

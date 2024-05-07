@@ -74,7 +74,7 @@ public class Operation {
     private Person owner;
 
     @ToString.Exclude
-    @OneToMany(mappedBy = "operation")
+    @OneToMany(mappedBy = "operation", cascade = CascadeType.ALL)
     private Set<PaidFor> paidForActions;
 
     @ToString.Exclude

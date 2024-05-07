@@ -39,43 +39,6 @@ public class CompanyController {
         this.personService = personService;
         this.eventionService = eventionService;
     }
-//
-//    @GetMapping("/v1/groups")
-//    //Получаем все записи (1) READ
-//    public String index(Model model) {
-//        model.addAttribute("company", companyService.findAll());
-//        return "groups/index";
-//    }
-//
-//
-//    @GetMapping("/v1/groups/{id}/edit")
-//    //Форма редактирования (4)
-//    public String edit(Model model, @PathVariable("id") int id) {
-//        model.addAttribute("company", companyService.findOneById(id));
-//        return "groups/edit";
-//    }
-//
-//    @GetMapping("/v1/groups/{id}")
-//    //Читаем одну запись (5)
-//    public String showCompany(@PathVariable("id") int id, Model model,
-//                              @ModelAttribute("person") Person person) {
-//        model.addAttribute("company", companyService.findOneById(id));
-//        Set<Person> persons = companyService.getPersons(id);
-//        if (persons != null) {
-//            model.addAttribute("persons", persons);
-//        }
-//        return "groups/show";
-//    }
-//
-//
-//    @DeleteMapping("/v1/groups/{id}")
-//    //Удаление одной записи (7)
-//    public String delete(@PathVariable("id") int id) {
-//        companyService.delete(id);
-//        return "redirect:/v1/groups";
-//    }
-
-///ToDo выше не должно быть методов!!!!!!!!!!!!!!!!!!!!!
 
     @GetMapping("/v1/persons/{id}/groups")
     //Просмотр групп в которых есть участник

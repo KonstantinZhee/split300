@@ -58,14 +58,23 @@
                 <th>Заплатил</th>
                 <th>Сумма</th>
                 <th>Дата</th>
+                <th></th>
             </tr>
             <div th:each="operation : ${evention.getOperations()}">
                 <tr>
-                    <td> <a href="@{/v1/persons/{id}/groups/{idc}/events/{eUID}/operations/{oUID}(idc=${companyId}, id=${personId}, eUID=${eventionId}, oUID=${operation.getUid()})}">
-                            <button th:text="${operation.getName()}"> </button></a></td>
+                    <td>
+                        <a href="@{/v1/persons/{id}/groups/{idc}/events/{eUID}/operations/{oUID}(idc=${companyId}, id=${personId}, eUID=${eventionId}, oUID=${operation.getUid()})}">
+                            <button th:text="${operation.getName()}"></button>
+                        </a></td>
                     <td th:text="${operation.getOwner().getName()}"></td>
                     <td th:text="${operation.getValue()}"></td>
                     <td th:text="${#dates.format(operation.getTime(), 'dd.MM.yy HH:mm')}"></td>
+                    <td>
+                        <form th:method="DELETE"
+                              th:action="@{/v1/persons/{id}/groups/{idc}/events/{eUID}/operations/{oUID}(idc=${companyId}, id=${personId}, eUID=${eventionId}, oUID=${operation.getUid()})}">
+                            <input type="submit" value="Удалить"/>
+                        </form>
+                    </td>
                 </tr>
             </div>
         </table>
