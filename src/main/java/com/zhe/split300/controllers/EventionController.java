@@ -132,7 +132,7 @@ public class EventionController {
 
     @PatchMapping("/v1/persons/{id}/groups/{idc}/events/{eUID}/refresh")
     //Обновление баланса
-    public String refreshOperations(Model model, @ModelAttribute("personToRemove") Person person,
+    public String refreshOperations(Model model,
                                     @PathVariable("id") int personId,
                                     @PathVariable("idc") int companyId,
                                     @PathVariable("eUID") UUID eventionId) {

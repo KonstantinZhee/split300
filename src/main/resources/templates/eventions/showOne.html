@@ -46,6 +46,10 @@
       th:action="@{/v1/persons/{id}/groups/{idc}/events/{eUID}/refresh (idc=${companyId}, id=${personId}, eUID=${eventionId})}">
     <input type="submit" value="Обновить расходы"/>
 </form>
+<form th:method="POST"
+      th:action="@{/v1/persons/{id}/groups/{idc}/events/{eUID}/calculations (idc=${companyId}, id=${personId}, eUID=${eventionId})}">
+    <input type="submit" value="Обновить Балансы"/>
+</form>
 <div th:if="${evention.getOperations() == null || evention.getOperations().isEmpty()}">
     <b><span>У События пока нет операций</span></b>
 </div>
