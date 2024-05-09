@@ -16,6 +16,7 @@ import java.math.RoundingMode;
 import java.util.Set;
 
 @Service
+@Transactional(readOnly = true)
 public class OperationBalanceServiceImpl implements OperationBalanceService {
     private final OperationBalanceRepository operationBalanceRepository;
     private final PersonRepository personRepository;
@@ -33,7 +34,6 @@ public class OperationBalanceServiceImpl implements OperationBalanceService {
         operationBalanceRepository.save(new OperationBalance(operation, value, person));
     }
 
-
     @Override
     @Transactional
     public void createNewOperationBalances(Operation operation) {
@@ -43,7 +43,8 @@ public class OperationBalanceServiceImpl implements OperationBalanceService {
         persons.remove(operationOwner);
         if (!persons.isEmpty()) {
             BigDecimal personsCount = BigDecimal.valueOf(persons.size());
-            BigDecimal personsValue = operationValue.divide(personsCount, 4, RoundingMode.CEILING);
+            BigDecimal personsValue = operationValue
+                    .divide(personsCount, 4, RoundingMode.CEILING);
             for (Person person : persons) {
                 createNewOperationBalance(operation, personsValue, person);
             }

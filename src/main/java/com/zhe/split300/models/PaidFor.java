@@ -19,6 +19,7 @@ import lombok.ToString;
 import org.hibernate.annotations.UuidGenerator;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 import java.util.UUID;
 
 @Entity
@@ -50,4 +51,17 @@ public class PaidFor {
     @JoinColumn(name = "person_id", referencedColumnName = "id")
     @ToString.Exclude
     private Person personPaidFor;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PaidFor paidFor = (PaidFor) o;
+        return Objects.equals(uid, paidFor.uid);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(uid);
+    }
 }

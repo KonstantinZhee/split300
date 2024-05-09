@@ -33,7 +33,6 @@ public class OperationServiceImpl implements OperationService {
         this.operationBalanceService = operationBalanceService;
     }
 
-
     @Override
     @Transactional
     public void createNewOperation(Operation operation, UUID eventionId, int personId) {

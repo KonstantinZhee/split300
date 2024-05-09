@@ -27,7 +27,7 @@ import java.util.UUID;
 public class Calculation {
 
     @Id
-    @Column(name = "calculation_id", updatable = false, nullable = false)
+    @Column(name = "calculation_id")
     @GeneratedValue
     @UuidGenerator
     private UUID uid;
@@ -38,14 +38,22 @@ public class Calculation {
     private Evention evention;
 
     @ManyToOne
-    @JoinColumn(name = "person_id", referencedColumnName = "id", insertable=false, updatable=false)
+    @JoinColumn(name = "from_person_id", referencedColumnName = "id")
     private Person fromPerson;
 
     @ManyToOne
-    @JoinColumn(name = "person_id", referencedColumnName = "id", insertable=false, updatable=false)
+    @JoinColumn(name = "to_person_id", referencedColumnName = "id")
     private Person toPerson;
 
     @Column(name = "calculation_value")
     @Digits(integer = 100, fraction = 2)
     private BigDecimal value;
+
+    public Calculation(Evention evention, Person fromPerson, Person toPerson, BigDecimal value) {
+        this.evention = evention;
+        this.fromPerson = fromPerson;
+        this.toPerson = toPerson;
+        this.value = value;
+    }
+
 }

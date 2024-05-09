@@ -26,6 +26,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
@@ -37,6 +38,7 @@ import java.util.UUID;
 @Table(name = "Operation")
 @ToString
 public class Operation {
+
 
     @Id
     @Column(name = "uid", updatable = false, nullable = false)
@@ -81,4 +83,16 @@ public class Operation {
     @OneToMany(mappedBy = "operation", cascade = CascadeType.ALL)
     private Set<OperationBalance> operationBalances;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Operation operation = (Operation) o;
+        return Objects.equals(uid, operation.uid);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(uid);
+    }
 }
