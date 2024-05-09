@@ -53,4 +53,17 @@ public class OperationBalance {
         this.balance = value;
         this.person = person;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        OperationBalance that = (OperationBalance) o;
+        return Objects.equals(uid, that.uid);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(uid);
+    }
 }
