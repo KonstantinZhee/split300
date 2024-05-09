@@ -16,6 +16,7 @@ import java.math.RoundingMode;
 import java.util.Set;
 
 @Service
+@Transactional(readOnly = true)
 public class OperationBalanceServiceImpl implements OperationBalanceService {
     private final OperationBalanceRepository operationBalanceRepository;
     private final PersonRepository personRepository;
