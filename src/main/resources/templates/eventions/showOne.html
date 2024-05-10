@@ -46,17 +46,43 @@
       th:action="@{/v1/persons/{id}/groups/{idc}/events/{eUID}/refresh (idc=${companyId}, id=${personId}, eUID=${eventionId})}">
     <input type="submit" value="Обновить расходы"/>
 </form>
+<hr>
+<div th:if="${evention.getCalculations() == null || evention.getCalculations().isEmpty()}">
+    <b><span>У События пока нет доступного списка Переводов</span></b>
+</div>
+<div th:if="${evention.getCalculations() != null}">
+    <div th:if="${!evention.getCalculations().isEmpty()}">
+        <table>
+            <caption><h3>Список переводов, чтобы рассчитаться друг с другом</h3></caption>
+            <tr>
+                <th>От кого</th>
+                <th>Кому</th>
+                <th>Сумма перевода</th>
+                <th></th>
+            </tr>
+            <div th:each="calculation : ${evention.getCalculations()}">
+                <tr>
+                    <td th:text="${calculation.getFromPerson().getName()}"></td>
+                    <td th:text="${calculation.getToPerson().getName()}"></td>
+                    <td th:text="${calculation.getValue()}"></td>
+                </tr>
+            </div>
+        </table>
+    </div>
+</div>
+<br>
 <form th:method="POST"
       th:action="@{/v1/persons/{id}/groups/{idc}/events/{eUID}/calculations (idc=${companyId}, id=${personId}, eUID=${eventionId})}">
     <input type="submit" value="Обновить Балансы"/>
 </form>
+<hr>
 <div th:if="${evention.getOperations() == null || evention.getOperations().isEmpty()}">
     <b><span>У События пока нет операций</span></b>
 </div>
 <div th:if="${evention.getOperations() != null}">
     <div th:if="${!evention.getOperations().isEmpty()}">
         <table>
-            <caption>Список операций</caption>
+            <caption><h3>Список операций</h3></caption>
             <tr>
                 <th>Название</th>
                 <th>Заплатил</th>
@@ -84,11 +110,13 @@
         </table>
     </div>
 </div>
-<hr>
+<br>
 <form th:method="GET"
       th:action="@{/v1/persons/{id}/groups/{idc}/events/{eUID}/operations/new(idc=${companyId}, id=${personId}, eUID=${eventionId})}">
     <input type="submit" value="Добавить новую операцию"/>
 </form>
+
+<hr>
 <br>
 </body>
 </html>

@@ -6,7 +6,6 @@ import com.zhe.split300.models.OperationBalance;
 import com.zhe.split300.models.Person;
 import com.zhe.split300.models.PersonBalance;
 import com.zhe.split300.repositories.PersonBalanceRepository;
-import com.zhe.split300.services.interfaces.PersonBalanceService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

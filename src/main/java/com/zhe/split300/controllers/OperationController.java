@@ -1,7 +1,7 @@
 package com.zhe.split300.controllers;
 
 import com.zhe.split300.models.Operation;
-import com.zhe.split300.services.interfaces.OperationService;
+import com.zhe.split300.services.OperationService;
 import jakarta.validation.Valid;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -97,7 +97,7 @@ public class OperationController {
 
     // Обновления Расхода события при удалении операции -думаю не надо.
     //TODO Редактирование событий
-    //@TODO n+1 устранить
+    //@TODO n+1 устранить (при запросе Эвента, при запросе расходов)
     //TODO Редактирование операции (изменить заплатившего) при нажатии на операцию
     //TODO Удаление Эвента из представления группы
     //TODO Удаление операции Каскадное удаление операций При удаление Эвентов - ПРОВЕРИТЬ!

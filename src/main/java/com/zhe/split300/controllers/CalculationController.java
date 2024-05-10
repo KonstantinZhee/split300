@@ -1,6 +1,6 @@
 package com.zhe.split300.controllers;
 
-import com.zhe.split300.services.interfaces.CalculationService;
+import com.zhe.split300.services.CalculationService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,7 +24,7 @@ public class CalculationController {
 
     @PostMapping("/v1/persons/{id}/groups/{idc}/events/{eUID}/calculations")
     //Создание в Событии списка с минимальным количеством переводов
-    public String create(Model model,
+    public String createNewCalculations(Model model,
                          @PathVariable("id") int personId,
                          @PathVariable("idc") int companyId,
                          @PathVariable("eUID") UUID eventionId) {

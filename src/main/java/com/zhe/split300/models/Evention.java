@@ -45,9 +45,20 @@ import java.util.UUID;
 @Table(name = "Evention")
 @ToString
 @Builder
-@NamedEntityGraph(name = "Evention.details", includeAllAttributes = true,
-        subgraphs = @NamedSubgraph(name = "Operations.details", type = Operation.class,
-                attributeNodes = @NamedAttributeNode("operationBalances")))
+@NamedEntityGraph(name = "Evention.details", attributeNodes = {
+        @NamedAttributeNode(value = "operations", subgraph = "Operation.details")
+}, subgraphs = {
+        @NamedSubgraph(name = "Operation.details", attributeNodes = {
+                @NamedAttributeNode("operationBalances"),
+                @NamedAttributeNode(value = "operationBalances", subgraph = "OperationBalances.details")
+        }),
+        @NamedSubgraph(name = "OperationBalances.details", attributeNodes = {
+                @NamedAttributeNode("person"),
+                @NamedAttributeNode("balance")
+        })
+})
+
+
 public class Evention {
 
     @Id
@@ -133,6 +144,4 @@ public class Evention {
     public int hashCode() {
         return Objects.hashCode(uid);
     }
-
-
 }

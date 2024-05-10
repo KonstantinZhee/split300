@@ -7,9 +7,6 @@ import com.zhe.split300.models.PersonBalance;
 import com.zhe.split300.repositories.CalculationRepository;
 import com.zhe.split300.repositories.EventionRepository;
 import com.zhe.split300.repositories.PersonRepository;
-import com.zhe.split300.services.interfaces.CalculationService;
-import com.zhe.split300.services.interfaces.PersonBalanceService;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -47,8 +44,7 @@ public class CalculationServiceImpl implements CalculationService {
     @Transactional
     public Evention createCalculations(UUID eventionId) {
         log.info("createCalculations(UUID eventionId)");
-        Evention evention = eventionRepository.findByIdWithAllFields(eventionId)
-                .orElseThrow(() -> new EntityNotFoundException("Evention not found"));
+        Evention evention = eventionRepository.findByIdWithAllFields(eventionId);
         Set<PersonBalance> personBalances = personBalanceService.createNewPersonBalances(evention);
         evention.setPersonBalances(personBalances);
         Set<Calculation> calculations = convertPersonBalancesToCalculations(personBalances, evention);

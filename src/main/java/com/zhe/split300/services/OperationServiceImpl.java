@@ -6,8 +6,6 @@ import com.zhe.split300.models.Person;
 import com.zhe.split300.repositories.EventionRepository;
 import com.zhe.split300.repositories.OperationRepository;
 import com.zhe.split300.repositories.PersonRepository;
-import com.zhe.split300.services.interfaces.OperationBalanceService;
-import com.zhe.split300.services.interfaces.OperationService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

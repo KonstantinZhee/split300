@@ -1,4 +1,4 @@
-package com.zhe.split300.services.interfaces;
+package com.zhe.split300.services;
 
 import com.zhe.split300.models.Evention;
 
