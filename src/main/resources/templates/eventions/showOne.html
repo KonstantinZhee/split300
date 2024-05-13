@@ -46,10 +46,31 @@
       th:action="@{/v1/persons/{id}/groups/{idc}/events/{eUID}/refresh (idc=${companyId}, id=${personId}, eUID=${eventionId})}">
     <input type="submit" value="Обновить расходы"/>
 </form>
-<hr>
+<hr><div th:if="${balances == null || balances.isEmpty()}">
+    <b><span>У События пока нет доступного списка Балансов</span></b>
+</div>
+<div th:if="${balances != null}">
+    <div th:if="${!balances.isEmpty()}">
+        <table>
+            <caption><h3>Список балансов</h3></caption>
+            <tr>
+                <th>Имя</th>
+                <th>На балансе</th>
+            </tr>
+            <div th:each="balance : ${balances}">
+                <tr>
+                    <td th:text="${balance.getName()}"></td>
+                    <td th:text="${balance.getBalance()}"></td>
+                </tr>
+            </div>
+        </table>
+    </div>
+</div>
+<br>
 <div th:if="${evention.getCalculations() == null || evention.getCalculations().isEmpty()}">
     <b><span>У События пока нет доступного списка Переводов</span></b>
 </div>
+
 <div th:if="${evention.getCalculations() != null}">
     <div th:if="${!evention.getCalculations().isEmpty()}">
         <table>

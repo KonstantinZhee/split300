@@ -1,5 +1,6 @@
 package com.zhe.split300.controllers;
 
+import com.zhe.split300.dto.PersonBalanceDTO;
 import com.zhe.split300.models.Evention;
 import com.zhe.split300.models.Person;
 import com.zhe.split300.services.CompanyService;
@@ -18,7 +19,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.Comparator;
+import java.util.List;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Log4j2
 @Controller
@@ -79,7 +84,9 @@ public class EventionController {
                                            @PathVariable("idc") int companyId,
                                            @PathVariable("eUID") UUID eventionId) {
         log.info("GET /v1/persons/{id}/groups/{idc}/events/{eUID}");
-        model.addAttribute("evention", eventionService.findOneWithAllFields(eventionId));
+        Evention evention = eventionService.findOneWithAllFields(eventionId);
+        model.addAttribute("evention", evention);
+        model.addAttribute("balances", convertToPersonBalancesDTO(evention));
         model.addAttribute("personId", personId);
         model.addAttribute("companyId", companyId);
         model.addAttribute("eventionId", eventionId);
@@ -87,7 +94,7 @@ public class EventionController {
     }
 
     @GetMapping("/v1/persons/{id}/groups/{idc}/events/{eUID}/edit")
-    //Вывод страницы с событием
+    //Редактирование события
     public String editEvention(Model model,
                                @PathVariable("id") int personId,
                                @PathVariable("idc") int companyId,
@@ -95,6 +102,7 @@ public class EventionController {
         log.info("GET  /v1/persons/{id}/groups/{idc}/events/{eUID}/edit");
         Evention evention = eventionService.findOneWithAllFields(eventionId);
         model.addAttribute("evention", evention);
+        model.addAttribute("balances", convertToPersonBalancesDTO(evention));
         model.addAttribute("company", evention.getCompany());
         model.addAttribute("personId", personId);
         model.addAttribute("companyId", companyId);
@@ -149,12 +157,19 @@ public class EventionController {
     public String delete(Model model,
                          @PathVariable("id") int personId,
                          @PathVariable("idc") int companyId,
-                         @PathVariable("eUID") UUID eventionId){
+                         @PathVariable("eUID") UUID eventionId) {
         log.info("DELETE /v1/persons/{id}/groups/{idc}/events/{eUID}/operations/{oUID}");
         eventionService.delete(eventionId);
         model.addAttribute("personId", personId);
         model.addAttribute("companyId", companyId);
         model.addAttribute("eventionId", eventionId);
         return "redirect:/v1/persons/{id}/groups/{idc}";
+    }
+
+    private List<PersonBalanceDTO> convertToPersonBalancesDTO(Evention evention) {
+        return evention.getPersonBalances().stream()
+                .map(personBalance -> new PersonBalanceDTO(personBalance.getPerson().getName(),
+                        personBalance.getBalance()))
+                .sorted(Comparator.comparing(PersonBalanceDTO::getBalance)).toList();
     }
 }

@@ -59,8 +59,9 @@ public class EventionService {
         return eventionRepository.findById(eventionId).orElse(null);
     }
 
+    @Transactional
     public Evention findOneWithAllFields(UUID id) {
-        return eventionRepository.findById(id).orElse(null);
+        return eventionRepository.findByIdWithAllFields(id);
     }
 
     @Transactional

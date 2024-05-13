@@ -6,5 +6,7 @@ import java.util.UUID;
 
 public interface CalculationService {
 
-    Evention createCalculations(UUID eventionId);
+    Evention createNewCalculations(UUID eventionId);
+
+    void deleteAllByEvention(Evention evention);
 }

@@ -42,17 +42,26 @@ public class CalculationServiceImpl implements CalculationService {
 
     @Override
     @Transactional
-    public Evention createCalculations(UUID eventionId) {
+    public Evention createNewCalculations(UUID eventionId) {
         log.info("createCalculations(UUID eventionId)");
         Evention evention = eventionRepository.findByIdWithAllFields(eventionId);
+        personBalanceService.deleteAllByEvention(evention);
         Set<PersonBalance> personBalances = personBalanceService.createNewPersonBalances(evention);
         evention.setPersonBalances(personBalances);
+        deleteAllByEvention(evention);
         Set<Calculation> calculations = convertPersonBalancesToCalculations(personBalances, evention);
         evention.setCalculations(calculations); //TODO Очистить Предидущие калькуляции и балансы
         eventionRepository.save(evention);
         personBalanceService.saveNewPersonBalances(personBalances);
         calculationRepository.saveAll(calculations);
         return evention;
+    }
+
+
+    @Override
+    @Transactional
+    public void deleteAllByEvention(Evention evention) {
+        calculationRepository.deleteAllByEvention(evention);
     }
 
 

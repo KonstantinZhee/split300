@@ -10,4 +10,5 @@ public interface PersonBalanceService {
     Set<PersonBalance> createNewPersonBalances(Evention evention);
 
     void saveNewPersonBalances(Set<PersonBalance> personBalances);
+    void deleteAllByEvention(Evention evention);
 }

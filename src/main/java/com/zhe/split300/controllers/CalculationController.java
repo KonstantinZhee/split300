@@ -29,7 +29,7 @@ public class CalculationController {
                          @PathVariable("idc") int companyId,
                          @PathVariable("eUID") UUID eventionId) {
         log.info("GET /v1/persons/{id}/groups/{idc}/events/{eUID}");
-        model.addAttribute("evention", calculationService.createCalculations(eventionId));
+        model.addAttribute("evention", calculationService.createNewCalculations(eventionId));
         model.addAttribute("personId", personId);
         model.addAttribute("companyId", companyId);
         model.addAttribute("eventionId", eventionId);

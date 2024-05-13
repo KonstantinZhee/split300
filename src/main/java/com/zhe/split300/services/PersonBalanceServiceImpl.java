@@ -61,4 +61,10 @@ public class PersonBalanceServiceImpl implements PersonBalanceService {
         log.info("saveNewPersonBalances(Set<PersonBalance> personBalances)");
         personBalanceRepository.saveAll(personBalances);
     }
+
+    @Override
+    @Transactional
+    public void deleteAllByEvention(Evention evention) {
+        personBalanceRepository.deleteAllByEvention(evention);
+    }
 }
