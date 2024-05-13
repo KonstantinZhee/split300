@@ -46,9 +46,9 @@ public class CalculationServiceImpl implements CalculationService {
         log.info("createCalculations(UUID eventionId)");
         Evention evention = eventionRepository.findByIdWithAllFields(eventionId);
         personBalanceService.deleteAllByEvention(evention);
+        deleteAllByEvention(evention);
         Set<PersonBalance> personBalances = personBalanceService.createNewPersonBalances(evention);
         evention.setPersonBalances(personBalances);
-        deleteAllByEvention(evention);
         Set<Calculation> calculations = convertPersonBalancesToCalculations(personBalances, evention);
         evention.setCalculations(calculations); //TODO Очистить Предидущие калькуляции и балансы
         eventionRepository.save(evention);
@@ -67,38 +67,40 @@ public class CalculationServiceImpl implements CalculationService {
 
     private Set<Calculation> convertPersonBalancesToCalculations(final Set<PersonBalance> personBalances,
                                                                  Evention evention) {
-        log.info("convertPersonBalancesToCalculations(final Set<PersonBalance> personBalances, Evention evention)");
-        Map<Person, BigDecimal> balancesMap = personBalances.stream().collect(Collectors
-                .toMap(PersonBalance::getPerson, PersonBalance::getBalance));
-        Set<Calculation> calculations = new TreeSet<>(Comparator
-                .comparing(Calculation::getValue).reversed());
+        Set<Calculation> calculations = new TreeSet<>(Comparator.comparing(Calculation::getValue)
+                .thenComparing(t -> t.getFromPerson().getName()));
+        if (!personBalances.isEmpty()) {
+            log.info("convertPersonBalancesToCalculations(final Set<PersonBalance> personBalances, Evention evention)");
+            Map<Person, BigDecimal> balancesMap = personBalances.stream().collect(Collectors
+                    .toMap(PersonBalance::getPerson, PersonBalance::getBalance));
 
-        while (true) {
-            Person minBalancePerson = findMinBalancePerson(balancesMap);
-            Person maxBalancePerson = findMaxBalancePerson(balancesMap);
-            if (balancesMap.get(minBalancePerson).compareTo(BigDecimal.ZERO) >= 0 || balancesMap.get(maxBalancePerson)
-                    .compareTo(BigDecimal.ZERO) <= 0) {
-                break;
+            while (true) {
+                Person minBalancePerson = findMinBalancePerson(balancesMap);
+                Person maxBalancePerson = findMaxBalancePerson(balancesMap);
+                if (balancesMap.get(minBalancePerson).compareTo(BigDecimal.ZERO) >= 0 || balancesMap.get(maxBalancePerson)
+                        .compareTo(BigDecimal.ZERO) <= 0) {
+                    break;
+                }
+                BigDecimal calculationValue = balancesMap.get(maxBalancePerson)
+                        .min(balancesMap.get(minBalancePerson).abs());
+                balancesMap.put(minBalancePerson, balancesMap.get(minBalancePerson).add(calculationValue));
+                balancesMap.put(maxBalancePerson, balancesMap.get(maxBalancePerson).subtract(calculationValue));
+                calculations.add(new Calculation(evention, maxBalancePerson, minBalancePerson,
+                        calculationValue.setScale(2, RoundingMode.CEILING)));
             }
-            BigDecimal calculationValue = balancesMap.get(maxBalancePerson)
-                    .min(balancesMap.get(minBalancePerson).abs());
-            balancesMap.put(minBalancePerson, balancesMap.get(minBalancePerson).add(calculationValue));
-            balancesMap.put(maxBalancePerson, balancesMap.get(maxBalancePerson).subtract(calculationValue));
-            calculations.add(new Calculation(evention, maxBalancePerson, minBalancePerson,
-                    calculationValue.setScale(2, RoundingMode.CEILING)));
         }
         return calculations;
     }
 
     private Person findMaxBalancePerson(Map<Person, BigDecimal> balancesMap) {
         return balancesMap.entrySet().stream().max(Map.Entry.comparingByValue())
-                .orElseThrow()
+                .orElse(null)
                 .getKey();
     }
 
     private Person findMinBalancePerson(Map<Person, BigDecimal> balancesMap) {
         return balancesMap.entrySet().stream().min(Map.Entry.comparingByValue())
-                .orElseThrow()
+                .orElse(null)
                 .getKey();
     }
 }

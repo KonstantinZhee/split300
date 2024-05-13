@@ -46,7 +46,8 @@
       th:action="@{/v1/persons/{id}/groups/{idc}/events/{eUID}/refresh (idc=${companyId}, id=${personId}, eUID=${eventionId})}">
     <input type="submit" value="Обновить расходы"/>
 </form>
-<hr><div th:if="${balances == null || balances.isEmpty()}">
+<hr>
+<div th:if="${balances == null || balances.isEmpty()}">
     <b><span>У События пока нет доступного списка Балансов</span></b>
 </div>
 <div th:if="${balances != null}">
@@ -66,26 +67,25 @@
         </table>
     </div>
 </div>
-<br>
+<hr>
 <div th:if="${evention.getCalculations() == null || evention.getCalculations().isEmpty()}">
     <b><span>У События пока нет доступного списка Переводов</span></b>
 </div>
-
 <div th:if="${evention.getCalculations() != null}">
     <div th:if="${!evention.getCalculations().isEmpty()}">
         <table>
             <caption><h3>Список переводов, чтобы рассчитаться друг с другом</h3></caption>
             <tr>
                 <th>От кого</th>
-                <th>Кому</th>
                 <th>Сумма перевода</th>
+                <th>Кому</th>
                 <th></th>
             </tr>
             <div th:each="calculation : ${evention.getCalculations()}">
                 <tr>
                     <td th:text="${calculation.getFromPerson().getName()}"></td>
-                    <td th:text="${calculation.getToPerson().getName()}"></td>
                     <td th:text="${calculation.getValue()}"></td>
+                    <td th:text="${calculation.getToPerson().getName()}"></td>
                 </tr>
             </div>
         </table>
@@ -94,7 +94,7 @@
 <br>
 <form th:method="POST"
       th:action="@{/v1/persons/{id}/groups/{idc}/events/{eUID}/calculations (idc=${companyId}, id=${personId}, eUID=${eventionId})}">
-    <input type="submit" value="Обновить Балансы"/>
+    <input type="submit" value="Обновить список переводов."/>
 </form>
 <hr>
 <div th:if="${evention.getOperations() == null || evention.getOperations().isEmpty()}">

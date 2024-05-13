@@ -1,10 +1,10 @@
 package com.zhe.split300.controllers;
 
-import com.zhe.split300.dto.PersonBalanceDTO;
 import com.zhe.split300.models.Evention;
 import com.zhe.split300.models.Person;
 import com.zhe.split300.services.CompanyService;
 import com.zhe.split300.services.EventionService;
+import com.zhe.split300.utils.ConverterDTO;
 import jakarta.validation.Valid;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,11 +19,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Log4j2
 @Controller
@@ -31,11 +27,13 @@ import java.util.stream.Collectors;
 public class EventionController {
     private final EventionService eventionService;
     private final CompanyService companyService;
+    private final ConverterDTO converterDTO;
 
     @Autowired
-    public EventionController(EventionService eventionService, CompanyService companyService) {
+    public EventionController(EventionService eventionService, CompanyService companyService, ConverterDTO converterDTO) {
         this.eventionService = eventionService;
         this.companyService = companyService;
+        this.converterDTO = converterDTO;
     }
 
     @GetMapping("/v1/persons/{id}/groups/{idc}/events")
@@ -86,7 +84,7 @@ public class EventionController {
         log.info("GET /v1/persons/{id}/groups/{idc}/events/{eUID}");
         Evention evention = eventionService.findOneWithAllFields(eventionId);
         model.addAttribute("evention", evention);
-        model.addAttribute("balances", convertToPersonBalancesDTO(evention));
+        model.addAttribute("balances", converterDTO.convertToPersonBalancesDTO(evention));
         model.addAttribute("personId", personId);
         model.addAttribute("companyId", companyId);
         model.addAttribute("eventionId", eventionId);
@@ -102,7 +100,7 @@ public class EventionController {
         log.info("GET  /v1/persons/{id}/groups/{idc}/events/{eUID}/edit");
         Evention evention = eventionService.findOneWithAllFields(eventionId);
         model.addAttribute("evention", evention);
-        model.addAttribute("balances", convertToPersonBalancesDTO(evention));
+        model.addAttribute("balances", converterDTO.convertToPersonBalancesDTO(evention));
         model.addAttribute("company", evention.getCompany());
         model.addAttribute("personId", personId);
         model.addAttribute("companyId", companyId);
@@ -131,9 +129,9 @@ public class EventionController {
                                            @PathVariable("idc") int companyId,
                                            @PathVariable("eUID") UUID eventionId) {
         log.info("PATCH   /v1/persons/{id}/groups/{idc}/events/{eUID}/removePerson");
-        model.addAttribute("personId", personId);
-        model.addAttribute("companyId", companyId);
-        model.addAttribute("eventionId", eventionId);
+//        model.addAttribute("personId", personId);
+//        model.addAttribute("companyId", companyId);
+//        model.addAttribute("eventionId", eventionId);
         eventionService.removePersonFromEvention(eventionId, person);
         return String.format("redirect:/v1/persons/%d/groups/%d/events/%s/edit", personId, companyId, eventionId);
     }
@@ -145,9 +143,6 @@ public class EventionController {
                                     @PathVariable("idc") int companyId,
                                     @PathVariable("eUID") UUID eventionId) {
         log.info("PATCH   /v1/persons/{id}/groups/{idc}/events/{eUID}/refresh");
-        model.addAttribute("personId", personId);
-        model.addAttribute("companyId", companyId);
-        model.addAttribute("eventionId", eventionId);
         eventionService.refreshBalance(eventionId);
         return String.format("redirect:/v1/persons/%d/groups/%d/events/%s", personId, companyId, eventionId);
     }
@@ -166,10 +161,4 @@ public class EventionController {
         return "redirect:/v1/persons/{id}/groups/{idc}";
     }
 
-    private List<PersonBalanceDTO> convertToPersonBalancesDTO(Evention evention) {
-        return evention.getPersonBalances().stream()
-                .map(personBalance -> new PersonBalanceDTO(personBalance.getPerson().getName(),
-                        personBalance.getBalance()))
-                .sorted(Comparator.comparing(PersonBalanceDTO::getBalance)).toList();
-    }
 }

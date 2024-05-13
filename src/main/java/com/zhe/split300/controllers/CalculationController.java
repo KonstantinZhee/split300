@@ -1,6 +1,8 @@
 package com.zhe.split300.controllers;
 
+import com.zhe.split300.models.Evention;
 import com.zhe.split300.services.CalculationService;
+import com.zhe.split300.utils.ConverterDTO;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,10 +18,12 @@ import java.util.UUID;
 @RequestMapping
 public class CalculationController {
     private final CalculationService calculationService;
+    private final ConverterDTO converterDTO;
 
     @Autowired
-    public CalculationController(CalculationService calculationService) {
+    public CalculationController(CalculationService calculationService, ConverterDTO converterDTO) {
         this.calculationService = calculationService;
+        this.converterDTO = converterDTO;
     }
 
     @PostMapping("/v1/persons/{id}/groups/{idc}/events/{eUID}/calculations")
@@ -29,7 +33,9 @@ public class CalculationController {
                          @PathVariable("idc") int companyId,
                          @PathVariable("eUID") UUID eventionId) {
         log.info("GET /v1/persons/{id}/groups/{idc}/events/{eUID}");
-        model.addAttribute("evention", calculationService.createNewCalculations(eventionId));
+        Evention evention = calculationService.createNewCalculations(eventionId);
+        model.addAttribute("evention", evention);
+        model.addAttribute("balances", converterDTO.convertToPersonBalancesDTO(evention));
         model.addAttribute("personId", personId);
         model.addAttribute("companyId", companyId);
         model.addAttribute("eventionId", eventionId);

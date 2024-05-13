@@ -47,14 +47,28 @@ import java.util.UUID;
 @Builder
 @NamedEntityGraph(name = "Evention.details", attributeNodes = {
         @NamedAttributeNode(value = "operations", subgraph = "Operation.details")
-}, subgraphs = {
+}, includeAllAttributes = true, subgraphs = {
         @NamedSubgraph(name = "Operation.details", attributeNodes = {
-                @NamedAttributeNode("operationBalances"),
+                @NamedAttributeNode(value = "owner", subgraph = "Person.details"),
                 @NamedAttributeNode(value = "operationBalances", subgraph = "OperationBalances.details")
         }),
         @NamedSubgraph(name = "OperationBalances.details", attributeNodes = {
-                @NamedAttributeNode("person"),
-                @NamedAttributeNode("balance")
+                @NamedAttributeNode(value = "person", subgraph = "Person.details"),
+                @NamedAttributeNode(value = "balance")
+        }),
+        @NamedSubgraph(name = "Person.details", attributeNodes = {
+                @NamedAttributeNode("name"),
+                @NamedAttributeNode("email"),
+                @NamedAttributeNode("id")
+        }),
+        @NamedSubgraph(name = "PersonBalance.details", attributeNodes = {
+                @NamedAttributeNode(value = "person", subgraph = "Person.details"),
+                @NamedAttributeNode("balance"),
+        }),
+        @NamedSubgraph(name = "Calculation.details", attributeNodes = {
+                @NamedAttributeNode(value = "fromPerson", subgraph = "Person.details"),
+                @NamedAttributeNode(value = "toPerson", subgraph = "Person.details"),
+                @NamedAttributeNode("value"),
         })
 })
 
