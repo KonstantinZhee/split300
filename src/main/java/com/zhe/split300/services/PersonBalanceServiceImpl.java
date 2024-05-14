@@ -65,6 +65,7 @@ public class PersonBalanceServiceImpl implements PersonBalanceService {
     @Override
     @Transactional
     public void deleteAllByEvention(Evention evention) {
-        personBalanceRepository.deleteAllByEvention(evention);
+        log.info("deleteAllByEvention(Evention evention)");
+        personBalanceRepository.deleteAll(evention.getPersonBalances());
     }
 }

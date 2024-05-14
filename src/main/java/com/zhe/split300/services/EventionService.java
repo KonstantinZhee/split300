@@ -86,7 +86,7 @@ public class EventionService {
 
     @Transactional
     public void refreshBalance(UUID eventionId) {
-        Evention evention = eventionRepository.findById(eventionId).orElseThrow(
+        Evention evention = eventionRepository.findByIdWithOperations(eventionId).orElseThrow(
                 () -> new EntityNotFoundException("Evention not found"));
         evention.setBalance(BigDecimal.ZERO);
         for (Operation operation : evention.getOperations()) {

@@ -57,19 +57,33 @@ import java.util.UUID;
                 @NamedAttributeNode(value = "balance")
         }),
         @NamedSubgraph(name = "Person.details", attributeNodes = {
-                @NamedAttributeNode("name"),
-                @NamedAttributeNode("email"),
-                @NamedAttributeNode("id")
+                @NamedAttributeNode(value = "name"),
+                @NamedAttributeNode(value = "email"),
+                @NamedAttributeNode(value = "id")
         }),
         @NamedSubgraph(name = "PersonBalance.details", attributeNodes = {
                 @NamedAttributeNode(value = "person", subgraph = "Person.details"),
-                @NamedAttributeNode("balance"),
+                @NamedAttributeNode(value = "balance"),
+                @NamedAttributeNode(value = "evention"),
+                @NamedAttributeNode(value = "uid")
         }),
         @NamedSubgraph(name = "Calculation.details", attributeNodes = {
                 @NamedAttributeNode(value = "fromPerson", subgraph = "Person.details"),
                 @NamedAttributeNode(value = "toPerson", subgraph = "Person.details"),
-                @NamedAttributeNode("value"),
+                @NamedAttributeNode(value = "value"),
+                @NamedAttributeNode(value = "evention"),
+                @NamedAttributeNode(value = "uid")
         })
+})
+
+@NamedEntityGraph(name = "Evention.withOperations", attributeNodes = {
+        @NamedAttributeNode(value = "operations", subgraph = "Operation.details"),
+        @NamedAttributeNode(value = "balance"),
+}, subgraphs = {
+        @NamedSubgraph(name = "Operation.details", attributeNodes = {
+                @NamedAttributeNode(value = "evention"),
+                @NamedAttributeNode(value = "value"),
+        }),
 })
 
 

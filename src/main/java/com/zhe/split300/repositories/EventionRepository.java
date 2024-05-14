@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
@@ -16,7 +17,11 @@ public interface EventionRepository extends JpaRepository<Evention, UUID> {
 
     Set<Evention> findByCompany(Company company);
 
-    @EntityGraph(value = "Evention.details", type = EntityGraph.EntityGraphType.LOAD)
+    @EntityGraph(value = "Evention.withOperations", type = EntityGraph.EntityGraphType.FETCH)
+    @Query("SELECT e FROM Evention e WHERE e.id = :uid")
+    Optional<Evention> findByIdWithOperations(@Param("uid") UUID eventionId);
+
+    @EntityGraph(value = "Evention.details", type = EntityGraph.EntityGraphType.FETCH)
     @Query("SELECT e FROM Evention e WHERE e.id = :uid")
     Evention findByIdWithAllFields(@Param("uid") UUID eventionId);
 }

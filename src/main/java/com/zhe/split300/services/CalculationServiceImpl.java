@@ -6,6 +6,7 @@ import com.zhe.split300.models.Person;
 import com.zhe.split300.models.PersonBalance;
 import com.zhe.split300.repositories.CalculationRepository;
 import com.zhe.split300.repositories.EventionRepository;
+import com.zhe.split300.repositories.PersonBalanceRepository;
 import com.zhe.split300.repositories.PersonRepository;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,7 @@ import java.util.stream.Collectors;
 @Service
 @Transactional(readOnly = true)
 public class CalculationServiceImpl implements CalculationService {
+    private final PersonBalanceRepository personBalanceRepository;
     private final CalculationRepository calculationRepository;
     private final EventionRepository eventionRepository;
     private final PersonRepository personRepository;
@@ -32,11 +34,13 @@ public class CalculationServiceImpl implements CalculationService {
 
     @Autowired
     public CalculationServiceImpl(CalculationRepository calculationRepository, EventionRepository eventionRepository,
-                                  PersonRepository personRepository, PersonBalanceService personBalanceService) {
+                                  PersonRepository personRepository, PersonBalanceService personBalanceService,
+                                  PersonBalanceRepository personBalanceRepository) {
         this.calculationRepository = calculationRepository;
         this.eventionRepository = eventionRepository;
         this.personRepository = personRepository;
         this.personBalanceService = personBalanceService;
+        this.personBalanceRepository = personBalanceRepository;
     }
 
 
@@ -46,7 +50,9 @@ public class CalculationServiceImpl implements CalculationService {
         log.info("createCalculations(UUID eventionId)");
         Evention evention = eventionRepository.findByIdWithAllFields(eventionId);
         personBalanceService.deleteAllByEvention(evention);
+        evention.getPersonBalances().clear();
         deleteAllByEvention(evention);
+        evention.getOperations().clear();
         Set<PersonBalance> personBalances = personBalanceService.createNewPersonBalances(evention);
         evention.setPersonBalances(personBalances);
         Set<Calculation> calculations = convertPersonBalancesToCalculations(personBalances, evention);
@@ -61,7 +67,8 @@ public class CalculationServiceImpl implements CalculationService {
     @Override
     @Transactional
     public void deleteAllByEvention(Evention evention) {
-        calculationRepository.deleteAllByEvention(evention);
+        log.info("deleteAllByEvention(Evention evention)");
+        calculationRepository.deleteAll(evention.getCalculations());
     }
 
 
