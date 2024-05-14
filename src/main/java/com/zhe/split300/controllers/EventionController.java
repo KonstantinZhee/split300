@@ -129,9 +129,6 @@ public class EventionController {
                                            @PathVariable("idc") int companyId,
                                            @PathVariable("eUID") UUID eventionId) {
         log.info("PATCH   /v1/persons/{id}/groups/{idc}/events/{eUID}/removePerson");
-//        model.addAttribute("personId", personId);
-//        model.addAttribute("companyId", companyId);
-//        model.addAttribute("eventionId", eventionId);
         eventionService.removePersonFromEvention(eventionId, person);
         return String.format("redirect:/v1/persons/%d/groups/%d/events/%s/edit", personId, companyId, eventionId);
     }
