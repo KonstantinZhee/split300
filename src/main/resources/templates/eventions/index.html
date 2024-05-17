@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Index</title>
+</head>
+<body>
+<h3><a href="/v1"><button>НА ГЛАВНУЮ СТРАНИЦУ</button></a></h3>
+<h3><a href="/company"><button>На страницу с Группами</button></a></h3>
+<h3><span>Все мероприятия:</span></h3>
+<div th:each="evention : ${evention}">
+    <a th:href="@{/eventions/{id}(id=${evention.getId()})}"><button>
+        <p th:text="${evention.getId() + ', ' + evention.getName() + ', ' + evention.getEmail()}"></button></a>
+</div>
+<br><br/><hr>
+<a href="/eventions/new"><button>Добавить новое событие</button></a>
+<hr><br><br/>
+</body>
+</html>

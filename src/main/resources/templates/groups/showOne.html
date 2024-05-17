@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>ShowOne</title>
+</head>
+<body>
+<h3><a href="/v1">
+    <button>НА ГЛАВНУЮ СТРАНИЦУ</button>
+</a></h3>
+<h3><a th:href="@{/v1/persons/{id}(id=${personId})}">
+    <button>На страницу с Группами пользователя</button>
+</a></h3>
+<hr/>
+<div th:if="${company != null}">
+    <h1><a th:text="${company.getId() + ',  ' + company.getName()}">VALUE</a></h1>
+    <div th:if="${company.getOwner() != null}">
+        <h2><span>Владелец группы: </span><a th:text="${company.getOwner().getName()}">VALUE</a></h2>
+    </div>
+    <div th:if="${company.getPersons() == null || company.getPersons().isEmpty()}">
+        <h3><span>Участники в группе не найдены</span></h3>
+    </div>
+
+    <div th:if="${!company.getPersons().isEmpty()}">
+        <h3><span>Участники в группе:</span></h3>
+        <div th:each="person : ${company.getPersons()}">
+            <span th:text="${person.getId() + ', ' + person.getName() + ', ' + person.getEmail()}"></span>
+        </div>
+    </div>
+</div>
+<br>
+<hr/>
+<div th:if="${eventions == null || eventions.isEmpty()}">
+    <h3><span>Событий не найдено</span></h3>
+</div>
+
+<div th:if="${eventions != null && !eventions.isEmpty()}">
+    <h3><span>Список событий в группе:</span></h3>
+    <div th:each="evention : ${eventions}">
+        <form th:method="GET"
+              th:action="@{/v1/persons/{id}/groups/{idc}/events/{ide}(idc=${companyId}, id=${personId}, ide=${evention.getUid()})}"
+              th:object="${evention}">
+            <span th:text="${evention.getName()}"></span>
+            <button type="submit">Выбрать событие</button>
+        </form>
+    </div>
+</div>
+<br>
+<hr/>
+<h3><span>Операции с группой:</span></h3>
+<form th:method="GET" th:action="@{/v1/persons/{id}/groups/{idc}/events/new(idc=${companyId}, id=${personId})}">
+    <input type="submit" value="ДОБАВИТЬ СОБЫТИЕ"/>
+</form>
+<br>
+<form th:method="GET" th:action="@{/v1/persons/{id}/groups/{idc}/edit(idc=${companyId}, id=${personId})}">
+    <input type="submit" value="РЕДАКТИРОВАТЬ ГРУППУ"/>
+</form>
+</body>
+</html>

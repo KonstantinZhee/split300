@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>Show Evention</title>
+</head>
+<body>
+<h3><a href="/v1">
+    <button>НА ГЛАВНУЮ СТРАНИЦУ</button>
+</a></h3>
+<h3><a th:href="@{/v1/persons/{id}/groups/{idc}(id=${personId}, idc=${companyId})}">
+    <button>На страницу Группы Событий</button>
+</a></h3>
+<hr/>
+
+<div th:if="${evention != null}">
+
+    <h1><a th:text="${evention.getName()}"></a></h1>
+    <div th:if="${evention.getCompany()!= null}">
+        <h3><a th:text="${'Группа: ' + evention.getCompany().getName()}">VALUE</a></h3>
+        <div th:if="${evention.getCompany().getOwner() != null}">
+            <h3>Владелец Группы:<a th:text="${evention.getCompany().getOwner().getName()}">VALUE</a></h3>
+        </div>
+    </div>
+    <h3><a th:text="${'Дата создания: ' + #dates.format(evention.getStartTime(), 'dd.MM.yy HH:mm')}"></a></h3>
+    <div th:if="${evention.getPersons() == null || evention.getPersons().isEmpty()}">
+        <b><span>Участники События не найдены</span></b>
+    </div>
+    <div th:if="${evention.getPersons() != null}">
+        <div th:if="${!evention.getPersons().isEmpty()}">
+            <b>Участники События:</b>
+            <div th:each="person : ${evention.getPersons()}">
+                <span th:text="${person.getName() + ', ' + person.getEmail()}"></span>
+            </div>
+        </div>
+    </div>
+    <form th:method="GET"
+          th:action="@{/v1/persons/{id}/groups/{idc}/events/{eUID}/edit(idc=${companyId}, id=${personId}, eUID=${eventionId})}">
+        <input type="submit" value="Редактировать событие"/>
+    </form>
+</div>
+<hr>
+<h2><a th:text="${'Расходы: ' + evention.getBalance()}"></a></h2>
+<form th:method="PATCH"
+      th:action="@{/v1/persons/{id}/groups/{idc}/events/{eUID}/refresh (idc=${companyId}, id=${personId}, eUID=${eventionId})}">
+    <input type="submit" value="Обновить расходы"/>
+</form>
+<hr>
+<div th:if="${balances == null || balances.isEmpty()}">
+    <b><span>У События пока нет доступного списка Балансов</span></b>
+</div>
+<div th:if="${balances != null}">
+    <div th:if="${!balances.isEmpty()}">
+        <table>
+            <caption><h3>Список балансов</h3></caption>
+            <tr>
+                <th>Имя</th>
+                <th>На балансе</th>
+            </tr>
+            <div th:each="balance : ${balances}">
+                <tr>
+                    <td th:text="${balance.getName()}"></td>
+                    <td th:text="${balance.getBalance()}"></td>
+                </tr>
+            </div>
+        </table>
+    </div>
+</div>
+<hr>
+<div th:if="${calculations == null || calculations.isEmpty()}">
+    <b><span>У События пока нет доступного списка Переводов</span></b>
+</div>
+<div th:if="${calculations != null}">
+    <div th:if="${!calculations.isEmpty()}">
+        <table>
+            <caption><h3>Список переводов, чтобы рассчитаться друг с другом</h3></caption>
+            <tr>
+                <th>От кого</th>
+                <th>Сумма перевода</th>
+                <th>Кому</th>
+                <th></th>
+            </tr>
+            <div th:each="calculation : ${calculations}">
+                <tr>
+                    <td th:text="${calculation.getFromPerson().getName()}"></td>
+                    <td th:text="${calculation.getValue()}"></td>
+                    <td th:text="${calculation.getToPerson().getName()}"></td>
+                </tr>
+            </div>
+        </table>
+    </div>
+</div>
+<br>
+<form th:method="POST"
+      th:action="@{/v1/persons/{id}/groups/{idc}/events/{eUID}/calculations (idc=${companyId}, id=${personId}, eUID=${eventionId})}">
+    <input type="submit" value="Обновить список переводов."/>
+</form>
+<hr>
+<div th:if="${evention.getOperations() == null || evention.getOperations().isEmpty()}">
+    <b><span>У События пока нет операций</span></b>
+</div>
+<div th:if="${evention.getOperations() != null}">
+    <div th:if="${!evention.getOperations().isEmpty()}">
+        <table>
+            <caption><h3>Список операций</h3></caption>
+            <tr>
+                <th>Название</th>
+                <th>Заплатил</th>
+                <th>Сумма</th>
+                <th>Дата</th>
+                <th></th>
+            </tr>
+            <div th:each="operation : ${evention.getOperations()}">
+                <tr>
+                    <td>
+                        <a th:href="@{/v1/persons/{id}/groups/{idc}/events/{eUID}/operations/{oUID}(idc=${companyId}, id=${personId}, eUID=${eventionId}, oUID=${operation.getUid()})}">
+                            <button th:text="${operation.getName()}"></button>
+                        </a>
+                    </td>
+                    <td th:text="${operation.getOwner().getName()}"></td>
+                    <td th:text="${operation.getValue()}"></td>
+                    <td th:text="${#dates.format(operation.getTime(), 'dd.MM.yy HH:mm')}"></td>
+                    <td>
+                        <form th:method="DELETE"
+                              th:action="@{/v1/persons/{id}/groups/{idc}/events/{eUID}/operations/{oUID}(idc=${companyId}, id=${personId}, eUID=${eventionId}, oUID=${operation.getUid()})}">
+                            <input type="submit" value="Удалить"/>
+                        </form>
+                    </td>
+                </tr>
+            </div>
+        </table>
+    </div>
+</div>
+<br>
+<form th:method="GET"
+      th:action="@{/v1/persons/{id}/groups/{idc}/events/{eUID}/operations/new(idc=${companyId}, id=${personId}, eUID=${eventionId})}">
+    <input type="submit" value="Добавить новую операцию"/>
+</form>
+
+<hr>
+<br>
+</body>
+</html>

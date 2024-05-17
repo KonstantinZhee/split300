@@ -6,8 +6,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class Split300Application {
 
-	public static void main(String[] args) {
-		SpringApplication.run(Split300Application.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(Split300Application.class, args);
+    }
 
 }

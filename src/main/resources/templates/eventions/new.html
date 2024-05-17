@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>New evention</title>
+</head>
+<body>
+<h3><a href="/v1"><button>НА ГЛАВНУЮ СТРАНИЦУ</button></a></h3>
+<h3><a th:href="@{/v1/persons/{id}/groups/{idc}(id=${personId}, idc=${companyId})}">
+    <button>На страницу с группой</button>
+</a></h3>
+<form th:method="POST" th:action="@{/v1/persons/{id}/groups/{idc}/events(id=${personId}, idc=${companyId})}"
+      th:object="${evention}">
+    <label for="name"> Введите Имя События: </label>
+    <input type="text" th:field="*{name}" id="name"/>
+    <div style="color:red" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name Error</div>
+    <input type="submit" value="Создать новое Событие"/>
+</form>
+
+</body>
+</html>

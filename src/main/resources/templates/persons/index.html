@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Index</title>
+</head>
+<body>
+<h3><a href="/v1"><button>НА ГЛАВНУЮ СТРАНИЦУ</button></a></h3>
+<div th:each="person : ${person}">
+    <a th:href="@{/v1/persons/{id}(id=${person.getId()})}"><button>
+      <p th:text="${person.getId() + ', ' + person.getName() + ', ' + person.getEmail()}"></button></a>
+</div>
+<br><br/><hr>
+<a href="/v1/persons"><button>На страницу с пользователями</button></a>
+<br><br/>
+<a href="/v1/persons/new"><button>Добавить нового пользователя в базу данных</button></a>
+<br><br/>
+<a href="/v1/persons/search"><button>Искать пользователей по произвольному запросу</button></a>
+<br><br>
+<a href="/v1/persons/find"><button>Выбрать пользователя по точным данным</button></a>
+<hr><br><br/>
+</body>
+</html>
