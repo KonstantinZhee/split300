@@ -33,12 +33,14 @@ public class CalculationController {
                          @PathVariable("idc") int companyId,
                          @PathVariable("eUID") UUID eventionId) {
         log.info("GET /v1/persons/{id}/groups/{idc}/events/{eUID}");
-        Evention evention = calculationService.createNewCalculations(eventionId);
-        model.addAttribute("evention", evention);
-        model.addAttribute("balances", converterDTO.convertToPersonBalancesDTO(evention));
         model.addAttribute("personId", personId);
         model.addAttribute("companyId", companyId);
         model.addAttribute("eventionId", eventionId);
+        Evention evention = calculationService.createNewCalculations(eventionId);
+        model.addAttribute("evention", evention);
+        model.addAttribute("balances", converterDTO.convertToPersonBalancesDTO(evention));
+        model.addAttribute("calculations",
+                converterDTO.sortCalculations(evention.getCalculations()));
         return "eventions/showOne";
     }
 }

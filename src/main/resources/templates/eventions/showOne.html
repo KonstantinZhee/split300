@@ -114,9 +114,10 @@
             <div th:each="operation : ${evention.getOperations()}">
                 <tr>
                     <td>
-                        <a href="@{/v1/persons/{id}/groups/{idc}/events/{eUID}/operations/{oUID}(idc=${companyId}, id=${personId}, eUID=${eventionId}, oUID=${operation.getUid()})}">
+                        <a th:href="@{/v1/persons/{id}/groups/{idc}/events/{eUID}/operations/{oUID}(idc=${companyId}, id=${personId}, eUID=${eventionId}, oUID=${operation.getUid()})}">
                             <button th:text="${operation.getName()}"></button>
-                        </a></td>
+                        </a>
+                    </td>
                     <td th:text="${operation.getOwner().getName()}"></td>
                     <td th:text="${operation.getValue()}"></td>
                     <td th:text="${#dates.format(operation.getTime(), 'dd.MM.yy HH:mm')}"></td>

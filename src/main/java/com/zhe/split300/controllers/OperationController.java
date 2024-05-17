@@ -2,6 +2,7 @@ package com.zhe.split300.controllers;
 
 import com.zhe.split300.models.Operation;
 import com.zhe.split300.services.OperationService;
+import com.zhe.split300.utils.ConverterDTO;
 import jakarta.validation.Valid;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,10 +23,12 @@ import java.util.UUID;
 @RequestMapping
 public class OperationController {
     private final OperationService operationService;
+    private final ConverterDTO converterDTO;
 
     @Autowired
-    public OperationController(OperationService operationService) {
+    public OperationController(OperationService operationService, ConverterDTO converterDTO) {
         this.operationService = operationService;
+        this.converterDTO = converterDTO;
     }
 
     @GetMapping("/v1/persons/{id}/groups/{idc}/events/{eUID}/operations/new")
@@ -70,9 +73,11 @@ public class OperationController {
                                     @PathVariable("eUID") UUID eventionId,
                                     @PathVariable("oUID") UUID operationId) {
         log.info("GET /v1/persons/{id}/groups/{idc}/events/{eUID}/operations/{oUID}");
-        model.addAttribute("operation",
-                operationService.findOneWithAllFields(eventionId));
-        model.addAttribute("personId", personId);
+        Operation operation = operationService.findOneWithAllFields(operationId);
+        model.addAttribute("operation", operation);
+        model.addAttribute("operationBalances",
+                converterDTO.sortOperationBalances(operation.getOperationBalances()));
+    model.addAttribute("personId", personId);
         model.addAttribute("companyId", companyId);
         model.addAttribute("eventionId", eventionId);
         model.addAttribute("operationId", operationId);

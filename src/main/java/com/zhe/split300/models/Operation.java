@@ -9,6 +9,9 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.NamedAttributeNode;
+import jakarta.persistence.NamedEntityGraph;
+import jakarta.persistence.NamedSubgraph;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
@@ -37,8 +40,26 @@ import java.util.UUID;
 @Setter
 @Table(name = "Operation")
 @ToString
+@NamedEntityGraph(name = "Operation.details", includeAllAttributes = true, attributeNodes = {
+        @NamedAttributeNode(value = "evention", subgraph = "evention.name"),
+        @NamedAttributeNode(value = "owner", subgraph = "person.details"),
+        @NamedAttributeNode(value = "operationBalances", subgraph = "operationBalances.details"),
+}, subgraphs = {
+        @NamedSubgraph(name = "evention.name", attributeNodes = {
+                @NamedAttributeNode(value = "name"),
+                @NamedAttributeNode(value = "uid")
+        }),
+        @NamedSubgraph(name = "person.details", attributeNodes = {
+                @NamedAttributeNode(value = "name"),
+                @NamedAttributeNode(value = "email"),
+                @NamedAttributeNode(value = "id")
+        }),
+        @NamedSubgraph(name = "operationBalances.details", attributeNodes = {
+                @NamedAttributeNode(value = "person", subgraph = "person.details"),
+                @NamedAttributeNode(value = "balance")
+        })
+})
 public class Operation {
-
 
     @Id
     @Column(name = "uid", updatable = false, nullable = false)

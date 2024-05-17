@@ -13,7 +13,6 @@
     <button>На страницу События</button>
 </a></h3>
 <hr/>
-
 <div th:if="${operation != null}">
     <form th:method="GET"
           th:action="@{/v1/persons/{id}/groups/{idc}/events/{eUID}/operations/{oUID}/edit(idc=${companyId}, id=${personId}, eUID=${eventionId}, oUID=${operationId})}">
@@ -21,15 +20,34 @@
     </form>
     <h1><a th:text="${operation.getName()}"></a></h1>
     <h2><a th:text="${'Сумма: ' + operation.getValue()}"></a></h2>
-    <div th:if="${operation.getOwner()!= null}">
+    <div th:if="${operation.getOwner() != null}">
         <h3>
             <a th:text="${'Операцию совершил: ' + operation.getOwner().getName() + ' ' + operation.getOwner().getEmail()}"></a>
         </h3>
     </div>
-    <div th:if="${operation.getEvention()!= null}">
+    <div th:if="${operation.getEvention() != null}">
         <h3><a th:text="${'Операция события: ' + operation.getEvention().getName()}">VALUE</a></h3>
     </div>
-    <h3><a th:text="${'Дата создания: ' + operation.getTime()}"></a></h3>
+    <h3><a th:text="${'Дата создания: ' + #dates.format(operation.getTime(), 'dd.MM.yy HH:mm')}"></a></h3>
+
+    <div th:if="${operationBalances != null}">
+        <div th:if="${!operationBalances.isEmpty()}">
+            <table>
+                <caption><h3>Баланс участников операции</h3></caption>
+                <tr>
+                    <th>Участник операции</th>
+                    <th> Баланс участника</th>
+                </tr>
+                <div th:each="operationBalance : ${operationBalances}">
+                    <tr>
+                        <td th:text="${operationBalance.getPerson().getName()}"></td>
+                        <td th:text="${operationBalance.getBalance()}"></td>
+                    </tr>
+                </div>
+            </table>
+        </div>
+    </div>
+    <hr>
     <div th:if="${operation.getPaidForActions() == null || operation.getPaidForActions().isEmpty()}">
         <b><span>Операция разделена на всех участников События в равных долях</span></b>
     </div>
