@@ -43,7 +43,10 @@ public class PersonController {
     @GetMapping("/v1/persons/{id}")
     public String showPerson(@PathVariable("id") int id, Model model) {
         log.info("GET: /v1/persons/{id}");
-        model.addAttribute("person", personService.findOne(id));
+        Person person = personService.findOneWithCompanies(id);
+        model.addAttribute("person", person);
+        model.addAttribute("companies", person.getCompanies());
+        model.addAttribute("ownedCompanies", person.getOwnedCompanies());
         return "persons/show";
     }
 

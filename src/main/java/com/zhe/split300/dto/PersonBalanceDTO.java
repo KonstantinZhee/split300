@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Comparator;
 import java.util.List;
 
@@ -16,7 +17,7 @@ public class PersonBalanceDTO {
 
     public PersonBalanceDTO(String personName, BigDecimal balance) {
         this.name = personName;
-        this.balance = balance;
+        this.balance = balance.setScale(2, RoundingMode.CEILING);
     }
     public List<PersonBalanceDTO> convertToPersonBalancesDTO(Evention evention) {
         return evention.getPersonBalances().stream()

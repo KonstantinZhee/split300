@@ -75,6 +75,7 @@ public class CalculationServiceImpl implements CalculationService {
     private Set<Calculation> convertPersonBalancesToCalculations(final Set<PersonBalance> personBalances,
                                                                  Evention evention) {
         Set<Calculation> calculations = new TreeSet<>(Comparator.comparing(Calculation::getValue)
+                .reversed()
                 .thenComparing(t -> t.getFromPerson().getName()));
         if (!personBalances.isEmpty()) {
             log.info("convertPersonBalancesToCalculations(final Set<PersonBalance> personBalances, Evention evention)");
