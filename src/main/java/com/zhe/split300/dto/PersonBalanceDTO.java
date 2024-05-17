@@ -19,10 +19,4 @@ public class PersonBalanceDTO {
         this.name = personName;
         this.balance = balance.setScale(2, RoundingMode.CEILING);
     }
-    public List<PersonBalanceDTO> convertToPersonBalancesDTO(Evention evention) {
-        return evention.getPersonBalances().stream()
-                .map(personBalance -> new PersonBalanceDTO(personBalance.getPerson().getName(),
-                        personBalance.getBalance()))
-                .sorted(Comparator.comparing(PersonBalanceDTO::getBalance)).toList();
-    }
 }

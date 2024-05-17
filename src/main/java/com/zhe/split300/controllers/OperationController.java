@@ -76,7 +76,7 @@ public class OperationController {
         Operation operation = operationService.findOneWithAllFields(operationId);
         model.addAttribute("operation", operation);
         model.addAttribute("operationBalances",
-                converterDTO.sortOperationBalances(operation.getOperationBalances()));
+                converterDTO.sortAndRoundOperationBalances(operation.getOperationBalances()));
     model.addAttribute("personId", personId);
         model.addAttribute("companyId", companyId);
         model.addAttribute("eventionId", eventionId);

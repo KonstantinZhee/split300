@@ -4,10 +4,10 @@ import com.zhe.split300.dto.PersonBalanceDTO;
 import com.zhe.split300.models.Calculation;
 import com.zhe.split300.models.Evention;
 import com.zhe.split300.models.OperationBalance;
-
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
 
+import java.math.RoundingMode;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.LinkedHashSet;
@@ -33,11 +33,12 @@ public class ConverterDTO {
                 .collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
-    public List<OperationBalance> sortOperationBalances(Collection<OperationBalance> operationBalances) {
+    public List<OperationBalance> sortAndRoundOperationBalances(Collection<OperationBalance> operationBalances) {
         log.info("sortOperationBalances");
-        return operationBalances.stream().sorted(Comparator
-                .comparing(OperationBalance::getBalance).reversed()
-                .thenComparing(operationBalance -> operationBalance.getPerson().getName())).toList();
+        operationBalances.forEach(o -> o.setBalance(o.getBalance().setScale(2, RoundingMode.CEILING)));
+        return operationBalances.stream()
+                .sorted(Comparator.comparing(OperationBalance::getBalance).reversed()
+                        .thenComparing(operationBalance -> operationBalance.getPerson().getName()))
+                .toList();
     }
-
 }
