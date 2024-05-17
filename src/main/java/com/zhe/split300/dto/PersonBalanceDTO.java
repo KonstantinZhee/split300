@@ -1,13 +1,10 @@
 package com.zhe.split300.dto;
 
-import com.zhe.split300.models.Evention;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.Comparator;
-import java.util.List;
 
 @Getter
 @Setter

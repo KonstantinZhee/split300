@@ -106,11 +106,6 @@ public class Company {
         person.getCompanies().remove(this);
     }
 
-    public void addEvention(Evention evention) {
-        eventions.add(evention);
-        evention.setCompany(this);
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

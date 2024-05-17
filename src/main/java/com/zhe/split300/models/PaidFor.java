@@ -44,7 +44,8 @@ public class PaidFor {
 
     @Column(name = "value")
     @NotBlank(message = "Укажите сумму.")
-    @Digits(message = "Укажите цифровое значение по второй знак после запятой например: 36,28", integer = 100, fraction = 2)
+    @Digits(message = "Укажите цифровое значение по второй знак после точки например: 36.28",
+            integer = 100, fraction = 2)
     private BigDecimal value;
 
     @ManyToOne(fetch = FetchType.LAZY)
