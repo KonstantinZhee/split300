@@ -68,11 +68,11 @@
     </div>
 </div>
 <hr>
-<div th:if="${evention.getCalculations() == null || evention.getCalculations().isEmpty()}">
+<div th:if="${calculations == null || calculations.isEmpty()}">
     <b><span>У События пока нет доступного списка Переводов</span></b>
 </div>
-<div th:if="${evention.getCalculations() != null}">
-    <div th:if="${!evention.getCalculations().isEmpty()}">
+<div th:if="${calculations != null}">
+    <div th:if="${!calculations.isEmpty()}">
         <table>
             <caption><h3>Список переводов, чтобы рассчитаться друг с другом</h3></caption>
             <tr>
@@ -81,7 +81,7 @@
                 <th>Кому</th>
                 <th></th>
             </tr>
-            <div th:each="calculation : ${evention.getCalculations()}">
+            <div th:each="calculation : ${calculations}">
                 <tr>
                     <td th:text="${calculation.getFromPerson().getName()}"></td>
                     <td th:text="${calculation.getValue()}"></td>

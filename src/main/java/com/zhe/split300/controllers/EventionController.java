@@ -85,6 +85,8 @@ public class EventionController {
         Evention evention = eventionService.findOneWithAllFields(eventionId);
         model.addAttribute("evention", evention);
         model.addAttribute("balances", converterDTO.convertToPersonBalancesDTO(evention));
+        model.addAttribute("calculations", converterDTO
+                .sortCalculations(evention.getCalculations()));
         model.addAttribute("personId", personId);
         model.addAttribute("companyId", companyId);
         model.addAttribute("eventionId", eventionId);
