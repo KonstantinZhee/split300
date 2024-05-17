@@ -56,7 +56,7 @@ public class CalculationServiceImpl implements CalculationService {
         Set<PersonBalance> personBalances = personBalanceService.createNewPersonBalances(evention);
         evention.setPersonBalances(personBalances);
         Set<Calculation> calculations = convertPersonBalancesToCalculations(personBalances, evention);
-        evention.setCalculations(calculations); //TODO Очистить Предидущие калькуляции и балансы
+        evention.setCalculations(calculations);
         eventionRepository.save(evention);
         personBalanceService.saveNewPersonBalances(personBalances);
         calculationRepository.saveAll(calculations);
