@@ -111,4 +111,7 @@ public class CompanyService {
         });
     }
 
+    public Company findOneWithPersonsAndEvention(int companyId) {
+        return companyRepository.findOneWithPersonsAndEvention(companyId);
+    }
 }

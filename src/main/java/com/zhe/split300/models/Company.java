@@ -11,6 +11,9 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.NamedAttributeNode;
+import jakarta.persistence.NamedEntityGraph;
+import jakarta.persistence.NamedSubgraph;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
@@ -35,6 +38,24 @@ import java.util.TreeSet;
 @Entity
 @ToString
 @Table(name = "Company")
+@NamedEntityGraph(name = "Company.withPersonsAndEventions", attributeNodes = {
+        @NamedAttributeNode(value = "name"),
+        @NamedAttributeNode(value = "id"),
+        @NamedAttributeNode(value = "owner", subgraph = "Person.details"),
+        @NamedAttributeNode(value = "persons", subgraph = "Person.details"),
+        @NamedAttributeNode(value = "eventions", subgraph = "Evention.names"),
+}, subgraphs = {
+        @NamedSubgraph(name = "Person.details", attributeNodes = {
+                @NamedAttributeNode(value = "id"),
+                @NamedAttributeNode(value = "name"),
+                @NamedAttributeNode(value = "email")
+        }),
+        @NamedSubgraph(name = "Evention.names", attributeNodes = {
+                @NamedAttributeNode(value = "uid"),
+                @NamedAttributeNode(value = "name"),
+                @NamedAttributeNode(value = "startTime")
+        })
+})
 public class Company {
 
     @Id

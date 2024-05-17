@@ -84,8 +84,6 @@ import java.util.UUID;
                 @NamedAttributeNode(value = "value"),
         }),
 })
-
-
 public class Evention {
 
     @Id
