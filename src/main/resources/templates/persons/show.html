@@ -18,7 +18,7 @@
     <input type="submit"  value="Показать группы"/>
 </form>
 </div>
-<div th:if="${companies != null && companies.isEmpty()}">
+<div th:if="${companies == null || companies.isEmpty()}">
     <h3> <span>Группы, где Вы участник не найдены</span></h3>
 </div>
 
@@ -33,7 +33,6 @@
     </div>
 </div>
 <br>
-</div>
 
 <div th:if="${ownedCompanies != null && ownedCompanies.isEmpty()}">
     <h3> <span>Группы, где Вы владелец не найдены</span></h3>

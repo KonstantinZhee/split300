@@ -43,10 +43,11 @@ public class CompanyController {
     @GetMapping("/v1/persons/{id}/groups")
     //Просмотр групп в которых есть участник
     public String getCompaniesByPersonId(Model model, @PathVariable("id") int personId) {
-        log.info("getCompaniesByPersonId\npersonId:\t{}", personId);
-        model.addAttribute("companies", companyService.findByPersonId(personId));
-        model.addAttribute("person", personService.findOne(personId));
-        model.addAttribute("ownedCompanies", companyService.findByOwnerId(personId));
+        log.info("GET: /v1/persons/{id}/groups");
+        Person person = personService.findOneWithCompanies(personId);
+        model.addAttribute("companies", person.getCompanies());
+        model.addAttribute("person", person);
+        model.addAttribute("ownedCompanies", person.getOwnedCompanies());
         return "persons/show";
     }
 
@@ -67,6 +68,7 @@ public class CompanyController {
     //получаем форму новой записи, где пользователь хозяин группы
     public String newCompany(Model model, @ModelAttribute("company") Company company,
                              @PathVariable("id") int personId) {
+        log.info("GET: /v1/persons/{id}/groups/new");
         model.addAttribute("personId", personId);
         return "groups/new";
     }
@@ -153,7 +155,6 @@ public class CompanyController {
         companyService.addPersonToCompany(companyId, person);
         model.addAttribute("personId", personId);
         model.addAttribute("companyId", companyId);
-        log.info("groups/edit");
         return String.format("redirect:/v1/persons/%d/groups/%d/edit", personId, companyId);
     }
 

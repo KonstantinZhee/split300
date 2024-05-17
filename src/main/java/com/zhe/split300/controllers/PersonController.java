@@ -35,24 +35,28 @@ public class PersonController {
 
     @GetMapping("/v1/persons")
     public String index(Model model) {
+        log.info("GET: /v1/persons");
         model.addAttribute("person", personService.findAll());
         return "persons/index";
     }
 
     @GetMapping("/v1/persons/{id}")
     public String showPerson(@PathVariable("id") int id, Model model) {
+        log.info("GET: /v1/persons/{id}");
         model.addAttribute("person", personService.findOne(id));
         return "persons/show";
     }
 
     @GetMapping("/v1/persons/new")
     public String newPerson(@ModelAttribute("person") Person person) {
+        log.info("GET: /v1/persons/new");
         return "persons/new";
     }
 
 
     @PostMapping("/v1/persons")
     public String create(@ModelAttribute("person") @Valid Person person, BindingResult bindingResult) {
+        log.info("POST: /v1/persons");
         personValidator.validate(person, bindingResult);
         if (bindingResult.hasErrors()) {
             return "persons/new";
@@ -64,6 +68,7 @@ public class PersonController {
 
     @GetMapping("/v1/persons/{id}/edit")
     public String edit(Model model, @PathVariable("id") int id) {
+        log.info("GET: /v1/persons/{id}/edit");
         model.addAttribute("person", personService.findOne(id));
         return "persons/edit";
     }
@@ -71,6 +76,7 @@ public class PersonController {
     @PatchMapping("/v1/persons/{id}")
     public String update(@ModelAttribute("person") @Valid Person person, BindingResult bindingResult,
                          @PathVariable("id") int id) {
+        log.info("PATCH: /v1/persons/{id}");
         personValidator.validate(person, bindingResult);
         if (bindingResult.hasErrors()) {
             return "persons/edit";
@@ -82,18 +88,21 @@ public class PersonController {
 
     @DeleteMapping("/v1/persons/{id}")
     public String delete(@PathVariable("id") int id) {
+        log.info("DELETE: /v1/persons/{id}");
         personService.delete(id);
         return "redirect:/v1/persons";
     }
 
     @GetMapping("/v1/persons/find")
     public String showFindPage(@ModelAttribute("person") Person person) {
+        log.info("GET: /v1/persons/find");
         return "persons/find";
     }
 
     @PostMapping("/v1/persons/find")
     public String findPerson(Model model, @RequestParam(value = "name", required = false) String name,
                              @RequestParam(value = "email", required = false) String email) {
+        log.info("POST: /v1/persons/find");
         if (name != null && !name.isBlank()) {
             personService.findByName(name).ifPresent(
                     person -> model.addAttribute("person", person));
@@ -106,12 +115,14 @@ public class PersonController {
 
     @GetMapping("/v1/persons/search")
     public String searchPageView() {
+        log.info("GET: /v1/persons/search");
         return "persons/search";
     }
 
     @PostMapping("/v1/persons/search")
     public String searchByNameOrEmail(Model model, @RequestParam(value = "name", required = false) String name,
                                       @RequestParam(value = "email", required = false) String email) {
+        log.info("POST /v1/persons/search");
         if (name == null && !email.isBlank()) {
             model.addAttribute("persons", personService.searchingByQuery(email));
         } else if (email == null && !name.isBlank())

@@ -44,7 +44,6 @@ import java.util.UUID;
 @Setter
 @Table(name = "Evention")
 @ToString
-@Builder
 @NamedEntityGraph(name = "Evention.details", attributeNodes = {
         @NamedAttributeNode(value = "operations", subgraph = "Operation.details")
 }, includeAllAttributes = true, subgraphs = {

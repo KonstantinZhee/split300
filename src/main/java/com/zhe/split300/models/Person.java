@@ -7,6 +7,9 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.NamedAttributeNode;
+import jakarta.persistence.NamedEntityGraph;
+import jakarta.persistence.NamedSubgraph;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
@@ -31,6 +34,18 @@ import java.util.Set;
 @Entity
 @ToString
 @Table(name = "Person")
+@NamedEntityGraph(name = "Person.withCompanies", attributeNodes = {
+        @NamedAttributeNode(value = "id"),
+        @NamedAttributeNode(value = "name"),
+        @NamedAttributeNode(value = "email"),
+        @NamedAttributeNode(value = "companies", subgraph = "Companies.details"),
+        @NamedAttributeNode(value = "ownedCompanies", subgraph = "Companies.details")
+}, subgraphs = {
+        @NamedSubgraph(name = "Companies.details", attributeNodes = {
+                @NamedAttributeNode(value = "id"),
+                @NamedAttributeNode(value = "name"),
+        })
+})
 public class Person {
     @Id
     @Column(name = "id")

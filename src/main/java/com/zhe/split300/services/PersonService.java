@@ -63,4 +63,8 @@ public class PersonService {
     public void delete(int id) {
         personRepository.deleteById(id);
     }
+
+    public Person findOneWithCompanies(int personId) {
+       return personRepository.findOneWithCompanies(personId);
+    }
 }
