@@ -164,6 +164,7 @@ public class CompanyController {
         return String.format("redirect:/v1/persons/%d/groups/%d/edit", personId, companyId);
     }
 
+
     @DeleteMapping("/v1/persons/{id}/groups/{idc}")
     public String delete(Model model,
                          @PathVariable("id") int personId,

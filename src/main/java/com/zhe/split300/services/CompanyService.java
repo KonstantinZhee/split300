@@ -103,12 +103,9 @@ public class CompanyService {
 
     @Transactional
     public void removePersonFromCompany(int idCompany, Person selectedPerson) {
-        companyRepository.findById(idCompany).ifPresent(company -> {
-            personRepository.findById(selectedPerson.getId()).ifPresent(person -> {
-                company.removePerson(person);
-                companyRepository.save(company);
-            });
-        });
+       Company company = companyRepository.findOneWithPersonsAndOwner(idCompany);
+       company.removePerson(selectedPerson);
+       companyRepository.save(company);
     }
 
     public Company findOneWithPersonsAndEvention(int companyId) {

@@ -18,6 +18,10 @@
     <div th:if="${company.getOwner() != null}">
         <h2><span>Владелец группы: </span><a th:text="${company.getOwner().getName()}">VALUE</a></h2>
     </div>
+    <form th:method="PATCH" th:action="@{/v1/persons/{id}/groups/{idc}/remove(id=${personId}, idc=${companyId})}"
+          th:object="${person}">
+        <button type="submit" name="id" id="personToRemoveId" th:value="${personId}">Выйти из группы</button>
+    </form>
     <div th:if="${company.getPersons() == null || company.getPersons().isEmpty()}">
         <h3><span>Участники в группе не найдены</span></h3>
     </div>
