@@ -44,8 +44,13 @@ import java.util.UUID;
 @Table(name = "Evention")
 @ToString
 @NamedEntityGraph(name = "Evention.details", attributeNodes = {
-        @NamedAttributeNode(value = "operations", subgraph = "Operation.details")
+        @NamedAttributeNode(value = "operations", subgraph = "Operation.details"),
+        @NamedAttributeNode(value = "company", subgraph = "Company.details")
 }, includeAllAttributes = true, subgraphs = {
+        @NamedSubgraph(name = "Company.details", attributeNodes = {
+                @NamedAttributeNode(value = "owner", subgraph = "Person.details"),
+                @NamedAttributeNode(value = "name")
+        }),
         @NamedSubgraph(name = "Operation.details", attributeNodes = {
                 @NamedAttributeNode(value = "owner", subgraph = "Person.details"),
                 @NamedAttributeNode(value = "operationBalances", subgraph = "OperationBalances.details")
@@ -114,15 +119,15 @@ public class Evention {
     @Column(name = "balance")
     private BigDecimal balance;
 
-    @OneToMany(mappedBy = "evention", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "evention", cascade = CascadeType.ALL,  orphanRemoval = true)
     @ToString.Exclude
     private Set<Operation> operations = new HashSet<>();
 
-    @OneToMany(mappedBy = "evention", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "evention", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
     private Set<PersonBalance> personBalances = new HashSet<>();
 
-    @OneToMany(mappedBy = "evention", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "evention", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
     private Set<Calculation> calculations = new HashSet<>();
 

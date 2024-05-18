@@ -33,10 +33,10 @@
     <div th:if="${operationBalances != null}">
         <div th:if="${!operationBalances.isEmpty()}">
             <table>
-                <caption><h3>Баланс участников операции</h3></caption>
+                <caption><h4>Баланс участников операции</h4></caption>
                 <tr>
-                    <th>Участник операции</th>
-                    <th> Баланс участника</th>
+                    <th>Участник:</th>
+                    <th>Баланс:</th>
                 </tr>
                 <div th:each="operationBalance : ${operationBalances}">
                     <tr>

@@ -12,12 +12,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.UUID;
 
 
 @Log4j2
@@ -26,7 +29,6 @@ public class CompanyController {
     private final CompanyService companyService;
     private final CompanyValidator companyValidator;
     private final PersonService personService;
-    private final EventionService eventionService;
 
     @Autowired
     public CompanyController(CompanyService companyService, CompanyValidator companyValidator,
@@ -34,13 +36,13 @@ public class CompanyController {
         this.companyService = companyService;
         this.companyValidator = companyValidator;
         this.personService = personService;
-        this.eventionService = eventionService;
     }
 
     @GetMapping("/v1/persons/{id}/groups")
     //Просмотр групп в которых есть участник
     public String getCompaniesByPersonId(Model model, @PathVariable("id") int personId) {
         log.info("GET: /v1/persons/{id}/groups");
+        // TODO companyService
         Person person = personService.findOneWithCompanies(personId);
         model.addAttribute("companies", person.getCompanies());
         model.addAttribute("person", person);
@@ -77,15 +79,12 @@ public class CompanyController {
                          BindingResult bindingResult, @PathVariable("id") int personId) {
         log.info("POST    /v1/persons/{id}/groups");
         companyValidator.validate(company, bindingResult);
-        model.addAttribute("personId", personId);
         if (bindingResult.hasErrors()) {
-            log.info("groups/new");
+            model.addAttribute("personId", personId);
             return "groups/new";
         } else {
             company.setOwner(personService.findOne(personId));
             companyService.save(company);
-            model.addAttribute("companyId", company.getId());
-            log.info(String.format("redirect:/v1/persons/%d/groups", personId));
             return String.format("redirect:/v1/persons/%d/groups", personId);
         }
     }
@@ -95,14 +94,13 @@ public class CompanyController {
     public String getPageToEditCompany(Model model, @ModelAttribute("company") Company company,
                                        @PathVariable("id") int personId, @PathVariable("idc") int companyId) {
         log.info("GET    /v1/persons/{id}/groups/{idc}/edit");
-        model.addAttribute("personId", personId);
-        model.addAttribute("companyId", companyId);
-        model.addAttribute("company", companyService.findOneById(companyId));
         if (companyService.isOwner(personId, companyId)) {
             log.info("groups/edit");
+            model.addAttribute("personId", personId);
+            model.addAttribute("companyId", companyId);
+            model.addAttribute("company", companyService.findOneWithPersonsAndOwner(companyId));
             return "groups/edit";
         }
-        log.info(String.format("redirect:/v1/persons/%d/groups/%d", personId, companyId));
         return String.format("redirect:/v1/persons/%d/groups/%d", personId, companyId);
     }
 
@@ -137,11 +135,11 @@ public class CompanyController {
         } else if (email == null && !name.isBlank()) {
             model.addAttribute("personsResponse", personService.searchingByQuery(name));
         }
-        model.addAttribute("company", companyService.findOneById(id));
-        model.addAttribute("persons", companyService.getPersons(id));
+        Company company = companyService.findOneWithPersonsAndOwner(companyId);
+        model.addAttribute("company", company);
+        model.addAttribute("persons", company.getPersons());
         model.addAttribute("personId", personId);
         model.addAttribute("companyId", companyId);
-        log.info("groups/edit");
         return "groups/edit";
     }
 
@@ -158,10 +156,21 @@ public class CompanyController {
 
     @PatchMapping("/v1/persons/{id}/groups/{idc}/remove")
     //Удалить человека из группы.
-    public String removePersonFromCompany(@PathVariable("id") int personId, @PathVariable("idc") int companyId,
+    public String removePersonFromCompany(@PathVariable("id") int personId,
+                                          @PathVariable("idc") int companyId,
                                           @ModelAttribute("personToRemoveId") Person person) {
         log.info("PATCH     /v1/persons/{id}/groups/{idc}/remove");
         companyService.removePersonFromCompany(companyId, person);
         return String.format("redirect:/v1/persons/%d/groups/%d/edit", personId, companyId);
     }
+
+    @DeleteMapping("/v1/persons/{id}/groups/{idc}")
+    public String delete(Model model,
+                         @PathVariable("id") int personId,
+                         @PathVariable("idc") int companyId) {
+        log.info("DELETE /v1/persons/{id}/groups/{idc}");
+        companyService.delete(companyId);
+        return "redirect:/v1/persons/{id}/groups";
+    }
+
 }
