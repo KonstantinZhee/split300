@@ -33,30 +33,6 @@ public class CompanyService {
         this.personRepository = personRepository;
     }
 
-    public List<Company> findAll() {
-        return companyRepository.findAll();
-    }
-
-    public Company findOneById(int id) {
-        return companyRepository.findById(id).orElse(null);
-    }
-
-    public Company findOneWithPersons(int id) {
-        Company company = companyRepository.findById(id).
-                orElseThrow(() -> new EntityNotFoundException("Company not found"));
-        Set<Evention> eventions = company.getEventions();
-        company.getPersons();
-        return company;
-    }
-
-    public List<Company> findByPersonId(int personId) {
-        return companyRepository.findByPersons(Collections.singletonList(new Person(personId)));
-    }
-
-    public List<Company> findByOwnerId(int ownerId) {
-        return companyRepository.findByOwner(new Person(ownerId));
-    }
-
     public boolean isOwner(int personId, int companyId) {
         Optional<Company> optionalCompany = companyRepository.findById(companyId);
         AtomicInteger ownerId = new AtomicInteger();
