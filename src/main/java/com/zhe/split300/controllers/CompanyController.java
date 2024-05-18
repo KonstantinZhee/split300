@@ -20,8 +20,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.UUID;
-
 
 @Log4j2
 @Controller
@@ -56,12 +54,17 @@ public class CompanyController {
                                            @PathVariable("id") int personId,
                                            @PathVariable("idc") int companyId) {
         log.info("GET     /v1/persons/{id}/groups/{idc}");
+
         Company company = companyService.findOneWithPersonsAndEvention(companyId);
-        model.addAttribute("personId", personId);
-        model.addAttribute("companyId", companyId);
-        model.addAttribute("company", company);
-        model.addAttribute("eventions", company.getEventions());
-        return "groups/showOne";
+        Person person = personService.findOne(personId);
+        if (company.getPersons().contains(person) || company.getOwner().equals(person)) {
+            model.addAttribute("personId", personId);
+            model.addAttribute("companyId", companyId);
+            model.addAttribute("company", company);
+            model.addAttribute("eventions", company.getEventions());
+            return "groups/showOne";
+        }
+        return String.format("redirect:/v1/persons/%d/groups", personId);
     }
 
     @GetMapping("/v1/persons/{id}/groups/new")
