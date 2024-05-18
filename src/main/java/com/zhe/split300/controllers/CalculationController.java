@@ -29,9 +29,9 @@ public class CalculationController {
     @PostMapping("/v1/persons/{id}/groups/{idc}/events/{eUID}/calculations")
     //Создание в Событии списка с минимальным количеством переводов
     public String createNewCalculations(Model model,
-                         @PathVariable("id") int personId,
-                         @PathVariable("idc") int companyId,
-                         @PathVariable("eUID") UUID eventionId) {
+                                        @PathVariable("id") int personId,
+                                        @PathVariable("idc") int companyId,
+                                        @PathVariable("eUID") UUID eventionId) {
         log.info("GET /v1/persons/{id}/groups/{idc}/events/{eUID}");
         model.addAttribute("personId", personId);
         model.addAttribute("companyId", companyId);

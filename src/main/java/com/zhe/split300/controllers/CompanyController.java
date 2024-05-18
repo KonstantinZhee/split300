@@ -116,12 +116,10 @@ public class CompanyController {
         model.addAttribute("companyId", companyId);
         companyValidator.validate(company, bindingResult);
         if (bindingResult.hasErrors()) {
-            log.info("groups/edit");
             return "groups/edit";
         } else {
             companyService.update(companyId, personId, company);
         }
-        log.info(String.format("redirect:/v1/persons/%d/groups/%d", personId, companyId));
         return String.format("redirect:/v1/persons/%d/groups/%d", personId, companyId);
     }
 

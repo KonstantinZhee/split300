@@ -9,7 +9,7 @@
 <h3><a href="/v1"><button>НА ГЛАВНУЮ СТРАНИЦУ</button></a></h3>
 <h3><a href="/v1/persons"><button>На страницу с пользователями</button></a></h3>
 <div th:if="${person != null}">
-<h1><p th:text="${person.getId() + ', ' + person.getName() + ', ' + person.getEmail()}">VALUE</p></h1>
+<h1><p th:text="${'Пользователь: ' + person.getName() + ',  mail: ' + person.getEmail()}">VALUE</p></h1>
 <br>
 <hr>
 </div>
@@ -27,7 +27,7 @@
     <div th:each="company : ${companies}">
         <form th:method="GET" th:action="@{/v1/persons/{id}/groups/{idc}(idc=${company.getId()}, id=${person.getId()})}"
               th:object="${company}">
-            <span th:text="${company.getId() + ', ' + company.getName()}"></span>
+            <span th:text="${company.getName()}"></span>
             <button type="submit">Выбрать группу</button>
         </form>
     </div>
@@ -43,7 +43,7 @@
     <div th:each="ownedCompany : ${ownedCompanies}">
         <form th:method="GET" th:action="@{/v1/persons/{id}/groups/{idc}(idc=${ownedCompany.getId()}, id=${person.getId()})}"
               th:object="${company}">
-            <span th:text="${ownedCompany.getId() + ', ' + ownedCompany.getName()}"></span>
+            <span th:text="${ownedCompany.getName()}"></span>
             <button type="submit">Выбрать группу</button>
         </form>
     </div>

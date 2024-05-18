@@ -60,7 +60,6 @@ public class OperationController {
             return "operations/new";
         } else {
             operationService.createNewOperation(operation, eventionId, personId);
-            model.addAttribute("operationId", operation.getUid());
         }
         return "redirect:/v1/persons/{id}/groups/{idc}/events/{eUID}/operations/" + operation.getUid();
     }
@@ -77,7 +76,7 @@ public class OperationController {
         model.addAttribute("operation", operation);
         model.addAttribute("operationBalances",
                 converterDTO.sortAndRoundOperationBalances(operation.getOperationBalances()));
-    model.addAttribute("personId", personId);
+        model.addAttribute("personId", personId);
         model.addAttribute("companyId", companyId);
         model.addAttribute("eventionId", eventionId);
         model.addAttribute("operationId", operationId);
@@ -86,8 +85,7 @@ public class OperationController {
 
     @DeleteMapping("/v1/persons/{id}/groups/{idc}/events/{eUID}/operations/{oUID}")
     //Удалить операцию из События
-    public String delete(Model model,
-                         @PathVariable("id") int personId,
+    public String delete(@PathVariable("id") int personId,
                          @PathVariable("idc") int companyId,
                          @PathVariable("eUID") UUID eventionId,
                          @PathVariable("oUID") UUID operationId) {
@@ -97,15 +95,12 @@ public class OperationController {
     }
 
 
-    //TODO Редактирование событий
+    //TODO Редактирование событий - Изменить имя
     //TODO Добавить людей из группы В событие при создании
+    //TODO Добавить дату События в списки и дату Операции
+    //TODO Удалить перевод(выполнить перевод) - обновление баланса того, кто выполнил перевод.!!
 
-    //TODO Оптимизировать добавление атрибутов при редиректах!!
 
     //TODO Редактирование операции (изменить заплатившего) при нажатии на операцию !
-    //TODO Удаление Эвента из представления группы
-    //TODO Удалить перевод(выполнить перевод) - обновление баланса того, кто выполнил перевод.
-    //TODO Удаление операции Каскадное удаление операций При удаление Эвентов - ПРОВЕРИТЬ!
-
     //TODO HTML showOne Operation - туда потом отображение PaidFor - продумать****************************************
 }

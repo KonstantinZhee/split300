@@ -27,7 +27,7 @@
     <br><br/>
     <div th:each="person : ${persons}">
         <a th:href="@{/v1/persons/{id}(id=${person.getId()})}"><button>
-           <p th:text="${person.getId() + ', ' + person.getName() + ', ' + person.getEmail()}"></button></a>
+           <p th:text="${person.getName() + '  Email: ' + person.getEmail()}"></button></a>
     </div>
 </div>
 

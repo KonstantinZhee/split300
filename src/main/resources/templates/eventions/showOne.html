@@ -31,7 +31,7 @@
         <div th:if="${!evention.getPersons().isEmpty()}">
             <b>Участники События:</b>
             <div th:each="person : ${evention.getPersons()}">
-                <span th:text="${person.getName() + ', ' + person.getEmail()}"></span>
+                <span th:text="${person.getName() + ',  mail:' + person.getEmail()}"></span>
             </div>
         </div>
     </div>

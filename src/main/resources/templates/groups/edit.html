@@ -27,7 +27,7 @@
 </form>
 <br/>
 <div th:if="${company != null}">
-    <h1><a th:text="${company.getId() + ',  ' + company.getName()}">VALUE</a></h1>
+    <h1><a th:text="${'Группа: ' + company.getName()}">VALUE</a></h1>
     <div th:if="${company.getOwner() != null}">
         <h2><span>Владелец группы: </span><a th:text="${company.getOwner().getName()}">VALUE</a></h2>
     </div>
@@ -45,7 +45,7 @@
                 <form th:method="PATCH"
                       th:action="@{/v1/persons/{id}/groups/{idc}/remove(id=${personId}, idc=${companyId})}"
                       th:object="${person}">
-                    <span th:text="${person.getId() + ', ' + person.getName() + ', ' + person.getEmail()}"></span>
+                    <span th:text="${person.getName() + ',  mail:' + person.getEmail()}"></span>
                     <button type="submit" name="id" id="personToRemoveId" th:value="${person.getId()}">Удалить из
                         группы
                     </button>
@@ -85,7 +85,7 @@
                 id="personToAdd">
             <option th:each="person : ${personsResponse}"
                     th:value="${person.getId()}"
-                    th:text="${person.getName() + ', ' + person.getEmail()}">
+                    th:text="${person.getName() + ',  mail:' + person.getEmail()}">
             </option>
         </select>
         <input type="submit" value="Добавить в группу"/>

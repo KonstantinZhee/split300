@@ -14,7 +14,7 @@
 </a></h3>
 <hr/>
 <div th:if="${company != null}">
-    <h1><a th:text="${company.getId() + ',  ' + company.getName()}">VALUE</a></h1>
+    <h1><a th:text="${'Группа: ' + company.getName()}">VALUE</a></h1>
     <div th:if="${company.getOwner() != null}">
         <h2><span>Владелец группы: </span><a th:text="${company.getOwner().getName()}">VALUE</a></h2>
     </div>
@@ -25,7 +25,7 @@
     <div th:if="${!company.getPersons().isEmpty()}">
         <h3><span>Участники в группе:</span></h3>
         <div th:each="person : ${company.getPersons()}">
-            <span th:text="${person.getId() + ', ' + person.getName() + ', ' + person.getEmail()}"></span>
+            <span th:text="${person.getName() + ',  mail:' + person.getEmail()}"></span>
         </div>
     </div>
 </div>
@@ -50,12 +50,11 @@
         </form>
     </div>
 </div>
+<br>
 <form th:method="GET" th:action="@{/v1/persons/{id}/groups/{idc}/events/new(idc=${companyId}, id=${personId})}">
     <input type="submit" value="ДОБАВИТЬ СОБЫТИЕ"/>
 </form>
-<br>
 <hr/>
-<br>
 <form th:method="GET" th:action="@{/v1/persons/{id}/groups/{idc}/edit(idc=${companyId}, id=${personId})}">
     <input type="submit" value="РЕДАКТИРОВАТЬ ГРУППУ"/>
 </form>

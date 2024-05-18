@@ -110,21 +110,18 @@ public class EventionController {
 
     @PatchMapping("/v1/persons/{id}/groups/{idc}/events/{eUID}/addPerson")
     //Добавить человека в событие
-    public String assignPersonToEvention(Model model, @ModelAttribute("personToAdd") Person person,
+    public String assignPersonToEvention(@ModelAttribute("personToAdd") Person person,
                                          @PathVariable("id") int personId,
                                          @PathVariable("idc") int companyId,
                                          @PathVariable("eUID") UUID eventionId) {
         log.info("PATCH   /v1/persons/{id}/groups/{idc}/events/{eUID}/addPerson");
-        model.addAttribute("personId", personId);
-        model.addAttribute("companyId", companyId);
-        model.addAttribute("eventionId", eventionId);
         eventionService.addPersonToEvention(eventionId, person);
         return String.format("redirect:/v1/persons/%d/groups/%d/events/%s/edit", personId, companyId, eventionId);
     }
 
     @PatchMapping("/v1/persons/{id}/groups/{idc}/events/{eUID}/removePerson")
     //Удалить человека из события
-    public String removePersonFromEvention(Model model, @ModelAttribute("personToRemove") Person person,
+    public String removePersonFromEvention(@ModelAttribute("personToRemove") Person person,
                                            @PathVariable("id") int personId,
                                            @PathVariable("idc") int companyId,
                                            @PathVariable("eUID") UUID eventionId) {
@@ -135,8 +132,7 @@ public class EventionController {
 
     @PatchMapping("/v1/persons/{id}/groups/{idc}/events/{eUID}/refresh")
     //Обновление баланса
-    public String refreshOperations(Model model,
-                                    @PathVariable("id") int personId,
+    public String refreshOperations(@PathVariable("id") int personId,
                                     @PathVariable("idc") int companyId,
                                     @PathVariable("eUID") UUID eventionId) {
         log.info("PATCH   /v1/persons/{id}/groups/{idc}/events/{eUID}/refresh");
@@ -146,15 +142,11 @@ public class EventionController {
 
     @DeleteMapping("/v1/persons/{id}/groups/{idc}/events/{eUID}")
     //Удалить Событие
-    public String delete(Model model,
-                         @PathVariable("id") int personId,
+    public String delete(@PathVariable("id") int personId,
                          @PathVariable("idc") int companyId,
                          @PathVariable("eUID") UUID eventionId) {
         log.info("DELETE /v1/persons/{id}/groups/{idc}/events/{eUID}/operations/{oUID}");
         eventionService.delete(eventionId);
-        model.addAttribute("personId", personId);
-        model.addAttribute("companyId", companyId);
-        model.addAttribute("eventionId", eventionId);
         return "redirect:/v1/persons/{id}/groups/{idc}";
     }
 
