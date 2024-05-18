@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -37,10 +38,6 @@ public class EventionService {
         this.personRepository = personRepository;
     }
 
-    public List<Evention> findAll() {
-        return eventionRepository.findAll();
-    }
-
     @Transactional
     public void createNewEvention(Evention evention, int companyId) {
         companyRepository.findById(companyId).ifPresent(company -> {
@@ -55,13 +52,12 @@ public class EventionService {
         return eventionRepository.findByCompany(new Company(companyId));
     }
 
-    public Evention findOneById(UUID eventionId) {
-        return eventionRepository.findById(eventionId).orElse(null);
+    public Evention findOneWithAllFields(UUID id) {
+        return eventionRepository.findByIdToMakeCalculations(id);
     }
 
-    @Transactional
-    public Evention findOneWithAllFields(UUID id) {
-        return eventionRepository.findByIdWithAllFields(id);
+    public Evention findOneToEdit(UUID id) {
+        return eventionRepository.findByIdToEditEvention(id);
     }
 
     @Transactional

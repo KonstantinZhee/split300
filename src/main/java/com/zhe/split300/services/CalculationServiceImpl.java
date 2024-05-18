@@ -48,7 +48,7 @@ public class CalculationServiceImpl implements CalculationService {
     @Transactional
     public Evention createNewCalculations(UUID eventionId) {
         log.info("createCalculations(UUID eventionId)");
-        Evention evention = eventionRepository.findByIdWithAllFields(eventionId);
+        Evention evention = eventionRepository.findByIdToMakeCalculations(eventionId);
         personBalanceService.deleteAllByEvention(evention);
         evention.getPersonBalances().clear();
         deleteAllByEvention(evention);

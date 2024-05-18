@@ -40,7 +40,6 @@ public class CompanyController {
     //Просмотр групп в которых есть участник
     public String getCompaniesByPersonId(Model model, @PathVariable("id") int personId) {
         log.info("GET: /v1/persons/{id}/groups");
-        // TODO companyService
         Person person = personService.findOneWithCompanies(personId);
         model.addAttribute("companies", person.getCompanies());
         model.addAttribute("person", person);

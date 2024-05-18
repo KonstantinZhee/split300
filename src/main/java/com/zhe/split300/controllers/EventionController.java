@@ -98,7 +98,7 @@ public class EventionController {
                                @PathVariable("idc") int companyId,
                                @PathVariable("eUID") UUID eventionId) {
         log.info("GET  /v1/persons/{id}/groups/{idc}/events/{eUID}/edit");
-        Evention evention = eventionService.findOneWithAllFields(eventionId);
+        Evention evention = eventionService.findOneToEdit(eventionId);
         model.addAttribute("evention", evention);
         model.addAttribute("balances", converterDTO.convertToPersonBalancesDTO(evention));
         model.addAttribute("company", evention.getCompany());

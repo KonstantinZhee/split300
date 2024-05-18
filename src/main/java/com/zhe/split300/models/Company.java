@@ -87,7 +87,7 @@ public class Company {
             name = "person_company",
             joinColumns = @JoinColumn(name = "company_id"),
             inverseJoinColumns = @JoinColumn(name = "person_id"))
-    private Set<Person> persons;
+    private Set<Person> persons = new HashSet<>();
 
     @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @ToString.Exclude

@@ -93,15 +93,15 @@ public class OperationController {
                          @PathVariable("oUID") UUID operationId) {
         log.info("DELETE /v1/persons/{id}/groups/{idc}/events/{eUID}/operations/{oUID}");
         operationService.delete(operationId);
-        model.addAttribute("personId", personId);
-        model.addAttribute("companyId", companyId);
-        model.addAttribute("eventionId", eventionId);
-        model.addAttribute("operationId", operationId);
         return "redirect:/v1/persons/{id}/groups/{idc}/events/{eUID}";
     }
 
-    //TODO Оптимизировать добавление атрибутов при редиректах!!
+
     //TODO Редактирование событий
+    //TODO Добавить людей из группы В событие при создании
+
+    //TODO Оптимизировать добавление атрибутов при редиректах!!
+
     //TODO Редактирование операции (изменить заплатившего) при нажатии на операцию !
     //TODO Удаление Эвента из представления группы
     //TODO Удалить перевод(выполнить перевод) - обновление баланса того, кто выполнил перевод.

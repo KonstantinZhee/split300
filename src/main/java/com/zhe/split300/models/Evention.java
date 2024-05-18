@@ -88,6 +88,23 @@ import java.util.UUID;
                 @NamedAttributeNode(value = "value"),
         }),
 })
+
+@NamedEntityGraph(name = "Evention.forEditPage", includeAllAttributes = true, attributeNodes ={
+        @NamedAttributeNode(value = "company", subgraph = "company.details"),
+        @NamedAttributeNode(value = "persons", subgraph = "person.details")
+}, subgraphs = {
+        @NamedSubgraph(name = "company.details", attributeNodes = {
+                @NamedAttributeNode(value = "persons", subgraph = "person.details"),
+                @NamedAttributeNode(value = "owner", subgraph = "person.details"),
+                @NamedAttributeNode(value = "name"),
+                @NamedAttributeNode(value = "id")
+        }),
+        @NamedSubgraph(name = "person.details", attributeNodes = {
+                @NamedAttributeNode(value = "name"),
+                @NamedAttributeNode(value = "email"),
+                @NamedAttributeNode(value = "id")
+        })
+})
 public class Evention {
 
     @Id

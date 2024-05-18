@@ -16,7 +16,7 @@
 
 <div th:if="${evention != null}">
 
-    <h1><a th:text="${evention.getName()}"></a></h1>
+    <h1><a th:text="${'Событие: ' + evention.getName()}"></a></h1>
     <div th:if="${evention.getCompany()!= null}">
         <h3><a th:text="${'Группа: ' + evention.getCompany().getName()}">VALUE</a></h3>
         <div th:if="${evention.getCompany().getOwner() != null}">

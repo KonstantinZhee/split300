@@ -23,5 +23,9 @@ public interface EventionRepository extends JpaRepository<Evention, UUID> {
 
     @EntityGraph(value = "Evention.details", type = EntityGraph.EntityGraphType.FETCH)
     @Query("SELECT e FROM Evention e WHERE e.id = :uid")
-    Evention findByIdWithAllFields(@Param("uid") UUID eventionId);
+    Evention findByIdToMakeCalculations(@Param("uid") UUID eventionId);
+
+    @EntityGraph(value = "Evention.forEditPage", type = EntityGraph.EntityGraphType.FETCH)
+    @Query("SELECT e FROM Evention e WHERE e.id = :uid")
+    Evention findByIdToEditEvention(@Param("uid") UUID eventionId);
 }
