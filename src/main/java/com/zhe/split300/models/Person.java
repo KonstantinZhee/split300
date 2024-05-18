@@ -77,7 +77,7 @@ public class Person {
     @OneToMany(mappedBy = "personPaidFor")
     private Set<PaidFor> paidForActions = new HashSet<>();
 
-    @OneToMany(mappedBy = "owner")
+    @OneToMany(mappedBy = "owner", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @ToString.Exclude
     private Set<Company> ownedCompanies = new HashSet<>();
 

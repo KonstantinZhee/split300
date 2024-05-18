@@ -24,13 +24,11 @@ public class PersonController {
 
     private final PersonService personService;
     private final PersonValidator personValidator;
-    private final CompanyService companyService;
 
     @Autowired
     public PersonController(PersonService personService, PersonValidator personValidator, CompanyService companyService) {
         this.personService = personService;
         this.personValidator = personValidator;
-        this.companyService = companyService;
     }
 
     @GetMapping("/v1/persons")

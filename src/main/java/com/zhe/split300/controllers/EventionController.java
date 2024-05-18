@@ -26,13 +26,11 @@ import java.util.UUID;
 @RequestMapping
 public class EventionController {
     private final EventionService eventionService;
-    private final CompanyService companyService;
     private final ConverterDTO converterDTO;
 
     @Autowired
     public EventionController(EventionService eventionService, CompanyService companyService, ConverterDTO converterDTO) {
         this.eventionService = eventionService;
-        this.companyService = companyService;
         this.converterDTO = converterDTO;
     }
 

@@ -56,6 +56,18 @@ import java.util.TreeSet;
                 @NamedAttributeNode(value = "startTime")
         })
 })
+@NamedEntityGraph(name = "Company.withPersonsAndOwner", attributeNodes = {
+        @NamedAttributeNode(value = "name"),
+        @NamedAttributeNode(value = "id"),
+        @NamedAttributeNode(value = "owner", subgraph = "Person.details"),
+        @NamedAttributeNode(value = "persons", subgraph = "Person.details"),
+}, subgraphs = {
+        @NamedSubgraph(name = "Person.details", attributeNodes = {
+                @NamedAttributeNode(value = "id"),
+                @NamedAttributeNode(value = "name"),
+                @NamedAttributeNode(value = "email")
+        })
+})
 public class Company {
 
     @Id
@@ -70,18 +82,18 @@ public class Company {
     private String name;
 
     @ToString.Exclude
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinTable(
             name = "person_company",
             joinColumns = @JoinColumn(name = "company_id"),
             inverseJoinColumns = @JoinColumn(name = "person_id"))
     private Set<Person> persons;
 
-    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @ToString.Exclude
     private Set<Evention> eventions = new HashSet<>();
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_id", referencedColumnName = "id")
     @ToString.Exclude
     private Person owner;

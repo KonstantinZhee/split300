@@ -17,6 +17,9 @@
     <input type="submit" value="Сменить название"/>
 </form>
 <br/>
+<form th:method="DELETE" th:action="@{/v1/persons/{id}/groups/{idc}(id=${personId}, idc=${companyId})}">
+    <input type="submit" value="Удалить Группу"/>
+</form>
 <div th:if="${company != null}">
     <h1><a th:text="${company.getId() + ',  ' + company.getName()}">VALUE</a></h1>
     <div th:if="${company.getOwner() != null}">
@@ -76,7 +79,6 @@
 
 <br><br/>
 <hr>
-<h3><span>Операции с группой:</span></h3>
 <form th:method="GET" th:action="@{/v1/persons/{id}/groups(id=${personId})}">
     <input type="submit" value="На страницу с группами"/>
 </form>

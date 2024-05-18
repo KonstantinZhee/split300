@@ -114,4 +114,8 @@ public class CompanyService {
     public Company findOneWithPersonsAndEvention(int companyId) {
         return companyRepository.findOneWithPersonsAndEvention(companyId);
     }
+
+    public Company findOneWithPersonsAndOwner(int companyId) {
+        return companyRepository.findOneWithPersonsAndOwner(companyId);
+    }
 }
