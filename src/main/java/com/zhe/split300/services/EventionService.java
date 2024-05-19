@@ -16,9 +16,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.Collections;
 import java.util.Date;
-import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
@@ -40,11 +39,13 @@ public class EventionService {
 
     @Transactional
     public void createNewEvention(Evention evention, int companyId) {
-        companyRepository.findById(companyId).ifPresent(company -> {
-            evention.setCompany(company);
-            evention.setStartTime(new Date());
-            evention.setBalance(BigDecimal.valueOf(0));
-            eventionRepository.save(evention);
+        Company company = companyRepository.findOneToAddPersonsToNewEvention(companyId);
+       Optional.of(company).ifPresent(c -> {
+           evention.setCompany(company);
+           evention.setPersons(company.getPersons());
+           evention.setStartTime(new Date());
+           evention.setBalance(BigDecimal.valueOf(0));
+           eventionRepository.save(evention);
         });
     }
 

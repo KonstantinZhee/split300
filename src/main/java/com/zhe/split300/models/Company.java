@@ -68,6 +68,14 @@ import java.util.TreeSet;
                 @NamedAttributeNode(value = "email")
         })
 })
+@NamedEntityGraph(name = "Company.addPersonsToNewEvention", attributeNodes = {
+        @NamedAttributeNode(value = "id"),
+        @NamedAttributeNode(value = "persons", subgraph = "Person.details")
+}, subgraphs = {
+        @NamedSubgraph(name = "Person.details", attributeNodes = {
+                @NamedAttributeNode("id")
+        })
+})
 public class Company {
 
     @Id

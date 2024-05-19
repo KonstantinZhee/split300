@@ -27,4 +27,8 @@ public interface CompanyRepository extends JpaRepository<Company, Integer> {
     @EntityGraph(value = "Company.withPersonsAndOwner", type = EntityGraph.EntityGraphType.FETCH)
     @Query("SELECT c FROM Company c WHERE c.id = :id")
     Company findOneWithPersonsAndOwner(@Param("id") int companyId);
+
+    @EntityGraph(value = "Company.addPersonsToNewEvention", type = EntityGraph.EntityGraphType.FETCH)
+    @Query("SELECT c FROM Company c WHERE c.id = :id")
+    Company findOneToAddPersonsToNewEvention(@Param("id") int companyId);
 }
