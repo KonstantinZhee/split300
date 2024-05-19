@@ -96,4 +96,9 @@ public class EventionService {
     public void delete(UUID eventionId) {
         eventionRepository.deleteById(eventionId);
     }
+
+    @Transactional
+    public void setNewNameToEvention(Evention evention, UUID eventionId) {
+        eventionRepository.updateName(evention.getName(), eventionId);
+    }
 }

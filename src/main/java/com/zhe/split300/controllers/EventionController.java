@@ -111,6 +111,17 @@ public class EventionController {
         return "eventions/edit";
     }
 
+    @PatchMapping("/v1/persons/{id}/groups/{idc}/events/{eUID}")
+    //Изменить название События
+    public String setNewNameToEvention(@ModelAttribute("evention") @Valid Evention evention,
+                                         @PathVariable("id") int personId,
+                                         @PathVariable("idc") int companyId,
+                                         @PathVariable("eUID") UUID eventionId) {
+        log.info("PATCH   /v1/persons/{id}/groups/{idc}/events/{eUID}");
+        eventionService.setNewNameToEvention(evention, eventionId);
+        return String.format("redirect:/v1/persons/%d/groups/%d/events/%s/edit", personId, companyId, eventionId);
+    }
+
     @PatchMapping("/v1/persons/{id}/groups/{idc}/events/{eUID}/addPerson")
     //Добавить человека в событие
     public String assignPersonToEvention(@ModelAttribute("personToAdd") Person person,
