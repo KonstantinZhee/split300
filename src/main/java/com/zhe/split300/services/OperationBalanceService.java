@@ -2,12 +2,14 @@ package com.zhe.split300.services;
 
 
 import com.zhe.split300.models.Operation;
+import com.zhe.split300.models.OperationBalance;
 import com.zhe.split300.models.Person;
 
 import java.math.BigDecimal;
+import java.util.Set;
 
 public interface OperationBalanceService {
-    void createNewOperationBalance(Operation operation, BigDecimal value, Person person);
+    OperationBalance createNewOperationBalance(Operation operation, BigDecimal value, Person person);
 
-    void createNewOperationBalances(Operation operation);
+    Set<OperationBalance> createNewOperationBalances(Operation operation);
 }

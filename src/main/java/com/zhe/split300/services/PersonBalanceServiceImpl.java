@@ -9,6 +9,7 @@ import com.zhe.split300.repositories.PersonBalanceRepository;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
@@ -45,6 +46,7 @@ public class PersonBalanceServiceImpl implements PersonBalanceService {
         return balances;
     }
 
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public Set<PersonBalance> createNewPersonBalances(Evention evention) {
         log.info("createNewPersonBalances(Evention evention)");
         Set<Operation> operations = evention.getOperations();
@@ -53,6 +55,8 @@ public class PersonBalanceServiceImpl implements PersonBalanceService {
         for (Map.Entry<Person, BigDecimal> entry : balances.entrySet()) {
             personBalances.add(new PersonBalance(evention, entry.getValue(), entry.getKey()));
         }
+        evention.setPersonBalances(personBalances);
+        personBalanceRepository.saveAll(personBalances);
         return personBalances;
     }
 
@@ -67,5 +71,28 @@ public class PersonBalanceServiceImpl implements PersonBalanceService {
     public void deleteAllByEvention(Evention evention) {
         log.info("deleteAllByEvention(Evention evention)");
         personBalanceRepository.deleteAll(evention.getPersonBalances());
+    }
+
+    @Override
+    public Set<PersonBalance> updatePersonBalances(Evention evention, Operation operation) {
+        Set<OperationBalance> operationBalances = operation.getOperationBalances();
+        Set<PersonBalance> personBalances = evention.getPersonBalances();
+        Map<Person, BigDecimal> newOperationBalances = new HashMap<>();
+        for (PersonBalance personBalance : personBalances) {
+            Person person = personBalance.getPerson();
+            BigDecimal currentBalance = newOperationBalances.getOrDefault(person, BigDecimal.ZERO);
+            newOperationBalances.put(person, currentBalance.add(personBalance.getBalance()));
+        }
+        for (OperationBalance operationBalance : operationBalances) {
+            Person person = operationBalance.getPerson();
+            BigDecimal currentBalance = newOperationBalances.getOrDefault(person, BigDecimal.ZERO);
+            newOperationBalances.put(person, currentBalance.add(operationBalance.getBalance()));
+        }
+        for (PersonBalance personBalance : personBalances) {
+            Person person = personBalance.getPerson();
+            BigDecimal newBalance = newOperationBalances.getOrDefault(person, BigDecimal.ZERO);
+            personBalance.setBalance(newBalance);
+        }
+        return personBalances;
     }
 }

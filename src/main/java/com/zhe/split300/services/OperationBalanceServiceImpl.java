@@ -8,34 +8,36 @@ import com.zhe.split300.repositories.OperationBalanceRepository;
 import com.zhe.split300.repositories.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.HashSet;
 import java.util.Set;
 
 @Service
 @Transactional(readOnly = true)
 public class OperationBalanceServiceImpl implements OperationBalanceService {
     private final OperationBalanceRepository operationBalanceRepository;
-    private final PersonRepository personRepository;
 
     @Autowired
-    public OperationBalanceServiceImpl(OperationBalanceRepository operationBalanceRepository,
-                                       PersonRepository personRepository) {
+    public OperationBalanceServiceImpl(OperationBalanceRepository operationBalanceRepository) {
         this.operationBalanceRepository = operationBalanceRepository;
-        this.personRepository = personRepository;
     }
 
     @Override
     @Transactional
-    public void createNewOperationBalance(Operation operation, BigDecimal value, Person person) {
-        operationBalanceRepository.save(new OperationBalance(operation, value, person));
+    public OperationBalance createNewOperationBalance(Operation operation, BigDecimal value, Person person) {
+        OperationBalance operationBalance = new OperationBalance(operation, value, person);
+        operationBalanceRepository.save(operationBalance);
+        return operationBalance;
     }
 
     @Override
     @Transactional
-    public void createNewOperationBalances(Operation operation) {
+    public Set<OperationBalance> createNewOperationBalances(Operation operation) {
+        Set<OperationBalance> operationBalances = new HashSet<>();
         Set<Person> persons = operation.getEvention().getPersons();
         Person operationOwner = operation.getOwner();
         BigDecimal operationValue = operation.getValue();
@@ -45,10 +47,12 @@ public class OperationBalanceServiceImpl implements OperationBalanceService {
             BigDecimal personsValue = operationValue
                     .divide(personsCount, 4, RoundingMode.CEILING);
             for (Person person : persons) {
-                createNewOperationBalance(operation, personsValue, person);
+                operationBalances.add(createNewOperationBalance(operation, personsValue, person));
             }
-            createNewOperationBalance(operation, operationValue.negate(), operationOwner);
+            operationBalances
+                    .add(createNewOperationBalance(operation, operationValue.negate(), operationOwner));
         }
+        return operationBalances;
     }
 
 }

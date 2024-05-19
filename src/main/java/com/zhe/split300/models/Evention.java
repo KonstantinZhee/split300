@@ -80,7 +80,7 @@ import java.util.UUID;
 })
 
 @NamedEntityGraph(name = "Evention.withOperations", attributeNodes = {
-        @NamedAttributeNode(value = "operations", subgraph = "Operation.details"),
+
         @NamedAttributeNode(value = "balance"),
 }, subgraphs = {
         @NamedSubgraph(name = "Operation.details", attributeNodes = {
@@ -103,6 +103,34 @@ import java.util.UUID;
                 @NamedAttributeNode(value = "name"),
                 @NamedAttributeNode(value = "email"),
                 @NamedAttributeNode(value = "id")
+        })
+})
+@NamedEntityGraph(name = "Evention.withBalances", attributeNodes = {
+        @NamedAttributeNode(value = "operations", subgraph = "Operation.details"),
+        @NamedAttributeNode(value = "company", subgraph = "Company.details")
+}, includeAllAttributes = true, subgraphs = {
+        @NamedSubgraph(name = "Company.details", attributeNodes = {
+                @NamedAttributeNode(value = "owner", subgraph = "Person.details"),
+                @NamedAttributeNode(value = "name")
+        }),
+        @NamedSubgraph(name = "Operation.details", attributeNodes = {
+                @NamedAttributeNode(value = "owner", subgraph = "Person.details"),
+                @NamedAttributeNode(value = "operationBalances", subgraph = "OperationBalances.details")
+        }),
+        @NamedSubgraph(name = "OperationBalances.details", attributeNodes = {
+                @NamedAttributeNode(value = "person", subgraph = "Person.details"),
+                @NamedAttributeNode(value = "balance")
+        }),
+        @NamedSubgraph(name = "Person.details", attributeNodes = {
+                @NamedAttributeNode(value = "name"),
+                @NamedAttributeNode(value = "email"),
+                @NamedAttributeNode(value = "id")
+        }),
+        @NamedSubgraph(name = "PersonBalance.details", attributeNodes = {
+                @NamedAttributeNode(value = "person", subgraph = "Person.details"),
+                @NamedAttributeNode(value = "balance"),
+                @NamedAttributeNode(value = "evention"),
+                @NamedAttributeNode(value = "uid")
         })
 })
 public class Evention {
@@ -155,12 +183,6 @@ public class Evention {
             joinColumns = @JoinColumn(name = "evention_id"),
             inverseJoinColumns = @JoinColumn(name = "person_id"))
     private Set<Person> persons = new HashSet<>();
-
-    public Set<Operation> getOperations() {
-        TreeSet<Operation> sortedOperations = new TreeSet<>(Comparator.comparing(Operation::getTime));
-        sortedOperations.addAll(operations);
-        return sortedOperations;
-    }
 
     public Set<Person> getPersons() {
         TreeSet<Person> sortedPersons = new TreeSet<>(Comparator.comparing(Person::getName));

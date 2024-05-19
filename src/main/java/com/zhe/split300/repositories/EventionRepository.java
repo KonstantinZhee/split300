@@ -35,4 +35,8 @@ public interface EventionRepository extends JpaRepository<Evention, UUID> {
     @Modifying
     @Query("update Evention e set e.name = ?1 where e.id = ?2")
     void updateName(String name, UUID eventionId);
+
+    @EntityGraph(value = "Evention.withBalances", type = EntityGraph.EntityGraphType.FETCH)
+    @Query("SELECT e FROM Evention e WHERE e.id = :uid")
+    Evention findByIdToAddBalances(@Param("uid") UUID eventionId);
 }
