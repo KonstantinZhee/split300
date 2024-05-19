@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.Set;
 import java.util.UUID;
 
 @Log4j2
@@ -36,10 +37,12 @@ public class EventionController {
 
     @GetMapping("/v1/persons/{id}/groups/{idc}/events")
     //Вывод событий в группе
+    // Удалить?
     public String getAllEventionsByCompanyId(Model model, @PathVariable("id") int personId,
                                              @PathVariable("idc") int companyId) {
         log.info("GET /v1/persons/{id}/groups/{idc}/events");
-        model.addAttribute("evention", eventionService.findByCompanyId(companyId));
+        Set<Evention> eventions = eventionService.findByCompanyId(companyId);
+        model.addAttribute("evention", converterDTO.sortEventions(eventions));
         model.addAttribute("personId", personId);
         model.addAttribute("companyId", companyId);
         return "groups/showOne";

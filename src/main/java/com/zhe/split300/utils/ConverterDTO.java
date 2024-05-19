@@ -42,4 +42,11 @@ public class ConverterDTO {
                         .thenComparing(operationBalance -> operationBalance.getPerson().getName()))
                 .toList();
     }
+
+    public Set<Evention> sortEventions(Collection<Evention> eventions) {
+        log.info("sortEventions");
+        return eventions.stream().sorted(Comparator
+                        .comparing(Evention::getStartTime))
+                .collect(Collectors.toCollection(LinkedHashSet::new));
+    }
 }

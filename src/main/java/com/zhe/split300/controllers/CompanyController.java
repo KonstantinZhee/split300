@@ -6,6 +6,7 @@ import com.zhe.split300.services.CompanyService;
 import com.zhe.split300.services.EventionService;
 import com.zhe.split300.services.PersonService;
 import com.zhe.split300.utils.CompanyValidator;
+import com.zhe.split300.utils.ConverterDTO;
 import jakarta.validation.Valid;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,13 +28,15 @@ public class CompanyController {
     private final CompanyService companyService;
     private final CompanyValidator companyValidator;
     private final PersonService personService;
+    private final ConverterDTO converterDTO;
 
     @Autowired
     public CompanyController(CompanyService companyService, CompanyValidator companyValidator,
-                             PersonService personService, EventionService eventionService) {
+                             PersonService personService, EventionService eventionService, ConverterDTO converterDTO) {
         this.companyService = companyService;
         this.companyValidator = companyValidator;
         this.personService = personService;
+        this.converterDTO = converterDTO;
     }
 
     @GetMapping("/v1/persons/{id}/groups")
@@ -53,14 +56,13 @@ public class CompanyController {
                                            @PathVariable("id") int personId,
                                            @PathVariable("idc") int companyId) {
         log.info("GET     /v1/persons/{id}/groups/{idc}");
-
         Company company = companyService.findOneWithPersonsAndEvention(companyId);
         Person person = personService.findOne(personId);
         if (company.getPersons().contains(person) || company.getOwner().equals(person)) {
             model.addAttribute("personId", personId);
             model.addAttribute("companyId", companyId);
             model.addAttribute("company", company);
-            model.addAttribute("eventions", company.getEventions());
+            model.addAttribute("eventions", converterDTO.sortEventions(company.getEventions()));
             return "groups/showOne";
         }
         return String.format("redirect:/v1/persons/%d/groups", personId);

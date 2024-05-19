@@ -40,15 +40,27 @@
 </div>
 
 <div th:if="${eventions != null && !eventions.isEmpty()}">
-    <h3><span>Список событий в группе:</span></h3>
-    <div th:each="evention : ${eventions}">
-        <form th:method="GET"
-              th:action="@{/v1/persons/{id}/groups/{idc}/events/{ide}(idc=${companyId}, id=${personId}, ide=${evention.getUid()})}"
-              th:object="${evention}">
-            <span th:text="${evention.getName()}"></span>
-            <button type="submit">Выбрать событие</button>
-        </form>
-    </div>
+    <table>
+        <caption><h3>Список событий в группе:</h3></caption>
+        <tr>
+            <th>Событие</th>
+            <th>Дата события</th>
+            <th></th>
+        </tr>
+        <div th:each="evention : ${eventions}">
+            <tr>
+                <td th:text="${evention.getName()}"></td>
+                <td th:text="${#dates.format(evention.getStartTime(), 'dd.MM.yy')}"></td>
+                <td>
+                    <form th:method="GET"
+                          th:action="@{/v1/persons/{id}/groups/{idc}/events/{ide}(idc=${companyId}, id=${personId}, ide=${evention.getUid()})}"
+                          th:object="${evention}">
+                        <button type="submit">Выбрать событие</button>
+                    </form>
+                </td>
+            </tr>
+        </div>
+    </table>
 </div>
 <br>
 <form th:method="GET" th:action="@{/v1/persons/{id}/groups/{idc}/events/new(idc=${companyId}, id=${personId})}">
