@@ -140,11 +140,11 @@ public class Evention {
     @ToString.Exclude
     private Set<Operation> operations = new HashSet<>();
 
-    @OneToMany(mappedBy = "evention", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "evention", cascade = CascadeType.ALL)
     @ToString.Exclude
     private Set<PersonBalance> personBalances = new HashSet<>();
 
-    @OneToMany(mappedBy = "evention", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "evention", cascade = CascadeType.ALL)
     @ToString.Exclude
     private Set<Calculation> calculations = new HashSet<>();
 

@@ -85,18 +85,14 @@ public class OperationController {
 
     @DeleteMapping("/v1/persons/{id}/groups/{idc}/events/{eUID}/operations/{oUID}")
     //Удалить операцию из События
-    public String delete(@PathVariable("id") int personId,
-                         @PathVariable("idc") int companyId,
-                         @PathVariable("eUID") UUID eventionId,
-                         @PathVariable("oUID") UUID operationId) {
+    public String delete(@PathVariable("oUID") UUID operationId) {
         log.info("DELETE /v1/persons/{id}/groups/{idc}/events/{eUID}/operations/{oUID}");
         operationService.delete(operationId);
         return "redirect:/v1/persons/{id}/groups/{idc}/events/{eUID}";
     }
 
-
+    //TODO Добавление и обновление Балансов эвента и операции при добавлении операции
     //TODO Редактирование событий - Изменить имя
-    //TODO Добавить людей из группы В событие при создании
     //TODO Добавить дату События в списки и дату Операции
     //TODO Удалить перевод(выполнить перевод) - обновление баланса того, кто выполнил перевод.!!
 
