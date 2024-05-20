@@ -5,10 +5,8 @@ import com.zhe.split300.models.Operation;
 import com.zhe.split300.models.OperationBalance;
 import com.zhe.split300.models.Person;
 import com.zhe.split300.repositories.OperationBalanceRepository;
-import com.zhe.split300.repositories.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;

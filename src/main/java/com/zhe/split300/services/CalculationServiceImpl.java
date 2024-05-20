@@ -11,6 +11,7 @@ import com.zhe.split300.repositories.PersonRepository;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
@@ -26,10 +27,8 @@ import java.util.stream.Collectors;
 @Service
 @Transactional(readOnly = true)
 public class CalculationServiceImpl implements CalculationService {
-    private final PersonBalanceRepository personBalanceRepository;
     private final CalculationRepository calculationRepository;
     private final EventionRepository eventionRepository;
-    private final PersonRepository personRepository;
     private final PersonBalanceService personBalanceService;
 
     @Autowired
@@ -38,9 +37,7 @@ public class CalculationServiceImpl implements CalculationService {
                                   PersonBalanceRepository personBalanceRepository) {
         this.calculationRepository = calculationRepository;
         this.eventionRepository = eventionRepository;
-        this.personRepository = personRepository;
         this.personBalanceService = personBalanceService;
-        this.personBalanceRepository = personBalanceRepository;
     }
 
 
@@ -52,14 +49,12 @@ public class CalculationServiceImpl implements CalculationService {
         personBalanceService.deleteAllByEvention(evention);
         evention.getPersonBalances().clear();
         deleteAllByEvention(evention);
-        evention.getOperations().clear();
+//        evention.getOperations().clear();
         Set<PersonBalance> personBalances = personBalanceService.createNewPersonBalances(evention);
         evention.setPersonBalances(personBalances);
         Set<Calculation> calculations = convertPersonBalancesToCalculations(personBalances, evention);
         evention.setCalculations(calculations);
         eventionRepository.save(evention);
-        personBalanceService.saveNewPersonBalances(personBalances);
-        calculationRepository.saveAll(calculations);
         return evention;
     }
 
@@ -71,8 +66,8 @@ public class CalculationServiceImpl implements CalculationService {
         calculationRepository.deleteAll(evention.getCalculations());
     }
 
-
-    private Set<Calculation> convertPersonBalancesToCalculations(final Set<PersonBalance> personBalances,
+    @Override
+    public Set<Calculation> convertPersonBalancesToCalculations(final Set<PersonBalance> personBalances,
                                                                  Evention evention) {
         Set<Calculation> calculations = new TreeSet<>(Comparator.comparing(Calculation::getValue)
                 .reversed()
@@ -98,6 +93,12 @@ public class CalculationServiceImpl implements CalculationService {
             }
         }
         return calculations;
+    }
+
+    @Override
+    public void updateCalculations(Evention evention) {
+        deleteAllByEvention(evention);
+        evention.setCalculations(convertPersonBalancesToCalculations(evention.getPersonBalances(), evention));
     }
 
     private Person findMaxBalancePerson(Map<Person, BigDecimal> balancesMap) {

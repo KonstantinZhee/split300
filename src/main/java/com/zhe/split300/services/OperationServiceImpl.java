@@ -1,5 +1,6 @@
 package com.zhe.split300.services;
 
+import com.zhe.split300.models.Calculation;
 import com.zhe.split300.models.Evention;
 import com.zhe.split300.models.Operation;
 import com.zhe.split300.models.OperationBalance;
@@ -29,16 +30,18 @@ public class OperationServiceImpl implements OperationService {
     private final PersonRepository personRepository;
     private final OperationBalanceService operationBalanceService;
     private final PersonBalanceService personBalanceService;
+    private final CalculationService calculationService;
 
     @Autowired
     public OperationServiceImpl(OperationRepository operationRepository, EventionRepository eventionRepository,
                                 PersonRepository personRepository, OperationBalanceService operationBalanceService,
-                                PersonBalanceService personBalanceService) {
+                                PersonBalanceService personBalanceService, CalculationService calculationService) {
         this.operationRepository = operationRepository;
         this.eventionRepository = eventionRepository;
         this.personRepository = personRepository;
         this.operationBalanceService = operationBalanceService;
         this.personBalanceService = personBalanceService;
+        this.calculationService = calculationService;
     }
 
     @Override
@@ -51,8 +54,10 @@ public class OperationServiceImpl implements OperationService {
         if (evention.getPersonBalances() == null || evention.getPersonBalances().isEmpty()) {
             Set<PersonBalance> personBalances = personBalanceService.createNewPersonBalances(evention);
             evention.setPersonBalances(personBalances);
+            evention.setCalculations(calculationService.convertPersonBalancesToCalculations(personBalances, evention));
         } else {
             evention.setPersonBalances(personBalanceService.updatePersonBalances(evention, operation));
+            calculationService.updateCalculations(evention);//обновить калькуляции
         }
         eventionRepository.save(evention);
     }

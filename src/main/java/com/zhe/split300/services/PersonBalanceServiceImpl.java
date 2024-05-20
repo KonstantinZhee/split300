@@ -46,7 +46,7 @@ public class PersonBalanceServiceImpl implements PersonBalanceService {
         return balances;
     }
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Transactional
     public Set<PersonBalance> createNewPersonBalances(Evention evention) {
         log.info("createNewPersonBalances(Evention evention)");
         Set<Operation> operations = evention.getOperations();
