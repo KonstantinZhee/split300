@@ -85,17 +85,20 @@ public class OperationController {
 
     @DeleteMapping("/v1/persons/{id}/groups/{idc}/events/{eUID}/operations/{oUID}")
     //Удалить операцию из События
-    public String delete(@PathVariable("oUID") UUID operationId) {
+    public String delete(@PathVariable("oUID") UUID operationId,
+                         @PathVariable("eUID") UUID eventionId) {
         log.info("DELETE /v1/persons/{id}/groups/{idc}/events/{eUID}/operations/{oUID}");
-        operationService.delete(operationId);
+        operationService.deleteOperationAndUpdateEvention(operationId, eventionId);
         return "redirect:/v1/persons/{id}/groups/{idc}/events/{eUID}";
     }
 
-    //TODO оптимизация при обновлении расходов
-    //TODO при удалении операции обновление расходов
-    //TODO при удалении операции обновление балансов
+
+    //TODO Оптимизировать запросы вывода событий в группу
     //TODO Удалить перевод(выполнить перевод) - обновление баланса того, кто выполнил перевод.!!
 
+    //TODO Изменение участников операции
     //TODO Редактирование операции (изменить заплатившего) при нажатии на операцию !
+
+    //TODO Идентификация Аутентификация Авторизация
     //TODO HTML showOne Operation - туда потом отображение PaidFor - продумать****************************************
 }

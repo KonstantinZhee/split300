@@ -1,6 +1,7 @@
 package com.zhe.split300.services;
 
 
+import com.zhe.split300.models.Evention;
 import com.zhe.split300.models.Operation;
 import com.zhe.split300.models.OperationBalance;
 import com.zhe.split300.models.Person;
@@ -12,7 +13,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 
 @Service
 @Transactional(readOnly = true)
@@ -52,5 +55,4 @@ public class OperationBalanceServiceImpl implements OperationBalanceService {
         }
         return operationBalances;
     }
-
 }

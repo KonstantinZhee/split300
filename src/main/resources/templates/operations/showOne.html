@@ -14,10 +14,7 @@
 </a></h3>
 <hr/>
 <div th:if="${operation != null}">
-    <form th:method="GET"
-          th:action="@{/v1/persons/{id}/groups/{idc}/events/{eUID}/operations/{oUID}/edit(idc=${companyId}, id=${personId}, eUID=${eventionId}, oUID=${operationId})}">
-        <input type="submit" value="Редактировать операцию"/>
-    </form>
+
     <h1><a th:text="${operation.getName()}"></a></h1>
     <h2><a th:text="${'Сумма: ' + operation.getValue()}"></a></h2>
     <div th:if="${operation.getOwner() != null}">
@@ -47,6 +44,10 @@
             </table>
         </div>
     </div>
+    <form th:method="GET"
+          th:action="@{/v1/persons/{id}/groups/{idc}/events/{eUID}/operations/{oUID}/edit(idc=${companyId}, id=${personId}, eUID=${eventionId}, oUID=${operationId})}">
+        <input type="submit" value="Редактировать операцию"/>
+    </form>
     <hr>
     <div th:if="${operation.getPaidForActions() == null || operation.getPaidForActions().isEmpty()}">
         <b><span>Операция разделена на всех участников События в равных долях</span></b>

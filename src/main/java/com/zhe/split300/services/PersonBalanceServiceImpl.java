@@ -71,6 +71,7 @@ public class PersonBalanceServiceImpl implements PersonBalanceService {
     public void deleteAllByEvention(Evention evention) {
         log.info("deleteAllByEvention(Evention evention)");
         personBalanceRepository.deleteAll(evention.getPersonBalances());
+        evention.getPersonBalances().clear();
     }
 
     @Override

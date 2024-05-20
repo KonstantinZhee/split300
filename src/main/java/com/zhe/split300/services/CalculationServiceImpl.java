@@ -47,9 +47,7 @@ public class CalculationServiceImpl implements CalculationService {
         log.info("createCalculations(UUID eventionId)");
         Evention evention = eventionRepository.findByIdToMakeCalculations(eventionId);
         personBalanceService.deleteAllByEvention(evention);
-        evention.getPersonBalances().clear();
         deleteAllByEvention(evention);
-//        evention.getOperations().clear();
         Set<PersonBalance> personBalances = personBalanceService.createNewPersonBalances(evention);
         evention.setPersonBalances(personBalances);
         Set<Calculation> calculations = convertPersonBalancesToCalculations(personBalances, evention);
@@ -64,6 +62,7 @@ public class CalculationServiceImpl implements CalculationService {
     public void deleteAllByEvention(Evention evention) {
         log.info("deleteAllByEvention(Evention evention)");
         calculationRepository.deleteAll(evention.getCalculations());
+        evention.getCalculations().clear();
     }
 
     @Override

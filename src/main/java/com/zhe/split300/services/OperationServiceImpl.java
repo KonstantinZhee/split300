@@ -1,6 +1,5 @@
 package com.zhe.split300.services;
 
-import com.zhe.split300.models.Calculation;
 import com.zhe.split300.models.Evention;
 import com.zhe.split300.models.Operation;
 import com.zhe.split300.models.OperationBalance;
@@ -18,6 +17,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
@@ -84,8 +84,30 @@ public class OperationServiceImpl implements OperationService {
 
     @Override
     @Transactional
+    public void deleteOperationAndUpdateEvention(UUID operationId, UUID eventionId) {
+        Evention evention = eventionRepository.findByIdToAddBalances(eventionId);
+        deleteOperation(evention, operationId);
+        personBalanceService.deleteAllByEvention(evention);
+        evention.setPersonBalances(personBalanceService.createNewPersonBalances(evention));
+        calculationService.updateCalculations(evention);
+        eventionRepository.save(evention);
+    }
+
+    @Transactional
     public void delete(UUID operationId) {
         operationRepository.deleteById(operationId);
+    }
 
+    @Override
+    @Transactional
+    public void deleteOperation(Evention evention, UUID operationId) {
+        Optional<Operation> oDeletedOperation = evention.getOperations().stream()
+                .filter(operation -> operation.getUid().equals(operationId))
+                .findFirst();
+        oDeletedOperation.ifPresent(operation -> {
+            evention.getOperations().remove(operation);
+            evention.setBalance(evention.getBalance().subtract(operation.getValue()));
+            operationRepository.delete(operation);
+        });
     }
 }
