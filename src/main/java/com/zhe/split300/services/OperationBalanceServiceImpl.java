@@ -46,7 +46,7 @@ public class OperationBalanceServiceImpl implements OperationBalanceService {
         if (!persons.isEmpty()) {
             BigDecimal personsCount = BigDecimal.valueOf(persons.size());
             BigDecimal personsValue = operationValue
-                    .divide(personsCount, 4, RoundingMode.CEILING);
+                    .divide(personsCount, 4, RoundingMode.HALF_UP);
             for (Person person : persons) {
                 operationBalances.add(createNewOperationBalance(operation, personsValue, person));
             }

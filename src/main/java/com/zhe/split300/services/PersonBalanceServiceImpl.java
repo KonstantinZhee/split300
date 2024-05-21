@@ -1,5 +1,6 @@
 package com.zhe.split300.services;
 
+import com.zhe.split300.models.Calculation;
 import com.zhe.split300.models.Evention;
 import com.zhe.split300.models.Operation;
 import com.zhe.split300.models.OperationBalance;
@@ -61,12 +62,6 @@ public class PersonBalanceServiceImpl implements PersonBalanceService {
     }
 
     @Override
-    public void saveNewPersonBalances(Set<PersonBalance> personBalances) {
-        log.info("saveNewPersonBalances(Set<PersonBalance> personBalances)");
-        personBalanceRepository.saveAll(personBalances);
-    }
-
-    @Override
     @Transactional
     public void deleteAllByEvention(Evention evention) {
         log.info("deleteAllByEvention(Evention evention)");
@@ -93,6 +88,21 @@ public class PersonBalanceServiceImpl implements PersonBalanceService {
             Person person = personBalance.getPerson();
             BigDecimal newBalance = newOperationBalances.getOrDefault(person, BigDecimal.ZERO);
             personBalance.setBalance(newBalance);
+        }
+        return personBalances;
+    }
+
+    @Override
+    public Set<PersonBalance> updatePersonBalancesTransferringCalculation(Calculation calculation) {
+        Set<PersonBalance> personBalances = calculation.getEvention().getPersonBalances();
+        for(PersonBalance personBalance : personBalances) {
+            if(personBalance.getPerson().equals(calculation.getFromPerson())) {
+                personBalance.setBalance(personBalance.getBalance().subtract(calculation.getValue()));
+                continue;
+            }
+            if(personBalance.getPerson().equals(calculation.getToPerson())){
+                personBalance.setBalance(personBalance.getBalance().add(calculation.getValue()));
+            }
         }
         return personBalances;
     }

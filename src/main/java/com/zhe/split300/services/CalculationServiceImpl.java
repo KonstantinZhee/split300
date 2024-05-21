@@ -11,7 +11,6 @@ import com.zhe.split300.repositories.PersonRepository;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
@@ -88,7 +87,7 @@ public class CalculationServiceImpl implements CalculationService {
                 balancesMap.put(minBalancePerson, balancesMap.get(minBalancePerson).add(calculationValue));
                 balancesMap.put(maxBalancePerson, balancesMap.get(maxBalancePerson).subtract(calculationValue));
                 calculations.add(new Calculation(evention, maxBalancePerson, minBalancePerson,
-                        calculationValue.setScale(2, RoundingMode.CEILING)));
+                        calculationValue));
             }
         }
         return calculations;
@@ -98,6 +97,22 @@ public class CalculationServiceImpl implements CalculationService {
     public void updateCalculations(Evention evention) {
         deleteAllByEvention(evention);
         evention.setCalculations(convertPersonBalancesToCalculations(evention.getPersonBalances(), evention));
+    }
+
+    @Override
+    @Transactional
+    public void transferCalculation(UUID calculationId, int personId) {
+        Calculation calculation = calculationRepository.selectCalculationToUpdate(calculationId);
+        if(isPersonPermittedToUpdateCalculation(calculation, personId)) {
+            calculation.setTransferred(true);
+            personBalanceService.updatePersonBalancesTransferringCalculation(calculation);
+            calculationRepository.save(calculation);
+        }
+    }
+
+    private boolean isPersonPermittedToUpdateCalculation(Calculation calculation, int personId) {
+        return calculation.getFromPerson().getId() == personId ||
+                calculation.getEvention().getCompany().getOwner().getId() == personId;
     }
 
     private Person findMaxBalancePerson(Map<Person, BigDecimal> balancesMap) {

@@ -18,4 +18,6 @@ public interface CalculationService {
 
 
     void updateCalculations(Evention evention);
+
+    void transferCalculation(UUID calculationId, int personId);
 }

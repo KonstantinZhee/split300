@@ -76,7 +76,7 @@ public class Calculation {
     private Person toPerson;
 
     @Column(name = "calculation_value")
-    @Digits(integer = 100, fraction = 2)
+    @Digits(integer = 100, fraction = 4)
     private BigDecimal value;
 
     @Column(name = "isTransferred")
