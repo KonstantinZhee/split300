@@ -14,6 +14,6 @@ public class PersonBalanceDTO {
 
     public PersonBalanceDTO(String personName, BigDecimal balance) {
         this.name = personName;
-        this.balance = balance.setScale(2, RoundingMode.CEILING);
+        this.balance = balance.setScale(2, RoundingMode.HALF_DOWN);
     }
 }

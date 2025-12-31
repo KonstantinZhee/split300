@@ -36,7 +36,7 @@ public class ConverterDTO {
     public List<OperationBalance> sortAndRoundOperationBalances(Collection<OperationBalance> operationBalances) {
         log.info("sortOperationBalances");
         operationBalances.forEach(o -> o.setBalance(o.getBalance()
-                .setScale(2, RoundingMode.CEILING)));
+                .setScale(4, RoundingMode.HALF_UP)));
         return operationBalances.stream()
                 .sorted(Comparator.comparing(OperationBalance::getBalance).reversed()
                         .thenComparing(operationBalance -> operationBalance.getPerson().getName()))

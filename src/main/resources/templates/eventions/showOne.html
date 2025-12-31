@@ -15,7 +15,6 @@
 <hr/>
 
 <div th:if="${evention != null}">
-
     <h1><a th:text="${'Событие: ' + evention.getName()}"></a></h1>
     <div th:if="${evention.getCompany()!= null}">
         <h3><a th:text="${'Группа: ' + evention.getCompany().getName()}">VALUE</a></h3>
@@ -41,12 +40,14 @@
     </form>
 </div>
 <hr>
+
 <h2><a th:text="${'Расходы: ' + evention.getBalance()}"></a></h2>
 <form th:method="PATCH"
       th:action="@{/v1/persons/{id}/groups/{idc}/events/{eUID}/refresh (idc=${companyId}, id=${personId}, eUID=${eventionId})}">
     <input type="submit" value="Обновить расходы"/>
 </form>
 <hr>
+
 <div th:if="${balances == null || balances.isEmpty()}">
     <b><span>У События пока нет доступного списка Балансов</span></b>
 </div>
@@ -82,10 +83,18 @@
                 <th></th>
             </tr>
             <div th:each="calculation : ${calculations}">
-                <tr>
+                <tr th:class="${calculation.isTransferred} ? 'transferred' : ''">
                     <td th:text="${calculation.getFromPerson().getName()}"></td>
-                    <td th:text="${calculation.getValue()}"></td>
+                    <td th:text="${#numbers.formatDecimal(calculation.getValue(), 0, 2)}"></td>
                     <td th:text="${calculation.getToPerson().getName()}"></td>
+                    <td>
+                        <div th:if="${!calculation.isTransferred}">
+                            <form th:method="PATCH"
+                                  th:action="@{/v1/persons/{id}/groups/{idc}/events/{eUID}/calculations/{cUID}(idc=${companyId}, id=${personId}, eUID=${eventionId}, cUID=${calculation.getUid()})}">
+                                <input type="submit" value="Перевод проведен!"/>
+                            </form>
+                        </div>
+                    </td>
                 </tr>
             </div>
         </table>
@@ -137,8 +146,12 @@
       th:action="@{/v1/persons/{id}/groups/{idc}/events/{eUID}/operations/new(idc=${companyId}, id=${personId}, eUID=${eventionId})}">
     <input type="submit" value="Добавить новую операцию"/>
 </form>
-
 <hr>
 <br>
 </body>
 </html>
+<style>
+    .transferred td {
+        text-decoration: line-through;
+    }
+</style>

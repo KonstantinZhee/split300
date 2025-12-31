@@ -1,20 +1,21 @@
 package com.zhe.split300.services;
 
 
+import com.zhe.split300.models.Evention;
 import com.zhe.split300.models.Operation;
 import com.zhe.split300.models.OperationBalance;
 import com.zhe.split300.models.Person;
 import com.zhe.split300.repositories.OperationBalanceRepository;
-import com.zhe.split300.repositories.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 
 @Service
 @Transactional(readOnly = true)
@@ -45,7 +46,7 @@ public class OperationBalanceServiceImpl implements OperationBalanceService {
         if (!persons.isEmpty()) {
             BigDecimal personsCount = BigDecimal.valueOf(persons.size());
             BigDecimal personsValue = operationValue
-                    .divide(personsCount, 4, RoundingMode.CEILING);
+                    .divide(personsCount, 4, RoundingMode.HALF_UP);
             for (Person person : persons) {
                 operationBalances.add(createNewOperationBalance(operation, personsValue, person));
             }
@@ -54,5 +55,4 @@ public class OperationBalanceServiceImpl implements OperationBalanceService {
         }
         return operationBalances;
     }
-
 }

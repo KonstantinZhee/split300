@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
@@ -29,16 +30,18 @@ public class OperationServiceImpl implements OperationService {
     private final PersonRepository personRepository;
     private final OperationBalanceService operationBalanceService;
     private final PersonBalanceService personBalanceService;
+    private final CalculationService calculationService;
 
     @Autowired
     public OperationServiceImpl(OperationRepository operationRepository, EventionRepository eventionRepository,
                                 PersonRepository personRepository, OperationBalanceService operationBalanceService,
-                                PersonBalanceService personBalanceService) {
+                                PersonBalanceService personBalanceService, CalculationService calculationService) {
         this.operationRepository = operationRepository;
         this.eventionRepository = eventionRepository;
         this.personRepository = personRepository;
         this.operationBalanceService = operationBalanceService;
         this.personBalanceService = personBalanceService;
+        this.calculationService = calculationService;
     }
 
     @Override
@@ -51,8 +54,10 @@ public class OperationServiceImpl implements OperationService {
         if (evention.getPersonBalances() == null || evention.getPersonBalances().isEmpty()) {
             Set<PersonBalance> personBalances = personBalanceService.createNewPersonBalances(evention);
             evention.setPersonBalances(personBalances);
+            evention.setCalculations(calculationService.convertPersonBalancesToCalculations(personBalances, evention));
         } else {
             evention.setPersonBalances(personBalanceService.updatePersonBalances(evention, operation));
+            calculationService.updateCalculations(evention);//обновить калькуляции
         }
         eventionRepository.save(evention);
     }
@@ -79,8 +84,30 @@ public class OperationServiceImpl implements OperationService {
 
     @Override
     @Transactional
+    public void deleteOperationAndUpdateEvention(UUID operationId, UUID eventionId) {
+        Evention evention = eventionRepository.findByIdToAddBalances(eventionId);
+        deleteOperation(evention, operationId);
+        personBalanceService.deleteAllByEvention(evention);
+        evention.setPersonBalances(personBalanceService.createNewPersonBalances(evention));
+        calculationService.updateCalculations(evention);
+        eventionRepository.save(evention);
+    }
+
+    @Transactional
     public void delete(UUID operationId) {
         operationRepository.deleteById(operationId);
+    }
 
+    @Override
+    @Transactional
+    public void deleteOperation(Evention evention, UUID operationId) {
+        Optional<Operation> oDeletedOperation = evention.getOperations().stream()
+                .filter(operation -> operation.getUid().equals(operationId))
+                .findFirst();
+        oDeletedOperation.ifPresent(operation -> {
+            evention.getOperations().remove(operation);
+            evention.setBalance(evention.getBalance().subtract(operation.getValue()));
+            operationRepository.delete(operation);
+        });
     }
 }

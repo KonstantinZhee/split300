@@ -80,7 +80,7 @@ import java.util.UUID;
 })
 
 @NamedEntityGraph(name = "Evention.withOperations", attributeNodes = {
-
+        @NamedAttributeNode(value = "operations", subgraph = "Operation.details"),
         @NamedAttributeNode(value = "balance"),
 }, subgraphs = {
         @NamedSubgraph(name = "Operation.details", attributeNodes = {
@@ -91,7 +91,8 @@ import java.util.UUID;
 
 @NamedEntityGraph(name = "Evention.forEditPage", includeAllAttributes = true, attributeNodes ={
         @NamedAttributeNode(value = "company", subgraph = "company.details"),
-        @NamedAttributeNode(value = "persons", subgraph = "person.details")
+        @NamedAttributeNode(value = "persons", subgraph = "person.details"),
+        @NamedAttributeNode(value = "personBalances", subgraph = "PersonBalance.details")
 }, subgraphs = {
         @NamedSubgraph(name = "company.details", attributeNodes = {
                 @NamedAttributeNode(value = "persons", subgraph = "person.details"),
@@ -103,6 +104,12 @@ import java.util.UUID;
                 @NamedAttributeNode(value = "name"),
                 @NamedAttributeNode(value = "email"),
                 @NamedAttributeNode(value = "id")
+        }),
+        @NamedSubgraph(name = "PersonBalance.details", attributeNodes = {
+                @NamedAttributeNode(value = "person", subgraph = "Person.details"),
+                @NamedAttributeNode(value = "balance"),
+                @NamedAttributeNode(value = "evention"),
+                @NamedAttributeNode(value = "uid")
         })
 })
 @NamedEntityGraph(name = "Evention.withBalances", attributeNodes = {

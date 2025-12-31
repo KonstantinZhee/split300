@@ -26,10 +26,8 @@ import java.util.stream.Collectors;
 @Service
 @Transactional(readOnly = true)
 public class CalculationServiceImpl implements CalculationService {
-    private final PersonBalanceRepository personBalanceRepository;
     private final CalculationRepository calculationRepository;
     private final EventionRepository eventionRepository;
-    private final PersonRepository personRepository;
     private final PersonBalanceService personBalanceService;
 
     @Autowired
@@ -38,9 +36,7 @@ public class CalculationServiceImpl implements CalculationService {
                                   PersonBalanceRepository personBalanceRepository) {
         this.calculationRepository = calculationRepository;
         this.eventionRepository = eventionRepository;
-        this.personRepository = personRepository;
         this.personBalanceService = personBalanceService;
-        this.personBalanceRepository = personBalanceRepository;
     }
 
 
@@ -50,16 +46,12 @@ public class CalculationServiceImpl implements CalculationService {
         log.info("createCalculations(UUID eventionId)");
         Evention evention = eventionRepository.findByIdToMakeCalculations(eventionId);
         personBalanceService.deleteAllByEvention(evention);
-        evention.getPersonBalances().clear();
         deleteAllByEvention(evention);
-        evention.getOperations().clear();
         Set<PersonBalance> personBalances = personBalanceService.createNewPersonBalances(evention);
         evention.setPersonBalances(personBalances);
         Set<Calculation> calculations = convertPersonBalancesToCalculations(personBalances, evention);
         evention.setCalculations(calculations);
         eventionRepository.save(evention);
-        personBalanceService.saveNewPersonBalances(personBalances);
-        calculationRepository.saveAll(calculations);
         return evention;
     }
 
@@ -69,10 +61,11 @@ public class CalculationServiceImpl implements CalculationService {
     public void deleteAllByEvention(Evention evention) {
         log.info("deleteAllByEvention(Evention evention)");
         calculationRepository.deleteAll(evention.getCalculations());
+        evention.getCalculations().clear();
     }
 
-
-    private Set<Calculation> convertPersonBalancesToCalculations(final Set<PersonBalance> personBalances,
+    @Override
+    public Set<Calculation> convertPersonBalancesToCalculations(final Set<PersonBalance> personBalances,
                                                                  Evention evention) {
         Set<Calculation> calculations = new TreeSet<>(Comparator.comparing(Calculation::getValue)
                 .reversed()
@@ -94,10 +87,32 @@ public class CalculationServiceImpl implements CalculationService {
                 balancesMap.put(minBalancePerson, balancesMap.get(minBalancePerson).add(calculationValue));
                 balancesMap.put(maxBalancePerson, balancesMap.get(maxBalancePerson).subtract(calculationValue));
                 calculations.add(new Calculation(evention, maxBalancePerson, minBalancePerson,
-                        calculationValue.setScale(2, RoundingMode.CEILING)));
+                        calculationValue));
             }
         }
         return calculations;
+    }
+
+    @Override
+    public void updateCalculations(Evention evention) {
+        deleteAllByEvention(evention);
+        evention.setCalculations(convertPersonBalancesToCalculations(evention.getPersonBalances(), evention));
+    }
+
+    @Override
+    @Transactional
+    public void transferCalculation(UUID calculationId, int personId) {
+        Calculation calculation = calculationRepository.selectCalculationToUpdate(calculationId);
+        if(isPersonPermittedToUpdateCalculation(calculation, personId)) {
+            calculation.setTransferred(true);
+            personBalanceService.updatePersonBalancesTransferringCalculation(calculation);
+            calculationRepository.save(calculation);
+        }
+    }
+
+    private boolean isPersonPermittedToUpdateCalculation(Calculation calculation, int personId) {
+        return calculation.getFromPerson().getId() == personId ||
+                calculation.getEvention().getCompany().getOwner().getId() == personId;
     }
 
     private Person findMaxBalancePerson(Map<Person, BigDecimal> balancesMap) {
