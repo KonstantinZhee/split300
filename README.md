@@ -71,3 +71,5 @@ graph LR
     D --> E[Автоматический пересчёт балансов]
     E --> F[Формирование минимальных переводов]
     F --> G[Просмотр результатов]
+
+Схема базы данных: https://github.com/KonstantinZhee/split300/blob/master/files/split300%20-%20public.png 
